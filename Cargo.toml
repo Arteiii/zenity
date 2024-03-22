@@ -1,0 +1,19 @@
+[package]
+name = "animations_rs"
+version = "0.1.0"
+authors = ["Arteii <ben.arteii@proton.me>"]
+edition = "2021"
+license-file = "LICENSE.md"
+readme = "README.md"
+
+
+description = "A library for console animations in Rust"
+repository = "https://github.com/Arteiii/animations_rs"
+keywords = ["console", "animations", "cli", "spinner", "loading"]
+homepage = "https://github.com/Arteiii/animations_rs"
+
+include = ["src/**/*", "README.md", "LICENSE.md"]
+
+
+[dependencies]
+crossterm = "0.27.0"
