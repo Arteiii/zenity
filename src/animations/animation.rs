@@ -1,8 +1,4 @@
-use crossterm::{
-    cursor, execute,
-    style::{Color, Print, ResetColor, SetForegroundColor},
-    terminal,
-};
+use crossterm::{cursor, execute, style::Print, terminal};
 use std::io::{stdout, Write};
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -10,7 +6,7 @@ use std::time::Duration;
 
 use super::frames::spinner::Frames;
 
-/// Prints the given text without buffering.
+/// prints the given text without buffering
 fn print_flush(text: &str) {
     print!("{}", text);
     stdout().flush().unwrap();
@@ -27,7 +23,7 @@ fn go_back_print_flush(text: &str) {
     .unwrap();
 }
 
-/// A loading animation that runs in a separate thread.
+/// a loading animation that runs in a separate thread
 pub fn spinner_animation(frames: &Frames, should_stop: Arc<Mutex<bool>>) {
     let mut frame_index = 0;
     let longest_frame_len = frames
@@ -42,7 +38,7 @@ pub fn spinner_animation(frames: &Frames, should_stop: Arc<Mutex<bool>>) {
     while !*should_stop.lock().unwrap() {
         let frame = &frames.frames[frame_index];
 
-        // Clear the current line, move the cursor to the beginning of the line, print the frame, and flush stdout
+        // clear the current line, move the cursor to the beginning of the line, print the frame, and flush stdout
         execute!(
             stdout(),
             terminal::Clear(terminal::ClearType::CurrentLine),
@@ -59,7 +55,7 @@ pub fn spinner_animation(frames: &Frames, should_stop: Arc<Mutex<bool>>) {
 
     let clear_length = " ".repeat(longest_frame_len);
 
-    // Clear the line after the animation finishes
+    // clear the line after the animation finishes
     execute!(
         stdout(),
         terminal::Clear(terminal::ClearType::CurrentLine),
