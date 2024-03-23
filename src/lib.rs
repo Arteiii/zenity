@@ -1,10 +1,8 @@
-use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
 
 use crate::animations::animation;
 pub use crate::animations::frames::spinner;
-use crate::spinner::{Frames, PreDefined};
 
 mod animations;
 
@@ -56,33 +54,4 @@ impl Drop for LoadingAnimation {
     fn drop(&mut self) {
         self.finish(None);
     }
-}
-
-/// an advanced loading animation with support for more complex features and configurations
-///
-/// this struct provides additional functionality and flexibility compared to `LoadingAnimation`
-/// it is suitable for scenarios where more advanced customization or control over the loading animation is required
-pub struct AdvancedLoadingAnimation {
-    tasks: HashMap<usize, Task>, // TODO: implement LoadingTask Struct
-    default_frames: Frames,
-}
-
-impl AdvancedLoadingAnimation {
-    /// Creates a new instance of `YourStruct`.
-    ///
-    /// If `frames` is `Some(Frames)`, it uses the provided frames; otherwise, it uses a default set of frames.
-    pub fn new(frames: Option<Frames>) -> Self {
-        let default_frames = frames.unwrap_or_else(|| PreDefined::dot_spinner1());
-
-        Self { default_frames }
-    }
-
-    pub fn add(frames: Option<Frames>, msg: Option<&str>)-> usize {
-        let frames = frames.unwrap_or_else(|| PreDefined::dot_spinner1());
-        // TODO: add new loading bar implementation
-        // TODO: add uid for each task and retrun so later on the user cna control each loading animation independently
-
-
-    }
-    // TODO: Define methods for more advanced features
 }
