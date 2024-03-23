@@ -18,7 +18,7 @@ It's as easy as pie (or maybe even easier, depending on your pie-making skills)!
 ```rust
 fn scope_example() {
     // create a LoadingAnimation instance using one of the predefined animations
-    let loading_animation = LoadingAnimation::new(PreDefined::kaomoji());
+    let _loading_animation = LoadingAnimation::new(PreDefined::dot_spinner1(false)); // invert frames bool (false)
     
     // `loading_animation` will run out of scope now and get dropped,
     // thus the animation will stop and remove itself from the console

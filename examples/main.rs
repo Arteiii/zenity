@@ -23,7 +23,7 @@ fn main() {
 
 fn scope_example() {
     // create a LoadingAnimation instance using one of the predefined animations
-    let _loading_animation = LoadingAnimation::new(PreDefined::kaomoji(false));
+    let _loading_animation = LoadingAnimation::new(PreDefined::dot_spinner1(false));
 
     // wait for 5 seconds to showcase the loading animation
     sleep(Duration::from_secs(5));
