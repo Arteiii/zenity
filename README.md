@@ -1,6 +1,6 @@
 # Yet Another Spinner Lib
 
-easy to use cli animation lib based on crossterm
+easy to use cli animation lib based on crossterm 
 
 Do you often find yourself gazing into the void of your terminal, wondering if your computer has decided to take a coffee break without notifying you?
 
