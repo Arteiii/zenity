@@ -6,22 +6,6 @@ use std::time::Duration;
 
 use super::frames::spinner::Frames;
 
-/// prints the given text without buffering
-fn print_flush(text: &str) {
-    print!("{}", text);
-    stdout().flush().unwrap();
-}
-
-/// moves the cursor back and prints the given text without buffering
-fn go_back_print_flush(text: &str) {
-    execute!(
-        stdout(),
-        terminal::Clear(terminal::ClearType::CurrentLine),
-        cursor::MoveToColumn(0),
-        Print(text),
-    )
-    .unwrap();
-}
 
 /// a loading animation that runs in a separate thread
 pub fn spinner_animation(frames: &Frames, should_stop: Arc<Mutex<bool>>) {
