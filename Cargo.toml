@@ -12,7 +12,6 @@ repository = "https://github.com/Arteiii/animations_rs"
 keywords = ["console", "animations", "cli", "spinner", "loading"]
 homepage = "https://github.com/Arteiii/animations_rs"
 
-include = ["src/**/*", "README.md", "LICENSE.md"]
 
 
 [dependencies]
