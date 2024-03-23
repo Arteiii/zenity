@@ -15,7 +15,7 @@ fn main() {
     };
 
     // create a LoadingAnimation instance using the new custom animation
-    let custom_loading_animation = LoadingAnimation::new(custom_frames);
+    let _custom_loading_animation = LoadingAnimation::new(custom_frames);
 
     // wait for 5 seconds to showcase the loading animation with the custom animation
     sleep(Duration::from_secs(5));
