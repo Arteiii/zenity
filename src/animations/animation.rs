@@ -7,7 +7,11 @@ use std::time::Duration;
 use super::frames::spinner::Frames;
 
 /// a loading animation that runs in a separate thread
-pub fn spinner_animation(frames: &Frames, should_stop: Arc<Mutex<bool>>) {
+pub fn spinner_animation(
+    frames: &Frames,
+    should_stop: Arc<Mutex<bool>>,
+    text: Arc<Mutex<Option<String>>>,
+) {
     let mut frame_index = 0;
     let longest_frame_len = frames
         .frames
@@ -27,6 +31,8 @@ pub fn spinner_animation(frames: &Frames, should_stop: Arc<Mutex<bool>>) {
             terminal::Clear(terminal::ClearType::CurrentLine),
             cursor::MoveToColumn(0),
             Print(frame),
+            Print("  "),
+            Print(text.lock().unwrap().as_ref().unwrap_or(&"".to_string())), // print the content of the String
             Print("\r"),
         )
         .unwrap();

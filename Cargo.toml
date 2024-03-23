@@ -1,6 +1,6 @@
 [package]
 name = "animations_rs"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Arteii <ben.arteii@proton.me>"]
 edition = "2021"
 license-file = "LICENSE.md"

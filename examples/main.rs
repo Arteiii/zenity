@@ -8,16 +8,29 @@ use std::time::Duration;
 fn main() {
     scope_example();
 
-    // custom animations
-    let custom_frames: Frames = Frames {
-        frames: vec!["⚫", "⚪", "⚫", "⚪"], // custom frames for animation
-        speed_ms: 150,                        // custom speed for animation in milliseconds
-    };
+    {
+        // custom animations
+        let custom_frames: Frames = Frames {
+            frames: vec!["⚫", "⚪", "⚫", "⚪"], // custom frames for animation
+            speed_ms: 150,                        // custom speed for animation in milliseconds
+        };
 
-    // create a LoadingAnimation instance using the new custom animation
-    let _custom_loading_animation = LoadingAnimation::new(custom_frames);
+        // create a LoadingAnimation instance using the new custom animation
+        let _custom_loading_animation = LoadingAnimation::new(custom_frames);
 
-    // wait for 5 seconds to showcase the loading animation with the custom animation
+        // wait for 5 seconds to showcase the loading animation with the custom animation
+        sleep(Duration::from_secs(5));
+        // end!
+    }
+
+    let spinner = LoadingAnimation::new(PreDefined::dot_spinner3(false));
+
+    spinner.set_text("Loading..."); // sets the text to "Loading..."
+
+    sleep(Duration::from_secs(5));
+
+    spinner.set_text("MOREEEEEEE Loading..."); // overwrite text
+
     sleep(Duration::from_secs(5));
 }
 

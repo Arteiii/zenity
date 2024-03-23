@@ -1,3 +1,27 @@
+//! # Yet Another Spinner Lib
+//!
+//!
+//! ## How to Use?
+//!
+//! It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
+//!
+//! ```rust
+//! use animations_rs::{spinner::PreDefined, LoadingAnimation};
+//!
+//! fn scope_example() {
+//!     // create a LoadingAnimation instance using one of the predefined animations
+//!     let spinner = LoadingAnimation::new(PreDefined::dot_spinner1(false)); // invert frames bool (false)
+//!
+//!     spinner.set_text("Loading..."); // sets the text to "Loading..."
+//!
+//!     // `loading_animation` will run out of scope now and get dropped,
+//!     // thus the animation will stop and remove itself from the console
+//! }
+//! ```
+//!
+//! check out the examples for more
+//!
+
 use std::sync::{Arc, Mutex};
 use std::thread;
 
@@ -13,6 +37,7 @@ mod animations;
 pub struct LoadingAnimation {
     should_stop: Arc<Mutex<bool>>,
     handle: Option<thread::JoinHandle<()>>,
+    text: Arc<Mutex<Option<String>>>,
 }
 
 impl LoadingAnimation {
@@ -28,14 +53,38 @@ impl LoadingAnimation {
     /// a new `LoadingAnimation` instance
     pub fn new(frames: spinner::Frames) -> Self {
         let should_stop = Arc::new(Mutex::new(false));
+        let text = Arc::new(Mutex::new(None));
         let should_stop_clone = Arc::clone(&should_stop);
+        let text_clone = Arc::clone(&text);
         let handle = thread::spawn(move || {
-            animation::spinner_animation(&frames, should_stop_clone);
+            animation::spinner_animation(&frames, should_stop_clone, text_clone);
         });
         Self {
             should_stop,
             handle: Some(handle),
+            text,
         }
+    }
+
+    /// sets the text content for the loading animation
+    ///
+    /// this function updates the text content displayed alongside the loading animation
+    ///
+    /// # Arguments
+    ///
+    /// * `text` - A string slice (`&str`) representing the new text content to be displayed.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use animations_rs::{spinner::PreDefined, LoadingAnimation};
+    /// let spinner = LoadingAnimation::new(PreDefined::dot_spinner1(false));
+    /// // update the text content of the spinner animation
+    /// spinner.set_text("Loading..."); // sets the text to "Loading..."
+    /// ```
+    pub fn set_text(&self, text: &str) {
+        let mut guard = self.text.lock().unwrap();
+        *guard = Some(text.to_string()); // update the text value
     }
 
     /// stops the loading animation
