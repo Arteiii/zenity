@@ -1,3 +1,23 @@
+//! # Yet Another Spinner Lib
+//!
+//!
+//! ## How to Use?
+//!
+//! It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
+//!
+//! ```rust
+//! use animations_rs::{spinner::PreDefined, LoadingAnimation};
+//!
+//! fn scope_example() {
+//!     // create a LoadingAnimation instance using one of the predefined animations
+//!     let _loading_animation = LoadingAnimation::new(PreDefined::dot_spinner1(false)); // invert frames bool (false)
+//!
+//!     // `loading_animation` will run out of scope now and get dropped,
+//!     // thus the animation will stop and remove itself from the console
+//! }
+//! ```
+//!
+
 use std::sync::{Arc, Mutex};
 use std::thread;
 
@@ -55,3 +75,4 @@ impl Drop for LoadingAnimation {
         self.finish();
     }
 }
+

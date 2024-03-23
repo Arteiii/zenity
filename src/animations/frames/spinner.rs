@@ -106,7 +106,7 @@ impl PreDefined {
     ///
     /// ## Credits
     ///
-    /// https://github.com/ad4mx/spinoff/blob/main/src/spinners.rs
+    /// <https://github.com/ad4mx/spinoff/blob/main/src/spinners.rs>
     pub fn aesthetic_spin(inverted: bool) -> Frames {
         let pattern = vec![
             "▱ ▱ ▱ ▱ ▱ ▱ ▱ ",
@@ -149,7 +149,7 @@ impl PreDefined {
     ///
     /// ## Credits
     ///
-    /// https://github.com/ad4mx/spinoff/blob/main/src/spinners.rs
+    /// <https://github.com/ad4mx/spinoff/blob/main/src/spinners.rs>
     pub fn clock(inverted: bool) -> Frames {
         let pattern = vec![
             "🕛 ", "🕐 ", "🕑 ", "🕒 ", "🕓 ", "🕔 ", "🕕 ", "🕖 ", "🕗 ", "🕘 ", "🕙 ", "🕚 ",
@@ -164,7 +164,7 @@ impl PreDefined {
     ///
     /// ## Credits
     ///
-    /// https://github.com/ad4mx/spinoff/blob/main/src/spinners.rs
+    /// <https://github.com/ad4mx/spinoff/blob/main/src/spinners.rs>
     pub fn bouncing_bar(inverted: bool) -> Frames {
         let pattern = vec![
             "[    ]", "[=   ]", "[==  ]", "[=== ]", "[ ===]", "[  ==]", "[   =]", "[    ]",
@@ -181,7 +181,7 @@ impl PreDefined {
     ///
     /// ## Credits
     ///
-    /// https://github.com/ad4mx/spinoff/blob/main/src/spinners.rs
+    /// <https://github.com/ad4mx/spinoff/blob/main/src/spinners.rs>
     pub fn material(inverted: bool) -> Frames {
         let pattern = vec![
             "█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",
