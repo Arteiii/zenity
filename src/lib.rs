@@ -41,7 +41,7 @@ impl LoadingAnimation {
     /// stops the loading animation
     ///
     /// this method sets the flag to stop the animation and waits for the animation thread to join
-    pub fn finish(&mut self, msg: Option<&str>) {
+    pub fn finish(&mut self) {
         *self.should_stop.lock().unwrap() = true;
         if let Some(handle) = self.handle.take() {
             handle.join().unwrap();
@@ -52,6 +52,6 @@ impl LoadingAnimation {
 impl Drop for LoadingAnimation {
     /// stops the loading animation thread when the `LoadingAnimation` object is dropped
     fn drop(&mut self) {
-        self.finish(None);
+        self.finish();
     }
 }
