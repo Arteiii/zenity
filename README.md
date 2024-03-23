@@ -16,6 +16,8 @@ we proudly present to you our humble attempt to transform loading animations fro
 It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
 
 ```rust
+use animations_rs::{spinner::PreDefined, LoadingAnimation};
+
 fn scope_example() {
     // create a LoadingAnimation instance using one of the predefined animations
     let _loading_animation = LoadingAnimation::new(PreDefined::dot_spinner1(false)); // invert frames bool (false)
