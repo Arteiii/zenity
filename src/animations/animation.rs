@@ -1,11 +1,10 @@
 use crossterm::{cursor, execute, style::Print, terminal};
-use std::io::{stdout, Write};
+use std::io::stdout;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
 use super::frames::spinner::Frames;
-
 
 /// a loading animation that runs in a separate thread
 pub fn spinner_animation(frames: &Frames, should_stop: Arc<Mutex<bool>>) {
