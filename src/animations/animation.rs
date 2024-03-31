@@ -1,4 +1,8 @@
-use crossterm::{cursor, execute, style::Print, terminal};
+use crossterm::{
+    cursor, execute,
+    style::{Color, Print, ResetColor, SetForegroundColor},
+    terminal,
+};
 use std::io::stdout;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -6,11 +10,13 @@ use std::time::Duration;
 
 use super::frames::spinner::Frames;
 
-/// a loading animation that runs in a separate thread
+/// a loading animation that runs in a separate thread.
 pub fn spinner_animation(
     frames: &Frames,
     should_stop: Arc<Mutex<bool>>,
     text: Arc<Mutex<Option<String>>>,
+    animation_color: Arc<Mutex<Color>>,
+    text_color: Arc<Mutex<Color>>,
 ) {
     let mut frame_index = 0;
     let longest_frame_len = frames
@@ -30,9 +36,12 @@ pub fn spinner_animation(
             stdout(),
             terminal::Clear(terminal::ClearType::CurrentLine),
             cursor::MoveToColumn(0),
+            SetForegroundColor(*animation_color.lock().unwrap()), // set animation color
             Print(frame),
             Print("  "),
-            Print(text.lock().unwrap().as_ref().unwrap_or(&"".to_string())), // print the content of the String
+            SetForegroundColor(*text_color.lock().unwrap()), // set text color
+            Print(text.lock().unwrap().as_ref().unwrap_or(&"".to_string())),
+            ResetColor, // reset colors
             Print("\r"),
         )
         .unwrap();
@@ -55,5 +64,3 @@ pub fn spinner_animation(
     )
     .unwrap();
 }
-
-// TODO: implement loading bar animation

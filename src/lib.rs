@@ -26,7 +26,9 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 
 use crate::animations::animation;
+
 pub use crate::animations::frames::spinner;
+pub use crossterm::style::Color;
 
 mod animations;
 
@@ -38,6 +40,8 @@ pub struct LoadingAnimation {
     should_stop: Arc<Mutex<bool>>,
     handle: Option<thread::JoinHandle<()>>,
     text: Arc<Mutex<Option<String>>>,
+    animation_color: Arc<Mutex<Color>>,
+    text_color: Arc<Mutex<Color>>,
 }
 
 impl LoadingAnimation {
@@ -52,17 +56,51 @@ impl LoadingAnimation {
     ///
     /// a new `LoadingAnimation` instance
     pub fn new(frames: spinner::Frames) -> Self {
+        let animation_color = Arc::new(Mutex::new(Color::White));
+        let text_color = Arc::new(Mutex::new(Color::White));
+        Self::with_colors(frames, animation_color, text_color)
+    }
+
+    /// creates a new `LoadingAnimation` instance with specified colors and starts the loading animation
+    ///
+    /// # Arguments
+    ///
+    /// * `frames` - the frames to be used for the loading animation
+    /// * `animation_color` - the color of the animation
+    /// * `text_color` - the color of the text
+    ///
+    /// # Returns
+    ///
+    /// a new `LoadingAnimation` instance with specified colors
+    pub fn with_colors(
+        frames: spinner::Frames,
+        animation_color_mutex: Arc<Mutex<Color>>,
+        text_color_mutex: Arc<Mutex<Color>>,
+    ) -> Self {
         let should_stop = Arc::new(Mutex::new(false));
         let text = Arc::new(Mutex::new(None));
+
         let should_stop_clone = Arc::clone(&should_stop);
         let text_clone = Arc::clone(&text);
+        let animation_color_clone = Arc::clone(&animation_color_mutex);
+        let text_color_clone = Arc::clone(&text_color_mutex);
+
         let handle = thread::spawn(move || {
-            animation::spinner_animation(&frames, should_stop_clone, text_clone);
+            animation::spinner_animation(
+                &frames,
+                should_stop_clone,
+                text_clone,
+                animation_color_clone,
+                text_color_clone,
+            );
         });
+
         Self {
             should_stop,
             handle: Some(handle),
             text,
+            animation_color: animation_color_mutex,
+            text_color: text_color_mutex,
         }
     }
 
@@ -72,19 +110,19 @@ impl LoadingAnimation {
     ///
     /// # Arguments
     ///
-    /// * `text` - A string slice (`&str`) representing the new text content to be displayed.
+    /// * `text` - a string slice (`&str`) representing the new text content to be displayed
     ///
     /// # Example
     ///
     /// ```
-    /// use zenity::{spinner::PreDefined, LoadingAnimation};
-    /// let spinner = LoadingAnimation::new(PreDefined::dot_spinner1(false));
-    /// // update the text content of the spinner animation
-    /// spinner.set_text("Loading..."); // sets the text to "Loading..."
+    /// use my_spinner_lib::{spinner::PreDefined, LoadingAnimation};
+    /// let spinner = LoadingAnimation::new(PreDefined::dot_spinner1());
+    /// // Update the text content of the spinner animation.
+    /// spinner.set_text("Loading..."); // Sets the text to "Loading..."
     /// ```
     pub fn set_text(&self, text: &str) {
         let mut guard = self.text.lock().unwrap();
-        *guard = Some(text.to_string()); // update the text value
+        *guard = Some(text.to_string()); // Update the text value
     }
 
     /// stops the loading animation
@@ -95,6 +133,24 @@ impl LoadingAnimation {
         if let Some(handle) = self.handle.take() {
             handle.join().unwrap();
         }
+    }
+
+    /// sets the color of the animation
+    ///
+    /// # Arguments
+    ///
+    /// * `color` - the color to set for the animation
+    pub fn set_animation_color(&self, color: Color) {
+        *self.animation_color.lock().unwrap() = color;
+    }
+
+    /// sets the color of the text
+    ///
+    /// # Arguments
+    ///
+    /// * `color` - the color to set for the text
+    pub fn set_text_color(&self, color: Color) {
+        *self.text_color.lock().unwrap() = color;
     }
 }
 
