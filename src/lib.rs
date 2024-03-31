@@ -6,7 +6,7 @@
 //! It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
 //!
 //! ```rust
-//! use animations_rs::{spinner::PreDefined, LoadingAnimation};
+//! use zenity::{spinner::PreDefined, LoadingAnimation};
 //!
 //! fn scope_example() {
 //!     // create a LoadingAnimation instance using one of the predefined animations
@@ -77,7 +77,7 @@ impl LoadingAnimation {
     /// # Example
     ///
     /// ```
-    /// use animations_rs::{spinner::PreDefined, LoadingAnimation};
+    /// use zenity::{spinner::PreDefined, LoadingAnimation};
     /// let spinner = LoadingAnimation::new(PreDefined::dot_spinner1(false));
     /// // update the text content of the spinner animation
     /// spinner.set_text("Loading..."); // sets the text to "Loading..."

@@ -1,8 +1,9 @@
-use animations_rs::{spinner::PreDefined, LoadingAnimation};
 use std::thread::sleep;
 use std::time::Duration;
+use zenity::{spinner::PreDefined, LoadingAnimation};
 
 fn main() {
+    preview_material();
     preview_aesthetic_spin();
     preview_aesthetic_load();
     preview_dot_spinner1();
@@ -13,7 +14,6 @@ fn main() {
     preview_kaomoji();
     preview_clock();
     preview_bouncing_bar();
-    preview_material();
 }
 
 fn preview_dot_spinner1() {

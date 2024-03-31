@@ -1,5 +1,5 @@
 [package]
-name = "animations_rs"
+name = "zenity"
 version = "0.1.1"
 authors = ["Arteii <ben.arteii@proton.me>"]
 edition = "2021"
@@ -7,11 +7,10 @@ license-file = "LICENSE.md"
 readme = "README.md"
 
 
-description = "A library for console animations in Rust"
-repository = "https://github.com/Arteiii/animations_rs"
+description = "easy to use cli animation lib (Yet Another Spinner Lib)"
+repository = "https://github.com/Arteiii/zenity"
 keywords = ["console", "animations", "cli", "spinner", "loading"]
-homepage = "https://github.com/Arteiii/animations_rs"
-
+homepage = "https://arteiii.github.io"
 
 
 [dependencies]

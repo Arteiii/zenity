@@ -1,9 +1,9 @@
-use animations_rs::{
+use std::thread::sleep;
+use std::time::Duration;
+use zenity::{
     spinner::{Frames, PreDefined},
     LoadingAnimation,
 };
-use std::thread::sleep;
-use std::time::Duration;
 
 fn main() {
     scope_example();
