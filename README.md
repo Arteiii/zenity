@@ -1,4 +1,4 @@
-# Yet Another Spinner Lib
+# zenity (Yet Another Spinner Lib)
 
 easy to use cli animation lib based on crossterm
 
@@ -15,17 +15,29 @@ we proudly present to you our humble attempt to transform loading animations fro
 It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
 
 ```rust
-use zenity::{spinner::PreDefined, LoadingAnimation};
+// example/basic.rs
+
+use std::thread::sleep;
+use std::time::Duration;
+use zenity::{style::Color, LoadingAnimation};
+
+fn main() {
+    println!("println test");
+    scope_example();
+}
 
 fn scope_example() {
     // create a LoadingAnimation instance using one of the predefined animations
-    let spinner = LoadingAnimation::new(PreDefined::dot_spinner1(false)); // invert frames bool (false)
+    let spinner = LoadingAnimation::default(); // invert frames bool (false)
 
     spinner.set_text("Loading..."); // sets the text to "Loading..."
+    spinner.set_text_color(Color::DarkBlue);
 
+    sleep(Duration::from_secs(5));
     // `loading_animation` will run out of scope now and get dropped,
     // thus the animation will stop and remove itself from the console
 }
+
 ```
 
 check out the examples for more
@@ -62,6 +74,6 @@ These projects not only provided delightful animations but also spared me from t
 
 ## License
 
-This project is licensed under the **DWFYW** License.
+This project is licensed under the **`DWFYW`** License.
 
 For more information, see the [LICENSE](LICENSE.md) file.
