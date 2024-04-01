@@ -7,7 +7,7 @@ use std::time::Duration;
 
 use super::frames::spinner::Frames;
 
-/// Spinner struct encapsulating the spinner animation.
+/// spinner struct encapsulating the spinner animation
 pub struct Spinner {
     frames: Frames,
     should_stop: Arc<Mutex<bool>>,
@@ -19,7 +19,7 @@ pub struct Spinner {
 }
 
 impl Spinner {
-    /// Creates a new instance of Spinner.
+    /// creates a new instance of Spinner
     pub fn new(
         frames: Frames,
         should_stop: Arc<Mutex<bool>>,
@@ -40,7 +40,7 @@ impl Spinner {
         }
     }
 
-    /// Runs the spinner animation.
+    /// runs the spinner animation
     pub fn run(&self) {
         let mut frame_index = 0;
         let longest_frame_len = self
@@ -57,7 +57,7 @@ impl Spinner {
             cursor::MoveToColumn(0),
             cursor::Hide
         )
-            .unwrap(); // hide cursor
+        .unwrap(); // hide cursor
 
         while !*self.should_stop.lock().unwrap() {
             self.display_frame(&mut frame_index);
@@ -68,7 +68,7 @@ impl Spinner {
         self.cleanup(longest_frame_len);
     }
 
-    /// Displays a frame of the spinner animation.
+    /// displays a frame of the spinner animation
     fn display_frame(&self, frame_index: &mut usize) {
         let frame = &self.frames.frames[*frame_index];
 
@@ -80,15 +80,21 @@ impl Spinner {
             Print(frame),
             Print("  "),
             SetStyle(*self.text_style.lock().unwrap()), // set text color
-            Print(self.text.lock().unwrap().as_ref().unwrap_or(&"".to_string())),
+            Print(
+                self.text
+                    .lock()
+                    .unwrap()
+                    .as_ref()
+                    .unwrap_or(&"".to_string())
+            ),
             ResetColor, // reset colors
         )
-            .unwrap();
+        .unwrap();
 
         *frame_index = (*frame_index + 1) % self.frames.frames.len();
     }
 
-    /// Displays the end sequence of the spinner animation.
+    /// displays the end sequence of the spinner animation
     fn display_end_sequence(&self) {
         if let Some(end_seq) = &*self.end_sequence.lock().unwrap() {
             execute!(
@@ -99,15 +105,21 @@ impl Spinner {
                 Print(end_seq),
                 Print("  "),
                 SetStyle(*self.text_style.lock().unwrap()),
-                Print(self.text.lock().unwrap().as_ref().unwrap_or(&"".to_string())),
+                Print(
+                    self.text
+                        .lock()
+                        .unwrap()
+                        .as_ref()
+                        .unwrap_or(&"".to_string())
+                ),
                 ResetColor,
                 Print("\n"),
             )
-                .unwrap();
+            .unwrap();
         }
     }
 
-    /// Cleans up after the spinner animation.
+    /// cleans up after the spinner animation
     fn cleanup(&self, longest_frame_len: usize) {
         if *self.cleanup_on_exit.lock().unwrap() {
             let clear_length = " ".repeat(longest_frame_len);
@@ -118,13 +130,13 @@ impl Spinner {
                 Print(&clear_length),
                 Print("\r"),
             )
-                .unwrap();
+            .unwrap();
         }
 
         execute!(
             stdout(),
             cursor::Show, // show cursor
         )
-            .unwrap();
+        .unwrap();
     }
 }

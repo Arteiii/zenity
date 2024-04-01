@@ -1,10 +1,10 @@
 use std::thread::sleep;
 use std::time::Duration;
 use zenity::{
+    combine_attributes,
     spinner::{Frames, PreDefined},
     style::{Attribute, Color, ContentStyle},
     LoadingAnimation,
-    combine_attributes,
 };
 
 fn main() {
@@ -39,11 +39,10 @@ fn main() {
         attributes: Attribute::Bold.into(),
     };
 
-    spinner.stop_and_persist(Some("\u{2713}"), Some(&"Successfully"), Some(content_style));
+    spinner.stop_and_persist(Some("\u{2705}"), Some(&"Successfully"), Some(content_style));
 
     sleep(Duration::from_secs(5));
 }
-
 
 fn change_colors_during_animation(spinner: &mut LoadingAnimation, text_color_duration: Duration) {
     spinner.set_text("MOREEEEEEE Loading... (but with color)"); // overwrite current text

@@ -1,1 +1,1 @@
-pub mod colors;
+pub(crate) mod colors;

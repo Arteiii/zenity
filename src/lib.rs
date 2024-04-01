@@ -28,7 +28,7 @@
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-use crate::animations::animation::Spinner;
+use crate::animations::Spinner;
 
 pub use crate::animations::frames::spinner;
 pub use crossterm::style;
@@ -168,8 +168,7 @@ impl LoadingAnimation {
             cleanup_on_exit_clone,
         );
 
-        let handle = thread::spawn(move || {spinner.run()
-        });
+        let handle = thread::spawn(move || spinner.run());
 
         Self {
             should_stop,
@@ -259,14 +258,13 @@ impl LoadingAnimation {
     /// if `text` is provided, it will replace the text field
     /// if `text_color` is provided, it will set the color of the text
     ///
-    /// The loading animation will be stopped after this method is called, but it won't be cleared from the console
+    /// the loading animation will be stopped after this method is called, but it won't be cleared from the console
     pub fn stop_and_persist(
         &mut self,
         spinner: Option<&str>,
         text: Option<&str>,
         text_color: Option<style::ContentStyle>,
     ) {
-
         // set cleanup_on_exit to false
         *self.cleanup_on_exit.lock().unwrap() = false;
 
@@ -283,8 +281,7 @@ impl LoadingAnimation {
             *self.text_style.lock().unwrap() = color;
         }
 
-
-        // Stop the animation
+        // stop the animation
         self.finish();
     }
 
