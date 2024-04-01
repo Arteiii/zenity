@@ -2,12 +2,12 @@ use std::thread::sleep;
 use std::time::Duration;
 use zenity::{
     spinner::{Frames, PreDefined},
-    Color, LoadingAnimation,
+    style::{Attribute, Color, ContentStyle},
+    LoadingAnimation,
+    combine_attributes,
 };
 
 fn main() {
-    scope_example();
-
     {
         // custom animations
         let custom_frames: Frames = Frames {
@@ -30,54 +30,44 @@ fn main() {
     sleep(Duration::from_secs(5));
 
     // change colors during the animation
-    change_colors_during_animation(&mut spinner, Duration::from_secs(2), Duration::from_secs(2));
+    change_colors_during_animation(&mut spinner, Duration::from_secs(2));
+
+    let content_style = ContentStyle {
+        foreground_color: Some(Color::Green),
+        background_color: None,
+        underline_color: Some(Color::Green),
+        attributes: Attribute::Bold.into(),
+    };
+
+    spinner.stop_and_persist(Some("\u{2713}"), Some(&"Successfully"), Some(content_style));
 
     sleep(Duration::from_secs(5));
 }
 
-fn change_colors_during_animation(
-    spinner: &mut LoadingAnimation,
-    animation_color_duration: Duration,
-    text_color_duration: Duration,
-) {
+
+fn change_colors_during_animation(spinner: &mut LoadingAnimation, text_color_duration: Duration) {
     spinner.set_text("MOREEEEEEE Loading... (but with color)"); // overwrite current text
 
-    // default color Red
-    spinner.set_animation_color(Color::Red);
+    // custom rgb color (50, 60, 70)
+    spinner.set_text_color(Color::Rgb { r: 255, g: 0, b: 0 });
     sleep(text_color_duration);
 
-    //  default color Blue
-    spinner.set_text_color(Color::Blue);
-    sleep(animation_color_duration);
+    spinner.set_text("Styled Text and loading");
 
-    // custom RGB color (50, 60, 70)
-    spinner.set_animation_color(Color::Rgb {
-        r: 50,
-        g: 60,
-        b: 70,
-    });
+    // custom style
+    let content_style = ContentStyle {
+        foreground_color: Some(Color::Yellow),
+        background_color: Some(Color::Blue),
+        underline_color: Some(Color::Green),
+        attributes: combine_attributes(&[
+            &Attribute::Bold,
+            &Attribute::Underlined,
+            &Attribute::Italic, // add another attribute here
+        ]),
+    };
+
+    spinner.set_animation_style(content_style);
     sleep(text_color_duration);
 
-    // custom RGB color (100, 200, 255)
-    spinner.set_text_color(Color::Rgb {
-        r: 100,
-        g: 200,
-        b: 255,
-    });
-    sleep(text_color_duration);
-
-    // for more information, refer to the Crossterm documentation (https://docs.rs/crossterm/latest/crossterm/style/enum.Color.html)
-}
-
-fn scope_example() {
-    // create a LoadingAnimation instance using one of the predefined animations
-    let _loading_animation = LoadingAnimation::new(PreDefined::dot_spinner1(false));
-
-    // wait for 5 seconds to showcase the loading animation
-    sleep(Duration::from_secs(5));
-
-    // `loading_animation` will run out of scope now and get dropped,
-    // thus the animation will stop and remove itself from the console
-    // There might be issues with cleanup if there is any output during the animation
-    // (will try to fix this issue, tho I don't know how yet)
+    // for more information, refer to the cross-term documentation (https://docs.rs/crossterm/latest/crossterm/style)
 }
