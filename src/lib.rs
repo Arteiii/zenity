@@ -202,23 +202,20 @@ impl LoadingAnimation {
         *guard = Some(text.to_string()); // Update the text value
     }
 
-    /// stops the loading animation
-    ///
-    /// this method sets the flag to stop the animation and waits for the animation thread to join
-    pub fn finish(&mut self) {
-        *self.should_stop.lock().unwrap() = true;
-        if let Some(handle) = self.handle.take() {
-            handle.join().unwrap();
-        }
-    }
-
     /// sets the color of the animation
     ///
     /// # Arguments
     ///
     /// * `color` - the color to set for the animation
-    pub fn set_animation_color(&self, color: Color) {
-        *self.animation_color.lock().unwrap() = color;
+    pub fn set_animation_color(&self, color: style::Color) {
+        let style = style::ContentStyle {
+            foreground_color: Some(color),
+            background_color: None,
+            underline_color: None,
+            attributes: style::Attributes::default(),
+        };
+
+        *self.animation_style.lock().unwrap() = style;
     }
 
     /// sets the color of the text
@@ -226,8 +223,78 @@ impl LoadingAnimation {
     /// # Arguments
     ///
     /// * `color` - the color to set for the text
-    pub fn set_text_color(&self, color: Color) {
-        *self.text_color.lock().unwrap() = color;
+    pub fn set_text_color(&self, color: style::Color) {
+        let style = style::ContentStyle {
+            foreground_color: Some(color),
+            background_color: None,
+            underline_color: None,
+            attributes: style::Attributes::default(),
+        };
+
+        *self.text_style.lock().unwrap() = style;
+    }
+
+    pub fn set_animation_style(&self, color: style::ContentStyle) {
+        *self.animation_style.lock().unwrap() = color;
+    }
+
+    pub fn set_text_style(&self, color: style::ContentStyle) {
+        *self.text_style.lock().unwrap() = color;
+    }
+
+    pub fn stop_and_discard(&mut self) {
+        self.finish();
+    }
+
+    /// stops the loading animation without clearing it from the console
+    ///
+    /// # Arguments
+    ///
+    /// * `spinner` - optional string slice (`&str`) representing the new spinner frame
+    /// * `text` - optional string slice (`&str`) representing the new text content to be displayed
+    /// * `text_color` - optional `ContentStyle` representing the color of the text
+    ///
+    /// if `spinner` is provided, it will replace the last spinner frame
+    /// if `text` is provided, it will replace the text field
+    /// if `text_color` is provided, it will set the color of the text
+    ///
+    /// The loading animation will be stopped after this method is called, but it won't be cleared from the console
+    pub fn stop_and_persist(
+        &mut self,
+        spinner: Option<&str>,
+        text: Option<&str>,
+        text_color: Option<style::ContentStyle>,
+    ) {
+
+        // set cleanup_on_exit to false
+        *self.cleanup_on_exit.lock().unwrap() = false;
+
+        if let Some(spinner_seq) = spinner {
+            *self.end_sequence.lock().unwrap() = Some(spinner_seq.to_string());
+        }
+
+        if let Some(text_seq) = text {
+            let mut guard = self.text.lock().unwrap();
+            *guard = Some(text_seq.to_string());
+        }
+
+        if let Some(color) = text_color {
+            *self.text_style.lock().unwrap() = color;
+        }
+
+
+        // Stop the animation
+        self.finish();
+    }
+
+    /// stops the loading animation
+    ///
+    /// this method sets the flag to stop the animation and waits for the animation thread to join
+    fn finish(&mut self) {
+        *self.should_stop.lock().unwrap() = true;
+        if let Some(handle) = self.handle.take() {
+            handle.join().unwrap();
+        }
     }
 }
 

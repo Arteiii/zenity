@@ -1,6 +1,7 @@
+use crossterm::style::SetStyle;
 use crossterm::{
     cursor, execute,
-    style::{Color, Print, ResetColor, SetForegroundColor},
+    style::{ContentStyle, Print, ResetColor},
     terminal,
 };
 use std::io::stdout;
@@ -15,8 +16,10 @@ pub fn spinner_animation(
     frames: &Frames,
     should_stop: Arc<Mutex<bool>>,
     text: Arc<Mutex<Option<String>>>,
-    animation_color: Arc<Mutex<Color>>,
-    text_color: Arc<Mutex<Color>>,
+    animation_style: Arc<Mutex<ContentStyle>>,
+    text_style: Arc<Mutex<ContentStyle>>,
+    end_sequence: Arc<Mutex<Option<String>>>,
+    cleanup_on_exit: Arc<Mutex<bool>>,
 ) {
     let mut frame_index = 0;
     let longest_frame_len = frames
@@ -26,7 +29,13 @@ pub fn spinner_animation(
         .max()
         .unwrap_or(0);
 
-    execute!(stdout(), cursor::Hide).unwrap(); // hide cursor
+    execute!(
+        stdout(),
+        terminal::Clear(terminal::ClearType::CurrentLine),
+        cursor::MoveToColumn(0),
+        cursor::Hide
+    )
+    .unwrap(); // hide cursor
 
     while !*should_stop.lock().unwrap() {
         let frame = &frames.frames[frame_index];
@@ -36,13 +45,12 @@ pub fn spinner_animation(
             stdout(),
             terminal::Clear(terminal::ClearType::CurrentLine),
             cursor::MoveToColumn(0),
-            SetForegroundColor(*animation_color.lock().unwrap()), // set animation color
+            SetStyle(*animation_style.lock().unwrap()), // set animation color
             Print(frame),
             Print("  "),
-            SetForegroundColor(*text_color.lock().unwrap()), // set text color
+            SetStyle(*text_style.lock().unwrap()), // set text color
             Print(text.lock().unwrap().as_ref().unwrap_or(&"".to_string())),
             ResetColor, // reset colors
-            Print("\r"),
         )
         .unwrap();
 
@@ -51,16 +59,38 @@ pub fn spinner_animation(
         frame_index = (frame_index + 1) % frames.frames.len();
     }
 
-    let clear_length = " ".repeat(longest_frame_len);
+    // print end sequence if provided
+    if let Some(end_seq) = &*end_sequence.lock().unwrap() {
+        execute!(
+            stdout(),
+            terminal::Clear(terminal::ClearType::CurrentLine),
+            cursor::MoveToColumn(0),
+            ResetColor,
+            Print(end_seq),
+            Print("  "),
+            SetStyle(*text_style.lock().unwrap()),
+            Print(text.lock().unwrap().as_ref().unwrap_or(&"".to_string())),
+            ResetColor,
+            Print("\n"),
+        )
+        .unwrap();
+    }
 
-    // clear the line after the animation finishes
+    if *cleanup_on_exit.lock().unwrap() {
+        let clear_length = " ".repeat(longest_frame_len);
+        // if cleanup active clear the line after the animation finishes
+        execute!(
+            stdout(),
+            terminal::Clear(terminal::ClearType::CurrentLine),
+            cursor::MoveToColumn(0),
+            Print(&clear_length),
+            Print("\r"),
+        )
+        .unwrap();
+    }
+
     execute!(
         stdout(),
-        terminal::Clear(terminal::ClearType::CurrentLine),
-        cursor::MoveToColumn(0),
-        Print(&clear_length),
-        Print("\r"),
         cursor::Show, // show cursor
-    )
-    .unwrap();
+    ).unwrap();
 }
