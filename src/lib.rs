@@ -6,13 +6,16 @@
 //! It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
 //!
 //! ```rust
-//! use zenity::{spinner::PreDefined, LoadingAnimation};
+//! // example/basic.rs
+//!
+//! use zenity::{spinner::PreDefined, LoadingAnimation, style::Color};
 //!
 //! fn scope_example() {
 //!     // create a LoadingAnimation instance using one of the predefined animations
-//!     let spinner = LoadingAnimation::new(PreDefined::dot_spinner1(false)); // invert frames bool (false)
+//!     let spinner = LoadingAnimation::default(); // invert frames bool (false)
 //!
 //!     spinner.set_text("Loading..."); // sets the text to "Loading..."
+//!     spinner.set_text_color(Color::DarkBlue);
 //!
 //!     // `loading_animation` will run out of scope now and get dropped,
 //!     // thus the animation will stop and remove itself from the console
@@ -28,20 +31,83 @@ use std::thread;
 use crate::animations::animation;
 
 pub use crate::animations::frames::spinner;
-pub use crossterm::style::Color;
+pub use crossterm::style;
 
 mod animations;
+mod helper;
 
-/// a simple loading animation that can be easily used with basic configurations
+// define helper functions for the cross-term colors
+pub use crate::helper::colors::combine_attributes;
+
+/// `LoadingAnimation` is a struct that provides a straightforward interface for creating and managing customizable loading animations.
 ///
-/// this struct provides a straightforward interface for creating and managing a loading animation
-/// it is suitable for common use cases where a basic loading animation is sufficient
+/// # Examples
+///
+/// ```
+/// use zenity::{spinner::PreDefined, LoadingAnimation};
+///
+/// // Create a loading animation instance using one of the predefined animations
+/// let spinner = LoadingAnimation::new(PreDefined::dot_spinner1(false));
+/// spinner.set_text("Loading..."); // Sets the text to "Loading..."
+/// ```
+///
+/// The `LoadingAnimation` struct offers various methods for customizing the loading animation:
+///
+/// - `new(frames: spinner::Frames) -> Self`: Creates a new `LoadingAnimation` instance with the specified frames for the animation
+/// - `set_text(text: &str)`: Sets the text content for the loading animation
+/// - `finish()`: Stops the loading animation
+/// - `set_animation_color(color: style::Color)`: Sets the color of the animation
+/// - `set_text_color(color: style::Color)`: Sets the color of the text
+/// - `set_animation_style(color: style::ContentStyle)`: Sets the style for the animation
+/// - `set_text_style(color: style::ContentStyle)`: Sets the style for the text
+///
+/// # Notes
+///
+/// The `LoadingAnimation` struct automatically stops the loading animation when it goes out of scope. However, you can explicitly call the `finish()` method to stop the animation at any time
+///
+/// # Thread Safety
+///
+/// `LoadingAnimation` is thread-safe and can be safely shared across multiple threads. It uses `Arc` and `Mutex` internally to ensure safe concurrent access to its fields
+///
+/// # Error Handling
+///
+/// Error handling is minimal in this struct. However, methods that may encounter errors (e.g., `set_text()`) return a `Result` type to handle potential errors gracefully
+///
+/// # Performance Considerations
+///
+/// While `LoadingAnimation` strives for efficiency, creating complex animations or frequently updating the animation's appearance may impact performance. Consider optimizing your usage based on performance requirements
 pub struct LoadingAnimation {
     should_stop: Arc<Mutex<bool>>,
     handle: Option<thread::JoinHandle<()>>,
     text: Arc<Mutex<Option<String>>>,
-    animation_color: Arc<Mutex<Color>>,
-    text_color: Arc<Mutex<Color>>,
+    end_sequence: Arc<Mutex<Option<String>>>,
+    animation_style: Arc<Mutex<style::ContentStyle>>,
+    text_style: Arc<Mutex<style::ContentStyle>>,
+    cleanup_on_exit: Arc<Mutex<bool>>,
+}
+
+impl Default for LoadingAnimation {
+    fn default() -> Self {
+        let animation_style = Arc::new(Mutex::new(style::ContentStyle {
+            foreground_color: Some(style::Color::White),
+            background_color: None,
+            underline_color: None,
+            attributes: style::Attributes::default(),
+        }));
+
+        let text_style = Arc::new(Mutex::new(style::ContentStyle {
+            foreground_color: Some(style::Color::White),
+            background_color: None,
+            underline_color: None,
+            attributes: style::Attributes::default(),
+        }));
+
+        Self::with_colors(
+            spinner::PreDefined::dot_spinner1(false),
+            animation_style,
+            text_style,
+        )
+    }
 }
 
 impl LoadingAnimation {
@@ -56,9 +122,12 @@ impl LoadingAnimation {
     ///
     /// a new `LoadingAnimation` instance
     pub fn new(frames: spinner::Frames) -> Self {
-        let animation_color = Arc::new(Mutex::new(Color::White));
-        let text_color = Arc::new(Mutex::new(Color::White));
-        Self::with_colors(frames, animation_color, text_color)
+        let default_animation = Self::default();
+        Self::with_colors(
+            frames,
+            Arc::clone(&default_animation.animation_style),
+            Arc::clone(&default_animation.text_style),
+        )
     }
 
     /// creates a new `LoadingAnimation` instance with specified colors and starts the loading animation
@@ -74,24 +143,30 @@ impl LoadingAnimation {
     /// a new `LoadingAnimation` instance with specified colors
     pub fn with_colors(
         frames: spinner::Frames,
-        animation_color_mutex: Arc<Mutex<Color>>,
-        text_color_mutex: Arc<Mutex<Color>>,
+        animation_style_mutex: Arc<Mutex<style::ContentStyle>>,
+        text_style_mutex: Arc<Mutex<style::ContentStyle>>,
     ) -> Self {
+        let cleanup_on_exit = Arc::new(Mutex::new(true));
         let should_stop = Arc::new(Mutex::new(false));
         let text = Arc::new(Mutex::new(None));
+        let end_sequence = Arc::new(Mutex::new(None));
 
         let should_stop_clone = Arc::clone(&should_stop);
         let text_clone = Arc::clone(&text);
-        let animation_color_clone = Arc::clone(&animation_color_mutex);
-        let text_color_clone = Arc::clone(&text_color_mutex);
+        let end_sequence_clone = Arc::clone(&end_sequence);
+        let animation_style_clone = Arc::clone(&animation_style_mutex);
+        let text_style_clone = Arc::clone(&text_style_mutex);
+        let cleanup_on_exit_clone = Arc::clone(&cleanup_on_exit);
 
         let handle = thread::spawn(move || {
             animation::spinner_animation(
                 &frames,
                 should_stop_clone,
                 text_clone,
-                animation_color_clone,
-                text_color_clone,
+                animation_style_clone,
+                text_style_clone,
+                end_sequence_clone,
+                cleanup_on_exit_clone,
             );
         });
 
@@ -99,8 +174,10 @@ impl LoadingAnimation {
             should_stop,
             handle: Some(handle),
             text,
-            animation_color: animation_color_mutex,
-            text_color: text_color_mutex,
+            animation_style: animation_style_mutex,
+            text_style: text_style_mutex,
+            end_sequence,
+            cleanup_on_exit,
         }
     }
 
