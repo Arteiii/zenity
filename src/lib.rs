@@ -28,7 +28,7 @@
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-use crate::animations::animation;
+use crate::animations::animation::Spinner;
 
 pub use crate::animations::frames::spinner;
 pub use crossterm::style;
@@ -158,16 +158,17 @@ impl LoadingAnimation {
         let text_style_clone = Arc::clone(&text_style_mutex);
         let cleanup_on_exit_clone = Arc::clone(&cleanup_on_exit);
 
-        let handle = thread::spawn(move || {
-            animation::spinner_animation(
-                &frames,
-                should_stop_clone,
-                text_clone,
-                animation_style_clone,
-                text_style_clone,
-                end_sequence_clone,
-                cleanup_on_exit_clone,
-            );
+        let spinner = Spinner::new(
+            frames,
+            should_stop_clone,
+            text_clone,
+            animation_style_clone,
+            text_style_clone,
+            end_sequence_clone,
+            cleanup_on_exit_clone,
+        );
+
+        let handle = thread::spawn(move || {spinner.run()
         });
 
         Self {
