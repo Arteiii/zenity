@@ -60,16 +60,16 @@ impl Spinner {
             .unwrap(); // hide cursor
 
         while !*self.should_stop.lock().unwrap() {
-            self.display_frame(&mut frame_index, longest_frame_len);
+            self.display_frame(&mut frame_index);
             thread::sleep(Duration::from_millis(self.frames.speed_ms));
         }
 
-        self.display_end_sequence(longest_frame_len);
+        self.display_end_sequence();
         self.cleanup(longest_frame_len);
     }
 
     /// Displays a frame of the spinner animation.
-    fn display_frame(&self, frame_index: &mut usize, longest_frame_len: usize) {
+    fn display_frame(&self, frame_index: &mut usize) {
         let frame = &self.frames.frames[*frame_index];
 
         execute!(
