@@ -1,0 +1,46 @@
+name: Compile Rust Examples and Upload to Release
+
+on:
+  push:
+    branches:
+      - '*'
+#    tags:
+#      - '*'
+
+jobs:
+  build:
+    name: Compile Examples
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - name: Compile Examples
+        run: |
+          cargo build --examples --release
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Compiled examples for Rust code.
+          draft: false
+          prerelease: false
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: examples
+          path: target/release/examples/*.exe
