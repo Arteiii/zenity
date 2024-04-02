@@ -66,6 +66,12 @@ impl Spinner {
 
         self.display_end_sequence();
         self.cleanup(longest_frame_len);
+
+        execute!(
+            stdout(),
+            cursor::Show, // show cursor
+        )
+        .unwrap();
     }
 
     /// displays a frame of the spinner animation
@@ -76,6 +82,7 @@ impl Spinner {
             stdout(),
             terminal::Clear(terminal::ClearType::CurrentLine),
             cursor::MoveToColumn(0),
+            cursor::Hide,
             SetStyle(*self.animation_style.lock().unwrap()), // set animation color
             Print(frame),
             Print("  "),
@@ -101,6 +108,7 @@ impl Spinner {
                 stdout(),
                 terminal::Clear(terminal::ClearType::CurrentLine),
                 cursor::MoveToColumn(0),
+                cursor::Hide,
                 ResetColor,
                 Print(end_seq),
                 Print("  "),
@@ -132,11 +140,5 @@ impl Spinner {
             )
             .unwrap();
         }
-
-        execute!(
-            stdout(),
-            cursor::Show, // show cursor
-        )
-        .unwrap();
     }
 }
