@@ -1,13 +1,14 @@
-use animations_rs::{
-    spinner::{Frames, PreDefined},
-    LoadingAnimation,
-};
 use std::thread::sleep;
 use std::time::Duration;
+use zenity::{
+    combine_attributes,
+    spinner::{Frames, PreDefined},
+    style::{Attribute, Color, ContentStyle},
+    LoadingAnimation,
+};
+use unicode_icons::symbols;
 
 fn main() {
-    scope_example();
-
     {
         // custom animations
         let custom_frames: Frames = Frames {
@@ -23,26 +24,50 @@ fn main() {
         // end!
     }
 
-    let spinner = LoadingAnimation::new(PreDefined::dot_spinner3(false));
+    let mut spinner = LoadingAnimation::new(PreDefined::dot_spinner3(false));
 
     spinner.set_text("Loading..."); // sets the text to "Loading..."
 
     sleep(Duration::from_secs(5));
 
-    spinner.set_text("MOREEEEEEE Loading..."); // overwrite text
+    // change colors during the animation
+    change_colors_during_animation(&mut spinner, Duration::from_secs(2));
+
+    let content_style = ContentStyle {
+        foreground_color: Some(Color::Green),
+        background_color: None,
+        underline_color: Some(Color::Green),
+        attributes: Attribute::Bold.into(),
+    };
+
+    spinner.stop_and_persist(Some(&symbols::check_mark_button()), Some(&"Successfully"), Some(content_style));
 
     sleep(Duration::from_secs(5));
 }
 
-fn scope_example() {
-    // create a LoadingAnimation instance using one of the predefined animations
-    let _loading_animation = LoadingAnimation::new(PreDefined::dot_spinner1(false));
+fn change_colors_during_animation(spinner: &mut LoadingAnimation, text_color_duration: Duration) {
+    spinner.set_text("MOREEEEEEE Loading... (but with color)"); // overwrite current text
 
-    // wait for 5 seconds to showcase the loading animation
-    sleep(Duration::from_secs(5));
+    // custom rgb color (50, 60, 70)
+    spinner.set_text_color(Color::Rgb { r: 255, g: 0, b: 0 });
+    sleep(text_color_duration);
 
-    // `loading_animation` will run out of scope now and get dropped,
-    // thus the animation will stop and remove itself from the console
-    // There might be issues with cleanup if there is any output during the animation
-    // (will try to fix this issue, tho I don't know how yet)
+    spinner.set_text("Styled Text and loading");
+
+    // custom style
+    let content_style = ContentStyle {
+        foreground_color: Some(Color::Yellow),
+        background_color: Some(Color::Blue),
+        underline_color: Some(Color::Green),
+        attributes: combine_attributes(&[
+            &Attribute::Bold,
+            &Attribute::Underlined,
+            &Attribute::Italic, // add another attribute here
+        ]),
+    };
+
+    spinner.set_animation_style(content_style);
+    sleep(text_color_duration);
+
+    // for more information, refer to the cross-term documentation (https://docs.rs/crossterm/latest/crossterm/style)
 }
