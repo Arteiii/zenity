@@ -1,6 +1,6 @@
 # zenity (Yet Another Spinner Lib)
 
-![](./images/WindowsTerminal_ZlTLEYK249.gif)
+![preview gif](./images/WindowsTerminal_ZlTLEYK249.gif)
 
 easy to use cli animation lib based on crossterm
 
@@ -80,4 +80,4 @@ This project is licensed under the **DWFYW** License.
 
 For more information, see the [LICENSE](LICENSE.md) file.
 
-**Copyright (c) 2024 Ben**
+### Copyright (c) 2024 Ben
