@@ -30,16 +30,16 @@ fn main() {
 
 fn scope_example() {
     // create a LoadingAnimation instance using one of the predefined animations
-    let spinner = LoadingAnimation::default(); // invert frames bool (false)
+    let spinner = LoadingAnimation::default();
 
+    // optional:
     spinner.set_text("Loading..."); // sets the text to "Loading..."
-    spinner.set_text_color(Color::DarkBlue);
+    spinner.set_text_color(Color::DarkBlue); // set the color
 
     sleep(Duration::from_secs(5));
     // `loading_animation` will run out of scope now and get dropped,
     // thus the animation will stop and remove itself from the console
 }
-
 ```
 
 check out the examples for more
