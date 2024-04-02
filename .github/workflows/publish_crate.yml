@@ -3,7 +3,7 @@ name: Update Cargo.toml Version and Publish to Crates
 on:
   push:
     tags:
-      - '*'
+      - "*.*.*"
 
 jobs:
   update_and_publish:
