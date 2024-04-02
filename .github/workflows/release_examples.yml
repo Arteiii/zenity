@@ -33,12 +33,16 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            Compiled examples for Rust code.
+            Compiled examples
           draft: false
           prerelease: false
+
+      - name: Find Example Executables
+        run: |
+          find target/release/examples -type f -name "*.exe" -exec mv {} ./ \;
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: examples
-          path: target/release/examples/*.exe
+          path: ./*.exe
