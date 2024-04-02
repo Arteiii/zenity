@@ -27,7 +27,7 @@ jobs:
       - name: Upload to Release
         uses: actions/upload-artifact@v2
         with:
-          name: lib-artifact
+          name: examples_windows-artifact
           path: |
             target/release/examples/main.exe
             target/release/examples/basic.exe
@@ -55,7 +55,7 @@ jobs:
       - name: Upload to Release
         uses: actions/upload-artifact@v2
         with:
-          name: lib-artifact
+          name: examples_unix-artifact
           path: |
             target/release/examples/main
             target/release/examples/basic
@@ -79,8 +79,14 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
-          name: examples-artifact
-          path: x64/Release
+          name: examples_windows-artifact
+          path: examples/windows
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: examples_unix-artifact
+          path: examples/unix
 
       - name: Create Release
         id: create_release
@@ -89,6 +95,6 @@ jobs:
           tag_name: ${{ env.TAG }}
           name: "Release ${{ env.TAG }}"
           files: |
-            x64/Release/*
+            examples/*
           token: ${{ secrets.GITHUB_TOKEN }}
           append_body: true
