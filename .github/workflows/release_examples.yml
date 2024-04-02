@@ -2,52 +2,68 @@ name: Compile Rust Examples and Upload to Release
 
 on:
   push:
-    tags:
+    branches:
       - '*'
 
 jobs:
-  build:
-    name: Compile Examples
+  build_windows:
+    name: Compile Examples for Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Rust for Windows
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: x86_64-pc-windows-msvc
+
+      - name: Compile Examples for Windows
+        run: cargo build --examples --release
+
+      - name: Move Windows Executables
+        run: |
+          mkdir -p windows
+          mv target/release/examples/main.exe windows/
+          mv target/release/examples/basic.exe windows/
+          mv target/release/examples/all.exe windows/
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: examples-windows
+          path: windows/
+
+  build_unix:
+    name: Compile Examples for Unix
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Setup Rust
+      - name: Setup Rust for Unix
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
+          target: x86_64-unknown-linux-gnu
 
-      - name: Compile Examples
+      - name: Compile Examples for Unix
+        run: cargo build --examples --release
+
+      - name: Move Unix Executables
         run: |
-          cargo build --examples --release
+          mkdir -p unix
+          mv target/release/examples/main unix/
+          mv target/release/examples/basic unix/
+          mv target/release/examples/all unix/
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Compiled examples
-          draft: false
-          prerelease: false
-
-      - name: debug
-        run: |
-          cd target/release/examples
-          ls
-
-      - name: Find Example Executables
-        run: |
-          find target/release/examples -type f -exec mv {} ./ \;
-
-      - name: Upload Artifact
+      - name: Upload Unix Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: examples
-          path: ./*.exe
+          name: examples-unix
+          path: unix/
