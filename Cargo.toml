@@ -16,3 +16,6 @@ homepage = "https://arteiii.github.io"
 
 [dependencies]
 crossterm = "0.27.0"
+
+[dev-dependencies]
+unicode-icons = "1.0.0"

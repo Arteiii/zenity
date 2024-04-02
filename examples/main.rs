@@ -6,6 +6,7 @@ use zenity::{
     style::{Attribute, Color, ContentStyle},
     LoadingAnimation,
 };
+use unicode_icons::symbols;
 
 fn main() {
     {
@@ -39,7 +40,7 @@ fn main() {
         attributes: Attribute::Bold.into(),
     };
 
-    spinner.stop_and_persist(Some("\u{2705}"), Some(&"Successfully"), Some(content_style));
+    spinner.stop_and_persist(Some(&symbols::check_mark_button()), Some(&"Successfully"), Some(content_style));
 
     sleep(Duration::from_secs(5));
 }
