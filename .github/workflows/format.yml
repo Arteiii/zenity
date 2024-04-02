@@ -1,0 +1,41 @@
+name: Format Code and Push Changes
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format_and_push:
+    name: Format Code and Push Changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Rust
+        uses: moonrepo/setup-rust@v1
+        with:
+          toolchain: stable
+
+      - name: Install cargo-edit
+        run: cargo install cargo-edit
+
+      - name: Format Code
+        run: cargo fmt -- --check
+
+      - name: Lint Code
+        run: cargo clippy --all -- -D warnings
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Format code using cargo fmt and lint using cargo clippy"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
