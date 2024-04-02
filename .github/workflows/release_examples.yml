@@ -6,61 +6,89 @@ on:
       - main
 
 jobs:
-  build_and_upload:
-    name: Compile Examples and Upload to Release
+  build_windows:
+    name: Compile Examples for Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Rust for Windows
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: x86_64-pc-windows-msvc
+
+      - name: Compile Examples for Windows
+        run: cargo build --examples --release
+
+      - name: Upload to Release
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib-artifact
+          path: |
+            target/release/examples/main.exe
+            target/release/examples/basic.exe
+            target/release/examples/all.exe
+
+
+  build_unix:
+    name: Compile Examples for Unix
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Setup Rust
+      - name: Setup Rust for Unix
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
-
-      - name: Compile Examples for Windows
-        run: |
-          cargo build --examples --release --target x86_64-pc-windows-msvc
-          mkdir -p windows
-          mv target/release/examples/*.exe windows/
+          target: x86_64-unknown-linux-gnu
 
       - name: Compile Examples for Unix
+        run: cargo build --examples --release
+
+      - name: Upload to Release
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib-artifact
+          path: |
+            target/release/examples/main
+            target/release/examples/basic
+            target/release/examples/all
+
+  release:
+    needs: [build_windows, build_unix]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: git fetch --tags
+
+      - name: Display release version
         run: |
-          cargo build --examples --release --target x86_64-unknown-linux-gnu
-          mkdir -p unix
-          mv target/release/examples/* unix/
+          echo "Release version: ${{ env.TAG }}"
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: examples-artifact
+          path: x64/Release
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Windows Artifact
-        id: upload-release-asset_windows
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: windows/
-          asset_name: examples-windows
-          asset_content_type: application/octet-stream
-
-      - name: Upload Unix Artifact
-        id: upload-release-asset_unix
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: unix/
-          asset_name: examples-unix
-          asset_content_type: application/octet-stream
+          tag_name: ${{ env.TAG }}
+          name: "Release ${{ env.TAG }}"
+          files: |
+            x64/Release/*
+          token: ${{ secrets.GITHUB_TOKEN }}
+          append_body: true
