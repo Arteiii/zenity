@@ -1,0 +1,48 @@
+name: Update Cargo.toml Version and Publish to Crates
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  update_and_publish:
+    name: Update Cargo.toml Version and Publish to Crates
+    runs-on: ubuntu-latest
+    environment: crates
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Rust
+        uses: moonrepo/setup-rust@v1
+
+      - name: Format Code
+        run: cargo fmt --all -- --check
+
+      - name: Lint Code
+        run: cargo clippy --all -- -D warnings
+
+      - name: Update Cargo.toml Version
+        run: |
+          VERSION=$(echo "${GITHUB_REF#refs/tags/}")
+          sed -i'' -e "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          if ! git diff --quiet; then
+            git commit -am "Bump version to $VERSION"
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Cargo and Publish
+        run: cargo publish --token ${CRATES_TOKEN}
+        env:
+          CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
