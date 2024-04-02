@@ -37,9 +37,14 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: debug
+        run: |
+          cd target/release/examples
+          ls
+
       - name: Find Example Executables
         run: |
-          find target/release/examples -type f -name "*.exe" -exec mv {} ./ \;
+          find target/release/examples -type f -exec mv {} ./ \;
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
