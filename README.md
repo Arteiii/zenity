@@ -1,5 +1,7 @@
 # zenity (Yet Another Spinner Lib)
 
+![](./images/WindowsTerminal_ZlTLEYK249.gif)
+
 easy to use cli animation lib based on crossterm
 
 Do you often find yourself gazing into the void of your terminal, wondering if your computer has decided to take a coffee break without notifying you?
@@ -74,6 +76,8 @@ These projects not only provided delightful animations but also spared me from t
 
 ## License
 
-This project is licensed under the **`DWFYW`** License.
+This project is licensed under the **DWFYW** License.
 
 For more information, see the [LICENSE](LICENSE.md) file.
+
+**Copyright (c) 2024 Ben**

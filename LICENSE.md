@@ -1,6 +1,9 @@
 # The "Do Whatever (the) F*** You Want" License
 
+Copyright (c) 2024 Ben
+
 This software is licensed under the "Do Whatever the F*** You Want" License.
+
 
 ## TL;DR
 
