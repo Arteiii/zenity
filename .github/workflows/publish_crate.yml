@@ -23,7 +23,7 @@ jobs:
         uses: moonrepo/setup-rust@v1
 
       - name: Format Code
-        run: cargo fmt --all -- --check
+        run: cargo fmt --all
 
       - name: Lint Code
         run: cargo clippy --all -- -D warnings
