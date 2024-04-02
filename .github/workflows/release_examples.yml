@@ -2,10 +2,8 @@ name: Compile Rust Examples and Upload to Release
 
 on:
   push:
-    branches:
+    tags:
       - '*'
-#    tags:
-#      - '*'
 
 jobs:
   build:
