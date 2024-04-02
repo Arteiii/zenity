@@ -95,6 +95,7 @@ jobs:
           tag_name: ${{ env.TAG }}
           name: "Release ${{ env.TAG }}"
           files: |
-            examples/*
+            examples/unix/*
+            examples/windows/*
           token: ${{ secrets.GITHUB_TOKEN }}
           append_body: true
