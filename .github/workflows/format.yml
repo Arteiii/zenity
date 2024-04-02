@@ -30,10 +30,15 @@ jobs:
 
       - name: Commit changes
         run: |
+          VERSION=$(echo "${GITHUB_REF#refs/tags/}")
+          sed -i'' -e "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Format code using cargo fmt and lint using cargo clippy"
+          if ! git diff --quiet; then
+            git commit -am "Format code using cargo fmt and lint using cargo clippy"
+          else
+            echo "No changes to commit"
+          fi
 
       - name: Push changes
         uses: ad-m/github-push-action@master
