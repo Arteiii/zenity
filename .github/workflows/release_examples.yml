@@ -3,36 +3,37 @@ name: Compile Rust Examples and Upload to Release
 on:
   push:
     branches:
-      - '*'
+      - main
 
 jobs:
-  build_windows:
-    name: Compile Examples for Windows
-    runs-on: windows-latest
+  build_and_upload:
+    name: Compile Examples and Upload to Release
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Setup Rust for Windows
+      - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
-          target: x86_64-pc-windows-msvc
 
       - name: Compile Examples for Windows
-        run: cargo build --examples --release
-
-      - name: Move Windows Executables
         run: |
+          cargo build --examples --release --target x86_64-pc-windows-msvc
           mkdir -p windows
-          mv target/release/examples/main.exe windows/
-          mv target/release/examples/basic.exe windows/
-          mv target/release/examples/all.exe windows/
+          mv target/release/examples/*.exe windows/
+
+      - name: Compile Examples for Unix
+        run: |
+          cargo build --examples --release --target x86_64-unknown-linux-gnu
+          mkdir -p unix
+          mv target/release/examples/* unix/
 
       - name: Create Release
-        id: create_release_windows
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,46 +49,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release_windows.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: windows/
           asset_name: examples-windows
           asset_content_type: application/octet-stream
-
-  build_unix:
-    name: Compile Examples for Unix
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Setup Rust for Unix
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: x86_64-unknown-linux-gnu
-
-      - name: Compile Examples for Unix
-        run: cargo build --examples --release
-
-      - name: Move Unix Executables
-        run: |
-          mkdir -p unix
-          mv target/release/examples/main unix/
-          mv target/release/examples/basic unix/
-          mv target/release/examples/all unix/
-
-      - name: Create Release
-        id: create_release_unix
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
 
       - name: Upload Unix Artifact
         id: upload-release-asset_unix
@@ -95,7 +60,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release_unix.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: unix/
           asset_name: examples-unix
           asset_content_type: application/octet-stream
