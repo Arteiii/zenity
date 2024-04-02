@@ -30,8 +30,6 @@ jobs:
 
       - name: Commit changes
         run: |
-          VERSION=$(echo "${GITHUB_REF#refs/tags/}")
-          sed -i'' -e "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           if ! git diff --quiet; then
