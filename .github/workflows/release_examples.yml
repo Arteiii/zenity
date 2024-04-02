@@ -32,7 +32,7 @@ jobs:
           mv target/release/examples/all.exe windows/
 
       - name: Create Release
-        id: create_release
+        id: create_release_windows
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,12 +43,12 @@ jobs:
           prerelease: false
 
       - name: Upload Windows Artifact
-        id: upload-release-asset
+        id: upload-release-asset_windows
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release_windows.outputs.upload_url }}
           asset_path: windows/
           asset_name: examples-windows
           asset_content_type: application/octet-stream
@@ -78,13 +78,24 @@ jobs:
           mv target/release/examples/basic unix/
           mv target/release/examples/all unix/
 
+      - name: Create Release
+        id: create_release_unix
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
       - name: Upload Unix Artifact
-        id: upload-release-asset
+        id: upload-release-asset_unix
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release_unix.outputs.upload_url }}
           asset_path: unix/
           asset_name: examples-unix
           asset_content_type: application/octet-stream
