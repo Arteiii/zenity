@@ -31,11 +31,27 @@ jobs:
           mv target/release/examples/basic.exe windows/
           mv target/release/examples/all.exe windows/
 
-      - name: Upload Windows Artifact
-        uses: actions/upload-artifact@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: examples-windows
-          path: windows/
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Windows Artifact
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: windows/
+          asset_name: examples-windows
+          asset_content_type: application/octet-stream
 
   build_unix:
     name: Compile Examples for Unix
@@ -63,7 +79,12 @@ jobs:
           mv target/release/examples/all unix/
 
       - name: Upload Unix Artifact
-        uses: actions/upload-artifact@v2
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: examples-unix
-          path: unix/
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: unix/
+          asset_name: examples-unix
+          asset_content_type: application/octet-stream
