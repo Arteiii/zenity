@@ -36,12 +36,12 @@
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-use crate::animations::Spinner;
+use crate::animations::animation::Spinner;
 
 pub use crate::animations::frames::spinner;
 pub use crossterm::style;
 
-mod animations;
+pub mod animations;
 mod helper;
 
 // define helper functions for the cross-term colors
@@ -154,6 +154,7 @@ impl LoadingAnimation {
         animation_style_mutex: Arc<Mutex<style::ContentStyle>>,
         text_style_mutex: Arc<Mutex<style::ContentStyle>>,
     ) -> Self {
+        let frames = Arc::new(Mutex::new(frames));
         let cleanup_on_exit = Arc::new(Mutex::new(true));
         let should_stop = Arc::new(Mutex::new(false));
         let text = Arc::new(Mutex::new(None));
