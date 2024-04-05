@@ -18,7 +18,7 @@ Do you often find yourself gazing into the void of your terminal, wondering if y
 
 81+ predefined animations
 
-[List Of Animations](https://docs.rs/zenity/1.0.3/zenity/spinner/struct.PreDefined.html)
+[List Of Animations](https://docs.rs/zenity/latest/zenity/animations/frames/spinner/struct.PreDefined.html)
 
 
 ## Introducing
