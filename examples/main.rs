@@ -1,6 +1,6 @@
 use std::thread::sleep;
 use std::time::Duration;
-use unicode_icons::symbols;
+use unicode_icons::icons::symbols;
 use zenity::{
     combine_attributes,
     spinner::{Frames, PreDefined},

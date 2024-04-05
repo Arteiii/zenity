@@ -238,9 +238,9 @@ dependencies = [
 
 [[package]]
 name = "unicode-icons"
-version = "1.0.1"
+version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89c13b079e3553b48fb0ac71561aafb8a8778a69a6aa042c8d545f47dc3b870d"
+checksum = "240289698a1f14e1f93e94637587d48fa843eb67dc0c23306b47675c8b07f00e"
 
 [[package]]
 name = "unicode-ident"
