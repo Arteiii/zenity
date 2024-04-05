@@ -146,6 +146,11 @@ impl Spinner {
                 Print("\r"),
             )
             .unwrap();
+        } else {
+            execute!(
+                stdout(),
+                Print("\n"),
+            ).unwrap();
         }
     }
 }
