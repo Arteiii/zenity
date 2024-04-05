@@ -3,8 +3,8 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-use crossterm::style::{ContentStyle, Print, ResetColor, SetStyle};
 use crossterm::{cursor, execute, terminal};
+use crossterm::style::{ContentStyle, Print, ResetColor, SetStyle};
 
 use super::frames::spinner::Frames;
 
@@ -147,10 +147,7 @@ impl Spinner {
             )
             .unwrap();
         } else {
-            execute!(
-                stdout(),
-                Print("\n"),
-            ).unwrap();
+            execute!(stdout(), Print("\n"),).unwrap();
         }
     }
 }
