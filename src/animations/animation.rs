@@ -3,8 +3,8 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-use crossterm::{cursor, execute, terminal};
 use crossterm::style::{ContentStyle, Print, ResetColor, SetStyle};
+use crossterm::{cursor, execute, terminal};
 
 use super::frames::spinner::Frames;
 

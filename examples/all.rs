@@ -96,7 +96,8 @@ fn main() {
     test_predefined_animation!(PreDefined::aesthetic_spin(false), "aesthetic_spin");
     test_predefined_animation!(PreDefined::aesthetic_load(false), "aesthetic_load");
     test_predefined_animation!(PreDefined::clock(false), "clock");
-    test_predefined_animation!(PreDefined::bouncing_bar(false), "bouncing_bar");
+    test_predefined_animation!(PreDefined::small_bouncing_bar(false), "small_bouncing_bar");
+    test_predefined_animation!(PreDefined::small_loading_bar(false), "small_loading_bar");
     test_predefined_animation!(PreDefined::material(false), "material");
     test_predefined_animation!(PreDefined::arrow_spinn(false), "arrow_spinn");
     test_predefined_animation!(PreDefined::line_spinner(false), "line_spinner");
