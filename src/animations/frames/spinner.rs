@@ -162,7 +162,7 @@ impl PreDefined {
     }
 
     /// [=   ]  [ ===]  [==  ]
-    pub fn bouncing_bar(inverted: bool) -> Frames {
+    pub fn small_bouncing_bar(inverted: bool) -> Frames {
         let pattern = vec![
             "[    ]", "[=   ]", "[==  ]", "[=== ]", "[ ===]", "[  ==]", "[   =]", "[    ]",
             "[   =]", "[  ==]", "[ ===]", "[====]", "[=== ]", "[==  ]", "[=   ]",
@@ -171,6 +171,13 @@ impl PreDefined {
     }
 
     /// [=   ]  [ ===]  [==  ]
+    pub fn small_loading_bar(inverted: bool) -> Frames {
+        let pattern = vec![
+            "[    ]", "[=   ]", "[==  ]", "[=== ]", "[ ===]", "[  ==]", "[   =]",
+        ];
+        Self::generate_frames(pattern, inverted, 80)
+    }
+
     pub fn loading_bar_with_arrow(inverted: bool) -> Frames {
         let pattern = vec![
             "[                    ]",
@@ -188,7 +195,6 @@ impl PreDefined {
         ];
         Self::generate_frames(pattern, inverted, 100)
     }
-    /// [=   ]  [ ===]  [==  ]
     pub fn short_loading_bar_with_arrow(inverted: bool) -> Frames {
         let pattern = vec![
             "[>        >>>]",
@@ -764,7 +770,8 @@ impl PreDefined {
     }
     pub fn mind_blown(inverted: bool) -> Frames {
         let pattern = vec![
-            "😐 ", "😐 ", "😮 ", "😮 ", "😦 ", "😦 ", "😧 ", "😧 ", "🤯 ", "🤯 ","💥 ", "💥 ","✨ ",
+            "😐 ", "😐 ", "😮 ", "😮 ", "😦 ", "😦 ", "😧 ", "😧 ", "🤯 ", "🤯 ", "💥 ", "💥 ",
+            "✨ ",
         ];
         Self::generate_frames(pattern, inverted, 280)
     }
@@ -773,5 +780,4 @@ impl PreDefined {
         let pattern = vec!["🔈 ", "🔉 ", "🔊 ", "🔉 "];
         Self::generate_frames(pattern, inverted, 200)
     }
-    
 }
