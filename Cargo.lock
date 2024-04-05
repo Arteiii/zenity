@@ -161,9 +161,9 @@ checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
 
 [[package]]
 name = "unicode-icons"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ddb33fa36f54270a1f3a498f12a763e2a44e49102641e8e42e5a2085c72d1eaa"
+checksum = "89c13b079e3553b48fb0ac71561aafb8a8778a69a6aa042c8d545f47dc3b870d"
 
 [[package]]
 name = "wasi"

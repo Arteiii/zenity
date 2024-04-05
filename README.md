@@ -6,6 +6,11 @@ easy to use cli animation lib based on crossterm
 
 Do you often find yourself gazing into the void of your terminal, wondering if your computer has decided to take a coffee break without notifying you?
 
+81+ predefined animations
+
+[List Of Animations](https://docs.rs/zenity/1.0.3/zenity/spinner/struct.PreDefined.html)
+
+
 ## Introducing
 
 After countless late nights (1) spent wrestling with terminal buffers and ASCII art,
