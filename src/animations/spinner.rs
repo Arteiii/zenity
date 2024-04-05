@@ -1,11 +1,11 @@
 use std::collections::HashMap;
-use std::io::{stdout};
+use std::io::stdout;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-use crossterm::{cursor, execute, terminal};
 use crossterm::style::Print;
+use crossterm::{cursor, execute, terminal};
 use rand::Rng;
 use utils_arteii_rs::vector_operations::iterators;
 
@@ -71,7 +71,6 @@ impl MultiSpinner {
         }
     }
 
-
     pub fn run_all(&mut self) {
         let spinners = Arc::clone(&self.spinner);
 
@@ -127,7 +126,7 @@ impl MultiSpinner {
             .zip(should_stop.iter())
             .filter_map(|((frame, text), should_stop)| {
                 if *should_stop {
-                    Some(format!("{}",text))
+                    Some(format!("{}", text))
                 } else {
                     if let Some(frame) = frame {
                         Some(format!("{}  {}", frame, text))

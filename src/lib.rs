@@ -46,7 +46,6 @@ mod helper;
 
 pub use animations::spinner as multi_spinner;
 
-
 // define helper functions for the cross-term colors
 pub use crate::helper::colors::combine_attributes;
 

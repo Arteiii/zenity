@@ -18,8 +18,15 @@ macro_rules! test_predefined_animation {
 }
 
 fn main() {
+    test_predefined_animation!(
+        PreDefined::short_loading_bar_with_arrow(false),
+        "short_loading_bar_with_arrow"
+    );
+    test_predefined_animation!(
+        PreDefined::loading_bar_with_arrow(false),
+        "loading_bar_with_arrow"
+    );
     test_predefined_animation!(PreDefined::speaker(false), "speaker");
-
     test_predefined_animation!(PreDefined::finger_dance(false), "finger_dance");
     test_predefined_animation!(PreDefined::fist_bump(false), "fist_bump");
     test_predefined_animation!(PreDefined::mind_blown(false), "mind_blown");
@@ -79,14 +86,6 @@ fn main() {
     test_predefined_animation!(PreDefined::wall_bounce(false), "wall_bounce");
     test_predefined_animation!(PreDefined::earth(false), "earth");
     test_predefined_animation!(PreDefined::arrow_row(false), "arrow_row");
-    test_predefined_animation!(
-        PreDefined::short_loading_bar_with_arrow(false),
-        "short_loading_bar_with_arrow"
-    );
-    test_predefined_animation!(
-        PreDefined::loading_bar_with_arrow(false),
-        "loading_bar_with_arrow"
-    );
     test_predefined_animation!(PreDefined::block(false), "block");
     test_predefined_animation!(PreDefined::block_spinn(false), "block_spinn");
     test_predefined_animation!(PreDefined::line(false), "line");
