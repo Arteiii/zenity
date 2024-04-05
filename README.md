@@ -3,10 +3,8 @@
 Elevate your Rust command-line interfaces with 81+ spinner animations and multiline support
 
 [![Publish to Crates](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml)
-[![Compile Rust and Upload to Release](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml)
-
+[![Compile Rust](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml)
 ![Crates.io Version](https://img.shields.io/crates/v/zenity)
-![Crates.io License](https://img.shields.io/crates/l/zenity)
 ![docs.rs](https://img.shields.io/docsrs/zenity)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/arteiii/zenity/badge)](https://www.codefactor.io/repository/github/arteiii/zenity)
