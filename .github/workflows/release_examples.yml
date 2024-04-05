@@ -1,4 +1,4 @@
-name: Compile Rust Examples and Upload to Release
+name: Compile Rust
 
 on:
   push:

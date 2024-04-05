@@ -8,7 +8,7 @@ readme = "README.md"
 categories = ["command-line-utilities", "command-line-interface"]
 
 
-description = "easy to use cli animation lib (Yet Another Spinner Lib ) 81+ predefined"
+description = "Elevate your Rust command-line interfaces with 81+ spinner animations and multiline support (Yet Another Spinner Lib)"
 repository = "https://github.com/Arteiii/zenity"
 keywords = ["console", "animations", "cli", "spinner", "loading"]
 homepage = "https://arteiii.github.io"
@@ -16,6 +16,8 @@ homepage = "https://arteiii.github.io"
 
 [dependencies]
 crossterm = "0.27.0"
+utils_arteii_rs = "0.1.0"
+rand = "0.9.0-alpha.1"
 
 [dev-dependencies]
 unicode-icons = "1.0.1"

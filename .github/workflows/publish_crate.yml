@@ -1,4 +1,4 @@
-name: Update Cargo.toml Version and Publish to Crates
+name: Publish to Crates
 
 on:
   push:
