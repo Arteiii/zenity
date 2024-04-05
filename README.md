@@ -1,5 +1,15 @@
 # zenity (Yet Another Spinner Lib)
 
+[![Publish to Crates](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml)
+[![Compile Rust and Upload to Release](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml)
+
+[![CodeFactor](https://www.codefactor.io/repository/github/arteiii/zenity/badge)](https://www.codefactor.io/repository/github/arteiii/zenity)
+
+
+![Crates.io Version](https://img.shields.io/crates/v/zenity)
+![Crates.io License](https://img.shields.io/crates/l/zenity)
+![docs.rs](https://img.shields.io/docsrs/zenity)
+
 ![preview gif](./images/WindowsTerminal_ZlTLEYK249.gif)
 
 easy to use cli animation lib based on crossterm
