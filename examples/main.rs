@@ -42,7 +42,7 @@ fn main() {
 
     spinner.stop_and_persist(
         Some(&symbols::check_mark_button()),
-        Some(&"Successfully"),
+        Some("Successfully"),
         Some(content_style),
     );
 

@@ -24,6 +24,12 @@ pub struct MultiSpinner {
     // index: usize,
 }
 
+impl Default for MultiSpinner {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MultiSpinner {
     pub fn new() -> Self {
         MultiSpinner {
@@ -66,7 +72,7 @@ impl MultiSpinner {
 
     /// stops a spinner if the uid is invalid this does nothing
     pub fn stop(&self, uid: &usize) {
-        if let Some(spinner) = self.spinner.lock().unwrap().get(&uid) {
+        if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
             *spinner.should_stop.lock().unwrap() = true;
         }
     }
@@ -86,7 +92,7 @@ impl MultiSpinner {
                 for (_, spinner) in spinners.lock().unwrap().iter() {
                     let frames = spinner.frames.lock().unwrap().frames.clone();
                     let text = spinner.text.lock().unwrap().clone();
-                    let should_stop = spinner.should_stop.lock().unwrap().clone();
+                    let should_stop = *spinner.should_stop.lock().unwrap();
                     all_should_stop.push(should_stop);
                     all_frames.push(frames);
                     all_texts.push(text);
@@ -126,13 +132,9 @@ impl MultiSpinner {
             .zip(should_stop.iter())
             .filter_map(|((frame, text), should_stop)| {
                 if *should_stop {
-                    Some(format!("{}", text))
+                    Some(text.to_string())
                 } else {
-                    if let Some(frame) = frame {
-                        Some(format!("{}  {}", frame, text))
-                    } else {
-                        None
-                    }
+                    frame.as_ref().map(|frame| format!("{}  {}", frame, text))
                 }
             })
             .collect::<Vec<String>>()

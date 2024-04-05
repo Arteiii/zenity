@@ -10,7 +10,7 @@ fn main() {
     let check_mark_text = check_mark_button();
     let cross_mark_text = cross_mark();
 
-    let mut spinner = MultiSpinner::new();
+    let mut spinner = MultiSpinner::default();
 
     // main thread operations
     let spinner1 = spinner.add(PreDefined::dot_spinner11(false));

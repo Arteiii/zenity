@@ -35,4 +35,4 @@ This is a casual license agreement between you (the User) and the developer (tha
 We hope this license brings a smile to your face and a sense of freedom to your heart.  
 Now go forth, brave adventurer, and make some magic happen!
 
-i don't even know if licenses work like this, anyway do what ever you want with it dont sue me tho (Please)
+I don't even know if licenses work like this, anyway do what ever you want with it, don't sue me tho (Please)
