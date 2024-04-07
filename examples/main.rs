@@ -41,7 +41,7 @@ fn main() {
     };
 
     spinner.stop_and_persist(
-        Some(&symbols::check_mark_button()),
+        Some(&symbols::check_mark_button().to_string()),
         Some("Successfully"),
         Some(content_style),
     );
