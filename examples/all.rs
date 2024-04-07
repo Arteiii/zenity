@@ -20,10 +20,13 @@ macro_rules! test_predefined_animation {
 fn main() {
     // new:
     test_predefined_animation!(PreDefined::dwarf_fortress(false), "dwarf_fortress");
-    
+
     test_predefined_animation!(PreDefined::matrix_glitch(false), "matrix_glitch");
     test_predefined_animation!(PreDefined::matrix_glitch2(false), "matrix_glitch2");
-    test_predefined_animation!(PreDefined::matrix_glitch2_small(false), "matrix_glitch2_small");
+    test_predefined_animation!(
+        PreDefined::matrix_glitch2_small(false),
+        "matrix_glitch2_small"
+    );
     test_predefined_animation!(PreDefined::layer(false), "layer");
     test_predefined_animation!(PreDefined::soccer(false), "soccer");
     test_predefined_animation!(PreDefined::wavy(false), "wavy");
@@ -31,7 +34,7 @@ fn main() {
     test_predefined_animation!(PreDefined::wavy3(false), "wavy3");
     test_predefined_animation!(PreDefined::wavy4(false), "wavy4");
     test_predefined_animation!(PreDefined::pray(false), "pray");
-    
+
     test_predefined_animation!(PreDefined::red_pulse(false), "red_pulse");
     test_predefined_animation!(PreDefined::dot_bounce2(false), "dot_bounce2");
     test_predefined_animation!(PreDefined::dot_box(false), "dot_box");
@@ -42,8 +45,7 @@ fn main() {
     test_predefined_animation!(PreDefined::blue_pulse(false), "blue_pulse");
     test_predefined_animation!(PreDefined::green_pulse(false), "green_pulse");
     test_predefined_animation!(PreDefined::other(false), "other");
-    
-    
+
     test_predefined_animation!(
         PreDefined::short_loading_bar_with_arrow(false),
         "short_loading_bar_with_arrow"

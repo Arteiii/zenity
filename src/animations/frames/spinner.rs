@@ -899,7 +899,7 @@ impl PreDefined {
             "βββρβββ",
             "ββββρββ",
             "βββββρβ",
-            "ββββββρ"
+            "ββββββρ",
         ];
         Self::generate_frames(pattern, inverted, 100)
     }
@@ -916,17 +916,14 @@ impl PreDefined {
             "🧑     ⚽️   🧑 ",
             "🧑    ⚽️    🧑 ",
             "🧑   ⚽️     🧑 ",
-            "🧑  ⚽️      🧑 "
+            "🧑  ⚽️      🧑 ",
         ];
         Self::generate_frames(pattern, inverted, 80)
     }
     pub fn layer(inverted: bool) -> Frames {
-        let pattern = vec![
-            "-", "=", "≡"
-        ];
+        let pattern = vec!["-", "=", "≡"];
         Self::generate_frames(pattern, inverted, 250)
     }
-
 
     pub fn matrix_glitch(inverted: bool) -> Frames {
         let pattern = vec![
@@ -943,7 +940,6 @@ impl PreDefined {
         ];
         Self::generate_frames(pattern, inverted, 100)
     }
-
 
     pub fn matrix_glitch2(inverted: bool) -> Frames {
         let pattern = vec![
@@ -976,7 +972,7 @@ impl PreDefined {
         ];
         Self::generate_frames(pattern, inverted, 100)
     }
-    
+
     pub fn dwarf_fortress(inverted: bool) -> Frames {
         let pattern = vec![
             " ██████£££  ",
