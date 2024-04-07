@@ -21,6 +21,7 @@ pub struct Spinner {
 /// struct holding multiple spinners
 pub struct MultiSpinner {
     spinner: Arc<Mutex<HashMap<usize, Spinner>>>,
+    stop: Arc<Mutex<bool>>,
     // index: usize,
 }
 
@@ -34,6 +35,7 @@ impl MultiSpinner {
     pub fn new() -> Self {
         MultiSpinner {
             spinner: Arc::new(Mutex::new(HashMap::new())),
+            stop: Arc::new(Mutex::new(false)),
             // index: 1_usize,
         }
     }
@@ -79,11 +81,12 @@ impl MultiSpinner {
 
     pub fn run_all(&mut self) {
         let spinners = Arc::clone(&self.spinner);
+        let stop = Arc::clone(&self.stop);
 
         thread::spawn(move || {
             let mut index = 1_usize;
 
-            loop {
+            while !*stop.lock().unwrap() {
                 let mut all_frames = Vec::new();
                 let mut all_texts = Vec::new();
                 let mut all_should_stop = Vec::new();
@@ -112,12 +115,11 @@ impl MultiSpinner {
     fn render_frame(frame: &str) {
         execute!(
             stdout(),
-            cursor::SavePosition,
-            cursor::MoveTo(0, 1),
-            terminal::Clear(terminal::ClearType::FromCursorDown),
             cursor::Hide,
+            cursor::MoveTo(0, 1),
+            cursor::SavePosition,
+            terminal::Clear(terminal::ClearType::FromCursorDown),
             Print(frame),
-            cursor::RestorePosition
         )
         .unwrap();
     }
@@ -141,5 +143,24 @@ impl MultiSpinner {
             .join("\n");
 
         MultiSpinner::render_frame(&combined_string);
+    }
+
+    fn cleanup(&mut self) {
+        *self.stop.lock().unwrap() = true;
+
+        execute!(
+            stdout(),
+            cursor::MoveTo(0, 0),
+            terminal::Clear(terminal::ClearType::FromCursorDown),
+            cursor::Show,
+        )
+        .unwrap();
+    }
+}
+
+impl Drop for MultiSpinner {
+    /// stops the loading animation thread when the `LoadingAnimation` object is dropped
+    fn drop(&mut self) {
+        self.cleanup();
     }
 }

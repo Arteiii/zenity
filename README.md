@@ -16,7 +16,7 @@ Elevate your Rust command-line interfaces with 81+ spinner animations and multil
 
 Do you often find yourself gazing into the void of your terminal, wondering if your computer has decided to take a coffee break without notifying you?
 
-81+ predefined animations
+100+ predefined animations
 
 [List Of Animations](https://docs.rs/zenity/latest/zenity/animations/frames/spinner/struct.PreDefined.html)
 
