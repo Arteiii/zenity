@@ -14,10 +14,15 @@ keywords = ["console", "animations", "cli", "spinner", "loading"]
 homepage = "https://arteiii.github.io"
 
 
+exclude = [
+    "examples/**"
+]
+
+
 [dependencies]
 crossterm = "0.27.0"
 utils_arteii_rs = "0.1.0"
 rand = "0.9.0-alpha.1"
 
 [dev-dependencies]
-unicode-icons = { version = "2.0.1", features = ["symbols"]  }
+unicode-icons = { version = "2.1.2", features = ["symbols"]  }
