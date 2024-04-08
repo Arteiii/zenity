@@ -1,3 +1,6 @@
+//! Predefined Frames and other aniamtions
+
+
 /// represents a collection of frames and their display speed, typically used for animations
 ///
 /// # Example
@@ -536,7 +539,7 @@ impl PreDefined {
 
     /// # dots_simple1
     ///
-    /// . .. ... .. .
+    /// . ... .. .
     ///
     /// # Example
     /// ```
@@ -551,7 +554,7 @@ impl PreDefined {
 
     /// # dots_simple2
     ///
-    /// . .. ... .. .
+    /// . ... .. .
     ///
     /// # Example
     /// ```

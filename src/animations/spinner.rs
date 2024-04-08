@@ -34,6 +34,13 @@ impl Default for MultiSpinner {
 }
 
 impl MultiSpinner {
+    /// creates a new MultiSpinner instance
+    ///
+    /// ## Example
+    /// ```
+    /// # use zenity::multi_spinner::MultiSpinner;
+    /// let _spinner = MultiSpinner::new();
+    /// ```
     pub fn new() -> Self {
         MultiSpinner {
             spinner: Arc::new(Mutex::new(HashMap::new())),
@@ -45,7 +52,19 @@ impl MultiSpinner {
     /// create a new spinner
     ///
     /// # Returns
+    ///
     /// unique identifier
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::multi_spinner::MultiSpinner;
+    /// use zenity::spinner::PreDefined;
+    ///
+    /// let spinner = MultiSpinner::new();
+    ///
+    /// // the return values is an id you will need to edit the spinner later on
+    /// let spinner_num1 = spinner.new(PreDefined::dots_simple_big1(false));
+    /// ```
     pub fn add(&self, frames: Frames) -> usize {
         let mut rng = rand::thread_rng();
         let mut uid: usize;
@@ -67,6 +86,21 @@ impl MultiSpinner {
         uid
     }
 
+
+    /// set text of a specific spinner
+    ///
+    /// if the uid is invalid this does nothing
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::multi_spinner::MultiSpinner;
+    /// use zenity::spinner::PreDefined;
+    ///
+    /// let spinner = MultiSpinner::new();
+    /// let spinner_num1 = spinner.new(PreDefined::dots_simple_big1(false));
+    ///
+    /// spinner.set_text(spinner_num1, "this is a text...".to_string());
+    /// ```
     pub fn set_text(&self, uid: &usize, new_text: String) {
         if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
             let mut text = spinner.text.lock().unwrap();
@@ -75,12 +109,41 @@ impl MultiSpinner {
     }
 
     /// stops a spinner if the uid is invalid this does nothing
+    ///
+    /// ## Example
+    ///
+    /// ```
+    /// use zenity::multi_spinner::MultiSpinner;
+    /// use zenity::spinner::PreDefined;
+    ///
+    /// let spinner = MultiSpinner::new();
+    /// let spinner_num1 = spinner.new(PreDefined::dots_simple_big1(false));
+    ///
+    /// spinner.stop(spinner_num1);
+    /// ```
     pub fn stop(&self, uid: &usize) {
         if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
             *spinner.should_stop.lock().unwrap() = true;
         }
     }
 
+    /// execute all created spinners
+    /// ## Example
+    ///
+    /// ```
+    /// use zenity::multi_spinner::MultiSpinner;
+    /// use zenity::spinner::PreDefined;
+    ///
+    /// // make spinner mutable
+    /// let mut spinner = MultiSpinner::new();
+    ///
+    /// // queu spinners for execution
+    /// let spinner_num1 = spinner.new(PreDefined::dots_simple_big1(false));
+    /// let spinner_num2 = spinner.new(PreDefined::dots_simple_big1(false));
+    ///
+    /// //start the spinners
+    /// spinner.run_all();
+    /// ```
     pub fn run_all(&mut self) {
         let spinners = Arc::clone(&self.spinner);
         let stop = Arc::clone(&self.stop);
@@ -113,7 +176,7 @@ impl MultiSpinner {
         });
     }
 
-    /// output frame using crossterm
+    /// helper function to output frame using crossterm
     fn render_frame(frame: &str) {
         execute!(
             stdout(),
@@ -126,7 +189,7 @@ impl MultiSpinner {
         .unwrap();
     }
 
-    /// to render frames to stdout
+    /// helper function to render frames to stdout
     fn render_frames(frames: &[Vec<&str>], index: usize, texts: &[String], should_stop: &[bool]) {
         let first_frame = iterators::balanced_iterator(index, frames);
 
@@ -147,6 +210,7 @@ impl MultiSpinner {
         MultiSpinner::render_frame(&combined_string);
     }
 
+    /// helper function to clean-up after animation stop
     fn cleanup(&mut self) {
         *self.stop.lock().unwrap() = true;
 
