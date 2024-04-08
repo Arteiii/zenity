@@ -188,9 +188,9 @@ impl CliColorConfig {
                 "--color=always" => ColorOption::Always,
                 "--color=never" => ColorOption::Never,
                 _ => {
-                    println!("Invalid argument: {}", arg);
-                    println!("Usage: my_program [--color=always|auto|never]");
-                    println!("Using Default: auto");
+                    eprintln!("Invalid argument: {}", arg);
+                    eprintln!("Usage: my_program [--color=always|auto|never]");
+                    eprintln!("Using Default: auto");
 
                     ColorOption::Auto
                 }
