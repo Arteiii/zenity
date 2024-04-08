@@ -1,4 +1,4 @@
 //! stores predefined animations and the `Frames` struct
 
 pub mod spinner;
-mod progress;
+pub mod progress;
