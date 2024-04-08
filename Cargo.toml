@@ -18,11 +18,18 @@ exclude = [
     "examples/**"
 ]
 
+[lib]
+name = "zenity"
+path = "src/lib.rs"
+test = true
+
+
 
 [dependencies]
 crossterm = "0.27.0"
 utils_arteii_rs = "0.1.0"
 rand = "0.9.0-alpha.1"
+supports-color = "3.0.0"
 
 [dev-dependencies]
 unicode-icons = { version = "2.1.2", features = ["symbols"]  }
