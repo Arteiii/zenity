@@ -1,6 +1,6 @@
 # zenity (Yet Another Spinner Lib)
 
-Elevate your Rust command-line interfaces with 81+ spinner animations and multiline support
+Elevate your Rust command-line interfaces with 100+ spinner animations and multiline support
 
 [![Publish to Crates](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml)
 [![Compile Rust](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml)
@@ -14,7 +14,8 @@ Elevate your Rust command-line interfaces with 81+ spinner animations and multil
 ![](./images/rustrover64_tlGiHM9JP0.gif)
 
 
-Do you often find yourself gazing into the void of your terminal, wondering if your computer has decided to take a coffee break without notifying you?
+Do you often find yourself gazing into the void of your terminal, 
+wondering if your computer has decided to take a coffee break without notifying you?
 
 100+ predefined animations
 
@@ -23,7 +24,7 @@ Do you often find yourself gazing into the void of your terminal, wondering if y
 
 ## Introducing
 
-After countless late nights (1) spent wrestling with terminal buffers and ASCII art,
+After countless late nights spent wrestling with terminal buffers and ASCII art,
 after enduring more trial and error than we care to admit,
 we proudly present to you our humble attempt to transform loading animations from a headache into a delight
 
@@ -59,8 +60,10 @@ fn scope_example() {
 
 check out the examples for more
 
-But wait, there's more! We're cooking up some extra features,
-like the ability to have multiple animations simultaneously and the power to delete specific ones.
+**NOTE:**
+
+- the lib already includes checks for `--color` following the conventions by: [Rain's Rust CLI recommendations](https://rust-cli-recommendations.sunshowers.io/colors.html#general-recommendations)
+
 
 ## Disclaimer
 
@@ -88,6 +91,8 @@ These projects not only provided delightful animations but also spared me from t
 ### Dependencies
 
 - [Crossterm](https://github.com/crossterm-rs/crossterm)
+- [supports_color](https://docs.rs/supports-color/latest/supports_color/)
+
 
 ## License
 
