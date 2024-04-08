@@ -6,10 +6,10 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-use crossterm::style::Print;
 use crossterm::{cursor, execute, terminal};
+use crossterm::style::Print;
 use rand::Rng;
-use utils_arteii_rs::vector_operations::iterators;
+use crate::helper::iterators;
 
 use crate::spinner::Frames;
 

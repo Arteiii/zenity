@@ -50,8 +50,6 @@ pub use crossterm::style;
 pub use animations::spinner as multi_spinner;
 
 use crate::animations::animation::Spinner;
-use crate::animations::frames::spinner;
-#[cfg(feature = "predefined_spinners")]
 pub use crate::animations::frames::spinner;
 pub use crate::helper::colors::{combine_attributes, CliColorConfig};
 
