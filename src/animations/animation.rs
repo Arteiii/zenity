@@ -1,3 +1,5 @@
+//! Single Animation priv mod
+
 use std::io::stdout;
 use std::sync::{Arc, Mutex};
 use std::thread;

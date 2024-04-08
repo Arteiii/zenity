@@ -1,3 +1,5 @@
+//! mod for multiline spinners
+
 use std::collections::HashMap;
 use std::io::stdout;
 use std::sync::{Arc, Mutex};
