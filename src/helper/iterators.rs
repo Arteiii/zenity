@@ -1,4 +1,3 @@
-
 /// iterates over a collection of vectors in a balanced manner based on indices
 ///
 /// it allows users to retrieve values from each vector at specified index positions
