@@ -33,13 +33,13 @@
 //! # Color Configuration
 //!
 //! To configure the color output, you can use the `--color` option with one of the following values:
-//! 
+//!
 //! - `always`: Enable color output regardless of the terminal type and capabilities
 //! - `auto`: Automatically determine whether to enable color output based on the terminal type and capabilities. If stdout is a pipe or if the terminal doesn't support colors, colors will be disabled
 //! - `never`: Disable color output
-//! 
-//! **Note**: If the stdout is a pipe or if the terminal doesn't support colors, colors will be automatically disabled 
-//! 
+//!
+//! **Note**: If the stdout is a pipe or if the terminal doesn't support colors, colors will be automatically disabled
+//!
 //! Check out the examples for more.
 
 use std::sync::{Arc, Mutex};
@@ -52,7 +52,7 @@ pub use animations::spinner as multi_spinner;
 use crate::animations::animation::Spinner;
 pub use crate::animations::frames::spinner;
 // define helper functions for the cross-term colors
-pub use crate::helper::colors::{CliColorConfig, combine_attributes};
+pub use crate::helper::colors::{combine_attributes, CliColorConfig};
 
 pub mod animations;
 mod helper;
