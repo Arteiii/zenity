@@ -8,18 +8,9 @@ The source code was a bit of a mess
 
 ### Modularization of Features
 
-- Animations: the aniamtions module got replaced by 2 new module (spinner and progress) each with their respective frames
+- Animations: the animations module got replaced by 2 new module (spinner and progress) each with their respective frames
 
 
 ### Style Modules
 
 The style modules, previously re-exported at the library base, have been moved into the style module (this change also impacts re-exports from crossterm colors)
-
-
-### Following Rust API Guidelines
-
-Oh, and by the way, I did my darnedest to follow the Rust API Guidelines.
-
-
-changes for the examples:
-
