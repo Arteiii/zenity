@@ -1,22 +1,27 @@
-# zenity (Yet Another Spinner Lib)
-
-Elevate your Rust command-line interfaces with 100+ spinner animations and Progress Bars + multiline support
-
-[![Publish to Crates](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml)
-[![Compile Rust](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml)
-![Crates.io Version](https://img.shields.io/crates/v/zenity)
-![docs.rs](https://img.shields.io/docsrs/zenity)
-
-[![CodeFactor](https://www.codefactor.io/repository/github/arteiii/zenity/badge)](https://www.codefactor.io/repository/github/arteiii/zenity)
-
-![multiline preview](./images/rustrover64_4bzlv2mWxK.gif)
-
-![](./images/rustrover64_tlGiHM9JP0.gif)
+<div align="center">
+  <img src="images/ZENITY.svg" alt="Zenity svg logo" width="400">
+<p>Yet Another Spinner Lib</p>
+<p style="margin-top: -10px;">Elevate your Rust command-line interfaces with 100+ spinner animations and Progress Bars + multiline support</p>
+  <a href="https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml">
+    <img src="https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml/badge.svg" alt="Publish to Crates">
+  </a>
+  <a href="https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml">
+    <img src="https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml/badge.svg" alt="Compile Rust">
+  </a>
+  <img src="https://img.shields.io/crates/v/zenity" alt="Crates.io Version">
+  <img src="https://img.shields.io/docsrs/zenity" alt="docs.rs">
+  <br>
+  <a href="https://www.codefactor.io/repository/github/arteiii/zenity">
+    <img src="https://www.codefactor.io/repository/github/arteiii/zenity/badge" alt="CodeFactor">
+  </a>
+</div>
 
 ![progress bar](./images/rustrover64_WupAJU44Lu.gif)
 
-checkout the examples for this^^
+![multiline preview](./images/rustrover64_4bzlv2mWxK.gif)
 
+
+[**CHANGELOG**](CHANGELOG.md)
 
 Do you often find yourself gazing into the void of your terminal, 
 wondering if your computer has decided to take a coffee break without notifying you?
@@ -96,6 +101,23 @@ These projects not only provided delightful animations but also spared me from t
 
 - [Crossterm](https://github.com/crossterm-rs/crossterm)
 - [supports_color](https://docs.rs/supports-color/latest/supports_color/)
+
+
+## Contribution
+
+Contributions are welcome!
+
+### How to Contribute
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin feature/YourFeature`)
+5. Create a new Pull Request
+
+## Feature Requests and Bug Reports
+
+If you have any ideas for new features or encounter any bugs while using Zenity, please don't hesitate to open an issue on [GitHub](https://github.com/Arteiii/zenity/issues). Your feedback is valuable and will help improve the library for everyone.
 
 
 ## License

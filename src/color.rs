@@ -1,41 +1,24 @@
-//! Collection of helper functions and classes related to colors
+//! Mod for color related methods
 
-use crossterm::style;
+use lazy_static::lazy_static;
 
-/// combines multiple attributes into a single `style::Attributes` instance
-///
-/// this function takes a slice of attribute references and combines them into a single
-/// `style::Attributes` instance using bitwise OR (`|`) operation
-///
-/// # Arguments
-///
-/// * `attr_list` - a slice containing references to the attributes to be combined
-///
-/// # Returns
-///
-/// A `style::Attributes` instance representing the combined attributes
-///
-/// # Example
-///
-/// ```
-/// use zenity::{style::Attribute, combine_attributes};
-///
-/// let attributes = combine_attributes(&[
-///     &Attribute::Bold,
-///     &Attribute::Underlined,
-///     &Attribute::Italic,
-/// ]);
-/// ```
-pub fn combine_attributes(attr_list: &[&style::Attribute]) -> style::Attributes {
-    attr_list
-        .iter()
-        .fold(style::Attributes::default(), |acc, &attr| {
-            acc | style::Attributes::from(*attr)
-        })
+
+lazy_static! {
+    /// supported color pallet (which colors are supported if ENABLE_COLOR)
+    pub static ref COLOR_PALETTE: ColorPalette = {
+        CliColorConfig::get_supported_color_palette()
+    };
+    
+    /// lazy static ENABLE color bool true if color should be enabled false otherwise
+    pub static ref ENABLE_COLOR: bool = {
+        let conf = CliColorConfig::default();
+        conf.should_enable_color()
+    };
 }
 
 /// represents different color palettes supported by terminals
-#[derive(PartialEq)]
+#[allow(dead_code)]
+#[derive(PartialEq, Debug)]
 pub enum ColorPalette {
     /// color support not available (pipe or otherwise disabled)
     None,
@@ -52,34 +35,6 @@ pub enum ColorPalette {
     Truecolor,
 }
 
-/// Represents a color palette used in the CLI app
-pub struct AppColorPalette {
-    /// the color palette enum representing the colors
-    color_palette: ColorPalette,
-}
-
-impl AppColorPalette {
-    /// creates a new `AppColorPalette` instance with the specified color palette
-    pub fn new(color_palette: ColorPalette) -> Self {
-        Self { color_palette }
-    }
-
-    pub fn get_color_palette(&self) -> &ColorPalette {
-        &self.color_palette
-    }
-
-    // TODO: implement
-    // /// modify a given color to align with the supported colors in the palette
-    // ///
-    // /// returns a modified version of the color that matches the closest supported color, or `None` if no suitable match is found
-    // pub fn modify_color(&self, color: &str) -> Option<String> {}
-
-    // TODO: implement
-    // fn convert_to_16(&self, ) {
-    //
-    // }
-}
-
 /// represents different options for controlling color output in the cli
 ///
 /// - Always: always enable color output
@@ -87,8 +42,9 @@ impl AppColorPalette {
 /// - Never: never enable color output
 ///
 /// [Read More](https://rust-cli-recommendations.sunshowers.io/colors.html#general-recommendations)
+#[allow(dead_code)]
 #[derive(Debug, PartialEq)]
-pub enum ColorOption {
+enum ColorOption {
     /// always enable color output
     Always,
 
@@ -99,32 +55,19 @@ pub enum ColorOption {
     Never,
 }
 
-impl ColorOption {
-    /// parses a string representation into a `ColorOption` enum variant
-    ///
-    /// the function takes a string slice as input and attempts to match it to one of the
-    /// predefined variants of the `ColorOption` enum
-    /// Case insensitivity and whitespace trimming are applied to improve robustness
-    pub fn from_string(s: &str) -> Option<Self> {
-        match s.trim().to_lowercase().as_str() {
-            "always" => Some(Self::Always),
-            "auto" => Some(Self::Auto),
-            "never" => Some(Self::Never),
-            _ => None,
-        }
-    }
-}
 
 /// configuration struct for managing cli color settings
-pub struct CliColorConfig {
+#[allow(dead_code)]
+struct CliColorConfig {
     /// the chosen color option for cli output
     #[allow(dead_code)]
     color_option: ColorOption,
 
     /// the color palette supported by the terminal
-    color_palette: AppColorPalette,
+    color_palette: ColorPalette,
 }
 
+#[allow(dead_code)]
 impl Default for CliColorConfig {
     /// creates a new `CliColorConfig` instance with default settings
     ///
@@ -139,11 +82,11 @@ impl Default for CliColorConfig {
 
         Self {
             color_option,
-            color_palette: AppColorPalette::new(color_palette),
+            color_palette,
         }
     }
 }
-
+#[allow(dead_code)]
 impl CliColorConfig {
     /// creates a new `CliColorConfig` instance with custom settings
     ///
@@ -151,7 +94,7 @@ impl CliColorConfig {
     ///
     /// * `color_option` - the chosen color option for CLI output
     /// * `color_palette` - the color palette supported by the terminal
-    pub fn new(color_option: ColorOption, color_palette: AppColorPalette) -> Self {
+    fn new(color_option: ColorOption, color_palette: ColorPalette) -> Self {
         Self {
             color_option,
             color_palette,
@@ -167,7 +110,7 @@ impl CliColorConfig {
         match self.color_option {
             ColorOption::Never => false,
             ColorOption::Always => true,
-            ColorOption::Auto => self.color_palette.get_color_palette() != &ColorPalette::None,
+            ColorOption::Auto => self.color_palette != ColorPalette::None,
         }
     }
 
@@ -176,8 +119,8 @@ impl CliColorConfig {
     /// # Returns
     ///
     /// * the color palette enum representing the supported colors
-    pub fn supported_colors(&self) -> &ColorPalette {
-        self.color_palette.get_color_palette()
+    fn supported_colors(&self) -> &ColorPalette {
+        &self.color_palette
     }
 
     /// parse args to check for --color=always|auto|never
@@ -222,6 +165,7 @@ impl CliColorConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::style::*;
 
     #[test]
     fn test_valid_arguments() {
@@ -240,57 +184,12 @@ mod tests {
     }
 
     #[test]
-    fn test_color_option_from_string() {
-        assert_eq!(
-            ColorOption::from_string("always"),
-            Some(ColorOption::Always)
-        );
-        assert_eq!(ColorOption::from_string("auto"), Some(ColorOption::Auto));
-        assert_eq!(ColorOption::from_string("never"), Some(ColorOption::Never));
-        assert_eq!(ColorOption::from_string("invalid"), None);
-        assert_eq!(
-            ColorOption::from_string("  Always "),
-            Some(ColorOption::Always)
-        );
-        assert_eq!(ColorOption::from_string("neVeR"), Some(ColorOption::Never));
-    }
-
-    #[test]
-    fn test_cli_color_config_should_enable_color() {
-        let config_always = CliColorConfig::new(
-            ColorOption::Always,
-            AppColorPalette::new(ColorPalette::Truecolor),
-        );
-        let config_auto = CliColorConfig::new(
-            ColorOption::Auto,
-            AppColorPalette::new(ColorPalette::Palette256),
-        );
-        let config_auto_failed =
-            CliColorConfig::new(ColorOption::Auto, AppColorPalette::new(ColorPalette::None));
-        let config_never = CliColorConfig::new(
-            ColorOption::Never,
-            AppColorPalette::new(ColorPalette::Palette16),
-        );
-
-        assert!(config_always.should_enable_color());
-        assert!(config_auto.should_enable_color());
-        assert!(!config_auto_failed.should_enable_color());
-        assert!(!config_never.should_enable_color());
-    }
-
-    #[test]
     fn test_combine_attributes() {
-        let attributes = combine_attributes(&[
-            &style::Attribute::Bold,
-            &style::Attribute::Underlined,
-            &style::Attribute::Italic,
-        ]);
+        let attributes =
+            combine_attributes(&[&Attribute::Bold, &Attribute::Underlined, &Attribute::Italic]);
         assert_eq!(
             attributes,
-            style::Attributes::default()
-                | style::Attribute::Bold
-                | style::Attribute::Underlined
-                | style::Attribute::Italic
+            Attributes::default() | Attribute::Bold | Attribute::Underlined | Attribute::Italic
         );
     }
 }

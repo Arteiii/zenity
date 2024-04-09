@@ -2,7 +2,7 @@
 
 use std::thread::sleep;
 use std::time::Duration;
-use zenity::{style::Color, LoadingAnimation};
+use zenity::spinner::MultiSpinner;
 
 fn main() {
     println!("println test");
@@ -11,11 +11,10 @@ fn main() {
 
 fn scope_example() {
     // create a LoadingAnimation instance using one of the predefined animations
-    let spinner = LoadingAnimation::default();
+    let spinner = MultiSpinner::default();
 
     // optional:
-    spinner.set_text("Loading..."); // sets the text to "Loading..."
-    spinner.set_text_color(Color::DarkBlue); // set the color
+    spinner.set_text(&spinner.get_last(), "Loading...".to_string()); // sets the text to "Loading..."
 
     sleep(Duration::from_secs(5));
     // `loading_animation` will run out of scope now and get dropped,

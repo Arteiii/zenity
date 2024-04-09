@@ -1,6 +1,7 @@
 pub(crate) mod console_render {
     use std::io::stdout;
 
+    use crate::style::ContentStyle;
     use crossterm::{cursor, execute, style, terminal};
 
     // use crossterm::style::ContentStyle;
@@ -9,16 +10,17 @@ pub(crate) mod console_render {
         execute!(stdout(), cursor::RestorePosition, style::Print(frame),).unwrap();
     }
 
-    // pub fn render_styled_frame(frame: &String, style: ContentStyle) {
-    //     execute!(
-    //         stdout(),
-    //         cursor::RestorePosition,
-    //         style::SetStyle(style), // set animation color
-    //         style::Print(frame),
-    //         style::ResetColor, // reset colors
-    //     )
-    //     .unwrap();
-    // }
+    #[allow(dead_code)]
+    pub fn render_styled_frame(frame: &String, style: ContentStyle) {
+        execute!(
+            stdout(),
+            cursor::RestorePosition,
+            style::SetStyle(style), // set animation color
+            style::Print(frame),
+            style::ResetColor, // reset colors
+        )
+        .unwrap();
+    }
 
     pub fn cleanup() {
         execute!(
@@ -41,6 +43,7 @@ pub(crate) mod console_cursor {
     pub fn save_hide_cursor() {
         execute!(
             stdout(),
+            cursor::MoveTo(0, 1),
             cursor::Hide,
             cursor::SavePosition,
             terminal::Clear(terminal::ClearType::FromCursorDown),
@@ -51,5 +54,10 @@ pub(crate) mod console_cursor {
     /// resets the cursor to be shown and restores its saved position
     pub fn reset_cursor() {
         execute!(stdout(), cursor::RestorePosition, cursor::Show).unwrap();
+    }
+
+    /// resets the cursor to be shown and restores its saved position
+    pub fn next_line(num: u16) {
+        execute!(stdout(), cursor::MoveToNextLine(num)).unwrap();
     }
 }

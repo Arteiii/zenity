@@ -5,20 +5,22 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-use rand::Rng;
+pub use frames::*;
 
-use crate::helper::iterators;
-use crate::spinner::Frames;
+use crate::iterators;
 use crate::terminal::{console_cursor, console_render};
 
+pub mod frames;
+
 /// spinner struct encapsulating the spinner animation
-pub struct Spinner {
+struct Spinner {
     frames: Arc<Mutex<Frames>>,
     text: Arc<Mutex<String>>,
     should_stop: Arc<Mutex<bool>>,
 }
 
 /// struct holding multiple spinners
+#[derive(Clone)]
 pub struct MultiSpinner {
     spinner: Arc<Mutex<HashMap<usize, Spinner>>>,
     stop: Arc<Mutex<bool>>,
@@ -27,7 +29,10 @@ pub struct MultiSpinner {
 
 impl Default for MultiSpinner {
     fn default() -> Self {
-        Self::new()
+        let spinner = Self::new(Frames::dot_spinner11(false));
+        spinner.run_all();
+
+        spinner
     }
 }
 
@@ -36,15 +41,19 @@ impl MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// # use zenity::multi_spinner::MultiSpinner;
-    /// let _spinner = MultiSpinner::new();
+    /// # use zenity::spinner::{MultiSpinner, Frames};
+    /// let _spinner = MultiSpinner::new(Frames::default());
     /// ```
-    pub fn new() -> Self {
-        MultiSpinner {
+    pub fn new(frames: Frames) -> Self {
+        let spinner = MultiSpinner {
             spinner: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
             // index: 1_usize,
-        }
+        };
+
+        spinner.add(frames);
+
+        spinner
     }
 
     /// create a new spinner
@@ -55,17 +64,16 @@ impl MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// use zenity::multi_spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new();
+    /// let spinner = MultiSpinner::new(Frames::default());
     ///
-    /// // the return values is an id you will need to edit the spinner later on
-    /// let spinner_num1 = spinner.new(PreDefined::dots_simple_big1(false));
+    /// spinner.add(Frames::aesthetic_load(false));
     /// ```
     pub fn add(&self, frames: Frames) -> usize {
-        let mut rng = rand::thread_rng();
-        let mut uid: usize;
+        let mut spinner_map = self.spinner.lock().unwrap();
+        let uid = spinner_map.len() + 1;
 
         let new_spinner = Spinner {
             frames: Arc::new(Mutex::new(frames)),
@@ -73,15 +81,32 @@ impl MultiSpinner {
             should_stop: Arc::new(Mutex::new(false)),
         };
 
-        loop {
-            uid = rng.gen();
-            if !self.spinner.lock().unwrap().contains_key(&uid) {
-                break;
-            }
-        }
+        spinner_map.insert(uid, new_spinner);
 
-        self.spinner.lock().unwrap().insert(uid, new_spinner);
         uid
+    }
+
+    /// get the last create uid
+    ///
+    /// # Returns
+    ///
+    /// unique identifier of the last created spinner
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
+    ///
+    /// let spinner = MultiSpinner::new(Frames::default());
+    ///
+    /// // the return values is an id you will need to edit the spinner later on
+    /// let spinner1_uid = spinner.get_last();
+    /// ```
+    pub fn get_last(&self) -> usize {
+        let spinner_map = self.spinner.lock().unwrap();
+
+        // get the maximum key value (uid) from the spinner map
+        spinner_map.keys().copied().max().unwrap()
     }
 
     /// set text of a specific spinner
@@ -90,13 +115,12 @@ impl MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// use zenity::multi_spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new();
-    /// let spinner_num1 = spinner.new(PreDefined::dots_simple_big1(false));
+    /// let spinner = MultiSpinner::new(Frames::default());
     ///
-    /// spinner.set_text(spinner_num1, "this is a text...".to_string());
+    /// spinner.set_text(&spinner.get_last(), "this is a text...".to_string());
     /// ```
     pub fn set_text(&self, uid: &usize, new_text: String) {
         if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
@@ -110,13 +134,12 @@ impl MultiSpinner {
     /// ## Example
     ///
     /// ```
-    /// use zenity::multi_spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new();
-    /// let spinner_num1 = spinner.new(PreDefined::dots_simple_big1(false));
+    /// let spinner = MultiSpinner::new(Frames::default());
     ///
-    /// spinner.stop(spinner_num1);
+    /// spinner.stop(&spinner.get_last());
     /// ```
     pub fn stop(&self, uid: &usize) {
         if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
@@ -128,20 +151,20 @@ impl MultiSpinner {
     /// ## Example
     ///
     /// ```
-    /// use zenity::multi_spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
     ///
     /// // make spinner mutable
-    /// let mut spinner = MultiSpinner::new();
+    /// let mut spinner = MultiSpinner::new(Frames::dots_simple_big1(false));
     ///
     /// // queu spinners for execution
-    /// let spinner_num1 = spinner.new(PreDefined::dots_simple_big1(false));
-    /// let spinner_num2 = spinner.new(PreDefined::dots_simple_big1(false));
+    /// let spinner_num1 = spinner.get_last();
+    /// let spinner_num2 = spinner.add(Frames::dots_simple_big1(false));
     ///
     /// //start the spinners
     /// spinner.run_all();
     /// ```
-    pub fn run_all(&mut self) {
+    pub fn run_all(&self) {
         let spinners = Arc::clone(&self.spinner);
         let stop = Arc::clone(&self.stop);
 
@@ -170,7 +193,7 @@ impl MultiSpinner {
 
                 index += 1;
 
-                thread::sleep(Duration::from_millis(100));
+                thread::sleep(Duration::from_millis(80));
             }
         });
     }

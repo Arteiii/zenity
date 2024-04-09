@@ -1,39 +1,42 @@
-use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
 use rand::Rng;
 
-use zenity::animations::{
-    frames::progress::ProgressBarFrames,
-    progress::{Bar, Progress},
-};
+use zenity::progress::{ProgressBar, Frames};
 
 fn main() {
-    // I know that this is not the best solution I will rework it asap
-    // contributions welcome
+    {
+        let progress = ProgressBar::default();
 
-    println!("test Header line");
-    thread::sleep(Duration::from_secs(8));
+        let loading = 1_usize;
 
-    let mut progress = Progress::default();
+        for loading in loading..=100 {
+            thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(1..=70)));
+            progress.set(&progress.get_last(), &loading);
+        }
+    }
 
-    let progress1 = progress.add(Bar::default());
+    multiple();
+    println!("test line ending")
+}
 
-    // TODO: create wrapper for this
-    let progress2 = progress.add(Bar {
-        frames: Arc::new(Mutex::new(ProgressBarFrames::rect())),
-        size: Arc::new(Mutex::new(70_usize)),
-        current: Arc::new(Mutex::new(0_usize)),
-        goal: Arc::new(Mutex::new(253_usize)),
-    });
+fn multiple() {
+    println!("multiple progressbar");
 
-    let progress3 = progress.add(Bar {
-        frames: Arc::new(Mutex::new(ProgressBarFrames::hash())),
-        size: Arc::new(Mutex::new(7_usize)),
-        current: Arc::new(Mutex::new(0_usize)),
-        goal: Arc::new(Mutex::new(253_usize)),
-    });
+    let progress = ProgressBar::new(Frames::rect().set_goal(253));
+    let progress1 = progress.get_last();
+
+    let progress2 = progress.add(
+        Frames::equal()
+            .set_goal(253)
+            .set_size(7),
+    );
+    let progress3 = progress.add(
+        Frames::hash()
+            .set_goal(253)
+            .set_size(60),
+    );
 
     progress.run_all();
 
@@ -44,9 +47,6 @@ fn main() {
         progress.set(&progress2, &loading);
         progress.set(&progress3, &loading);
 
-        let sleep_time = rand::thread_rng().gen_range(1..=70);
-        thread::sleep(Duration::from_millis(sleep_time));
+        thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(1..=70)));
     }
-
-    thread::sleep(Duration::from_millis(1000));
 }
