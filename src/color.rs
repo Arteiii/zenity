@@ -1,5 +1,6 @@
 
 /// represents different color palettes supported by terminals
+#[allow(dead_code)]
 #[derive(PartialEq)]
 pub enum ColorPalette {
     /// color support not available (pipe or otherwise disabled)
@@ -18,11 +19,13 @@ pub enum ColorPalette {
 }
 
 /// Represents a color palette used in the CLI app
+#[allow(dead_code)]
 pub struct AppColorPalette {
     /// the color palette enum representing the colors
     color_palette: ColorPalette,
 }
 
+#[allow(dead_code)]
 impl AppColorPalette {
     /// creates a new `AppColorPalette` instance with the specified color palette
     pub fn new(color_palette: ColorPalette) -> Self {
@@ -52,6 +55,7 @@ impl AppColorPalette {
 /// - Never: never enable color output
 ///
 /// [Read More](https://rust-cli-recommendations.sunshowers.io/colors.html#general-recommendations)
+#[allow(dead_code)]
 #[derive(Debug, PartialEq)]
 pub enum ColorOption {
     /// always enable color output
@@ -63,7 +67,7 @@ pub enum ColorOption {
     /// never enable color output
     Never,
 }
-
+#[allow(dead_code)]
 impl ColorOption {
     /// parses a string representation into a `ColorOption` enum variant
     ///
@@ -81,6 +85,7 @@ impl ColorOption {
 }
 
 /// configuration struct for managing cli color settings
+#[allow(dead_code)]
 pub struct CliColorConfig {
     /// the chosen color option for cli output
     #[allow(dead_code)]
@@ -89,7 +94,7 @@ pub struct CliColorConfig {
     /// the color palette supported by the terminal
     color_palette: AppColorPalette,
 }
-
+#[allow(dead_code)]
 impl Default for CliColorConfig {
     /// creates a new `CliColorConfig` instance with default settings
     ///
@@ -108,7 +113,7 @@ impl Default for CliColorConfig {
         }
     }
 }
-
+#[allow(dead_code)]
 impl CliColorConfig {
     /// creates a new `CliColorConfig` instance with custom settings
     ///

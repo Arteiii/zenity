@@ -2,6 +2,7 @@ pub(crate) mod console_render {
     use std::io::stdout;
 
     use crossterm::{cursor, execute, style, terminal};
+    use crate::style::ContentStyle;
 
     // use crossterm::style::ContentStyle;
 
@@ -9,8 +10,9 @@ pub(crate) mod console_render {
         execute!(stdout(), cursor::RestorePosition, style::Print(frame),).unwrap();
     }
 
+    #[allow(dead_code)]
     pub fn render_styled_frame(frame: &String, style: ContentStyle) {
-        
+
         execute!(
             stdout(),
             cursor::RestorePosition,
