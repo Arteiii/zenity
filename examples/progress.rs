@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use rand::Rng;
 
-use zenity::progress::{Bar, ProgressBar, ProgressBarFrames};
+use zenity::progress::{ProgressBar, Frames};
 
 fn main() {
     {
@@ -24,16 +24,16 @@ fn main() {
 fn multiple() {
     println!("multiple progressbar");
 
-    let progress = ProgressBar::new(Bar::new(ProgressBarFrames::rect()).set_goal(253));
+    let progress = ProgressBar::new(Frames::rect().set_goal(253));
     let progress1 = progress.get_last();
 
     let progress2 = progress.add(
-        Bar::new(ProgressBarFrames::equal())
+        Frames::equal()
             .set_goal(253)
             .set_size(7),
     );
     let progress3 = progress.add(
-        Bar::new(ProgressBarFrames::hash())
+        Frames::hash()
             .set_goal(253)
             .set_size(60),
     );

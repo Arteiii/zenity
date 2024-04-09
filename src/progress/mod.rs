@@ -9,116 +9,19 @@ use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
 
-/// bar struct encapsulating the loading bar data animation
-#[derive(Clone)]
-pub struct Bar {
-    /// frames to use for animation
-    pub frames: Arc<Mutex<ProgressBarFrames>>,
-
-    /// size of progress bar
-    pub size: Arc<Mutex<usize>>,
-
-    /// goal value
-    pub goal: Arc<Mutex<usize>>,
-
-    /// current value
-    pub current: Arc<Mutex<usize>>,
-}
-
-impl Default for Bar {
-    fn default() -> Self {
-        Bar {
-            frames: Arc::new(Mutex::new(ProgressBarFrames::equal())),
-            size: Arc::new(Mutex::new(30)),
-            goal: Arc::new(Mutex::new(100)),
-            current: Arc::new(Mutex::new(0)),
-        }
-    }
-}
-
-impl Bar {
-    /// creates a new custom Bar object with the specified progress bar frames
-    ///
-    /// # Arguments
-    ///
-    /// * `frames` - the ProgressBarFrames to use
-    ///
-    /// # Returns
-    ///
-    /// a new Bar object with the specified frames, default size, goal, and current values
-    pub fn new(frames: ProgressBarFrames) -> Self {
-        Bar {
-            frames: Arc::new(Mutex::new(frames)),
-            size: Arc::new(Mutex::new(30)),   // default 30
-            goal: Arc::new(Mutex::new(100)),  // default 100
-            current: Arc::new(Mutex::new(0)), // default 0
-        }
-    }
-
-    /// Sets the size of the progress bar.
-    ///
-    /// # Arguments
-    ///
-    /// * `size` - The size of the progress bar as an usize, where 1 represents one character in the loading bar.
-    ///
-    /// # Returns
-    ///
-    /// A new Bar object with the modified size.
-    pub fn set_size(&self, size: usize) -> Self {
-        *self.size.lock().unwrap() = size;
-
-        self.clone()
-    }
-
-    /// sets the goal value
-    ///
-    /// # Arguments
-    ///
-    /// * `goal` - the new goal value
-    ///
-    /// # Returns
-    ///
-    /// a new Bar object with the modified goal value
-    pub fn set_goal(&self, goal: usize) -> Self {
-        let mut current = self.current.lock().unwrap();
-        let mut goal_ref = self.goal.lock().unwrap();
-        *goal_ref = goal;
-        *current = current.min(goal);
-
-        self.clone()
-    }
-
-    /// Increments the current value.
-    ///
-    /// # Arguments
-    ///
-    /// * `num` - The amount to increment by.
-    ///
-    /// # Returns
-    ///
-    /// A new Bar object with the modified current value.
-    pub fn inc(&self, num: &usize) -> Self {
-        let mut current = self.current.lock().unwrap();
-        let goal = *self.goal.lock().unwrap();
-        let new_current = (*current + num).min(goal);
-        *current = new_current;
-
-        self.clone()
-    }
-}
 
 /// struct holding multiple bars
 #[derive(Clone)]
 pub struct ProgressBar {
     // TODO: instead of random ids go after creation and increment by one
     // this would allow to render them line for line based on this and order them correctly
-    bar: Arc<Mutex<HashMap<usize, Bar>>>,
+    bar: Arc<Mutex<HashMap<usize, Frames>>>,
     stop: Arc<Mutex<bool>>,
 }
 
 impl Default for ProgressBar {
     fn default() -> Self {
-        let progress = Self::new(Bar::default());
+        let progress = Self::new(Frames::default());
 
         progress.run_all();
 
@@ -131,10 +34,10 @@ impl ProgressBar {
     ///
     /// ## Example
     /// ```
-    /// # use zenity::progress::{Bar, ProgressBar};
-    /// let _spinner = ProgressBar::new(Bar::default());
+    /// # use zenity::progress::{Frames, ProgressBar};
+    /// let _spinner = ProgressBar::new(Frames::default());
     /// ```
-    pub fn new(bar: Bar) -> Self {
+    pub fn new(bar: Frames) -> Self {
         // console_cursor::reset_cursor();
 
         console_cursor::save_hide_cursor();
@@ -158,7 +61,7 @@ impl ProgressBar {
     /// # Returns
     ///
     /// the UID assigned to the added progress bar
-    pub fn add(&self, bar: Bar) -> usize {
+    pub fn add(&self, bar: Frames) -> usize {
         let mut bar_map = self.bar.lock().unwrap();
         let uid: usize = bar_map.len() + 1_usize; // Incremental UID starting from 1
 
@@ -195,16 +98,15 @@ impl ProgressBar {
             while !*stop.lock().unwrap() {
                 let mut rendered_frames = Vec::new();
 
-                for (_, spinner) in bars.lock().unwrap().iter() {
-                    let frames = spinner.frames.lock().unwrap();
+                for (_, frames) in bars.lock().unwrap().iter() {
                     let begin: &str = frames.begin[0];
                     let end: &str = frames.end[0];
                     let current_incomplete: &str = frames.bar_incomplete_char[0];
                     let current_complete: &str = frames.bar_complete_char[0];
 
-                    let size: usize = *spinner.size.lock().unwrap();
-                    let goal = *spinner.goal.lock().unwrap();
-                    let current: usize = *spinner.current.lock().unwrap();
+                    let size: usize = *frames.size.lock().unwrap();
+                    let goal = *frames.goal.lock().unwrap();
+                    let current: usize = *frames.current.lock().unwrap();
 
                     // calculate percentage completion
                     let completion_percentage = (current as f64 / goal as f64) * 100.0;
