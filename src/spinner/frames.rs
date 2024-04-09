@@ -18,10 +18,13 @@ pub struct Frames {
     pub speed_ms: u64,
 }
 
-/// Provides predefined spinner animations
-pub struct PreDefined;
+impl Default for Frames {
+    fn default() -> Self {
+        Self::dots_simple_big1(false)
+    }
+}
 
-impl PreDefined {
+impl Frames {
     /// generates frames for spinner animation based on the provided pattern, inversion flag, and speed
     ///
     /// # Arguments
@@ -33,9 +36,9 @@ impl PreDefined {
     /// # Example
     ///
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::generate_frames(vec!["◐", "◓", "◑", "◒"], false, 100);
+    /// let spinner_frames = Frames::generate_frames(vec!["◐", "◓", "◑", "◒"], false, 100);
     ///
     /// assert_eq!(spinner_frames.frames, vec!["◐", "◓", "◑", "◒"]);
     /// assert_eq!(spinner_frames.speed_ms, 100);
@@ -50,15 +53,16 @@ impl PreDefined {
         Frames { frames, speed_ms }
     }
 
+
     /// ⠋
     /// ⠹
     /// ⠧
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner1(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner1(false);
     /// ```
     pub fn dot_spinner1(inverted: bool) -> Frames {
         let pattern = vec!["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
@@ -69,9 +73,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner2(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner2(false);
     /// ```
     pub fn dot_spinner2(inverted: bool) -> Frames {
         let pattern = vec!["⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾"];
@@ -82,9 +86,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner3(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner3(false);
     /// ```
     pub fn dot_spinner3(inverted: bool) -> Frames {
         let pattern = vec!["⠋", "⠙", "⠚", "⠞", "⠖", "⠦", "⠴", "⠲", "⠳", "⠓"];
@@ -95,9 +99,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner4(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner4(false);
     /// ```
     pub fn dot_spinner4(inverted: bool) -> Frames {
         let pattern = vec![
@@ -110,9 +114,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner5(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner5(false);
     /// ```
     pub fn dot_spinner5(inverted: bool) -> Frames {
         let pattern = vec![
@@ -142,9 +146,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner6(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner6(false);
     /// ```
     pub fn dot_spinner6(inverted: bool) -> Frames {
         let pattern = vec!["⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈"];
@@ -155,9 +159,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner7(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner7(false);
     /// ```
     pub fn dot_spinner7(inverted: bool) -> Frames {
         let pattern = vec!["⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠"];
@@ -168,9 +172,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner8(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner8(false);
     /// ```
     pub fn dot_spinner8(inverted: bool) -> Frames {
         let pattern = vec![
@@ -185,9 +189,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner9(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner9(false);
     /// ```
     pub fn dot_spinner9(inverted: bool) -> Frames {
         let pattern = vec![
@@ -203,9 +207,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner10(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner10(false);
     /// ```
     pub fn dot_spinner10(inverted: bool) -> Frames {
         let pattern = vec!["⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈"];
@@ -216,9 +220,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_spinner11(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner11(false);
     /// ```
     pub fn dot_spinner11(inverted: bool) -> Frames {
         let pattern = vec!["⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠"];
@@ -233,9 +237,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::kaomoji(false);
+    /// let spinner_frames: Frames = Frames::kaomoji(false);
     /// ```
     pub fn kaomoji(inverted: bool) -> Frames {
         let pattern = vec![
@@ -260,9 +264,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::kaomoji(false);
+    /// let spinner_frames: Frames = Frames::kaomoji(false);
     /// ```
     pub fn aesthetic_spin(inverted: bool) -> Frames {
         let pattern = vec![
@@ -289,9 +293,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::aesthetic_load(false);
+    /// let spinner_frames: Frames = Frames::aesthetic_load(false);
     /// ```
     pub fn aesthetic_load(inverted: bool) -> Frames {
         let pattern = vec![
@@ -313,9 +317,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::clock(false);
+    /// let spinner_frames: Frames = Frames::clock(false);
     /// ```
     pub fn clock(inverted: bool) -> Frames {
         let pattern = vec![
@@ -330,9 +334,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::small_bouncing_bar(false);
+    /// let spinner_frames: Frames = Frames::small_bouncing_bar(false);
     /// ```
     pub fn small_bouncing_bar(inverted: bool) -> Frames {
         let pattern = vec![
@@ -348,9 +352,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::small_loading_bar(false);
+    /// let spinner_frames: Frames = Frames::small_loading_bar(false);
     /// ```
     pub fn small_loading_bar(inverted: bool) -> Frames {
         let pattern = vec![
@@ -363,9 +367,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::loading_bar_with_arrow(false);
+    /// let spinner_frames: Frames = Frames::loading_bar_with_arrow(false);
     /// ```
     pub fn loading_bar_with_arrow(inverted: bool) -> Frames {
         let pattern = vec![
@@ -389,9 +393,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::short_loading_bar_with_arrow(false);
+    /// let spinner_frames: Frames = Frames::short_loading_bar_with_arrow(false);
     /// ```
     pub fn short_loading_bar_with_arrow(inverted: bool) -> Frames {
         let pattern = vec![
@@ -419,9 +423,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::material(false);
+    /// let spinner_frames: Frames = Frames::material(false);
     /// ```
     pub fn material(inverted: bool) -> Frames {
         let pattern = vec![
@@ -527,9 +531,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::moon(false);
+    /// let spinner_frames: Frames = Frames::moon(false);
     /// ```
     pub fn moon(inverted: bool) -> Frames {
         let pattern = vec!["🌑 ", "🌒 ", "🌓 ", "🌔 ", "🌕 ", "🌖 ", "🌗 ", "🌘 "];
@@ -542,9 +546,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dots_simple1(false);
+    /// let spinner_frames: Frames = Frames::dots_simple1(false);
     /// ```
     pub fn dots_simple1(inverted: bool) -> Frames {
         let pattern = vec![".  ", ".. ", "...", " ..", "  .", "   "];
@@ -557,9 +561,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dots_simple2(false);
+    /// let spinner_frames: Frames = Frames::dots_simple2(false);
     /// ```
     pub fn dots_simple2(inverted: bool) -> Frames {
         let pattern = vec!["   ", ".  ", ".. ", "..."];
@@ -572,9 +576,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::japanese(false);
+    /// let spinner_frames: Frames = Frames::japanese(false);
     /// ```
     pub fn japanese(inverted: bool) -> Frames {
         let pattern = vec![
@@ -592,9 +596,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::line(false);
+    /// let spinner_frames: Frames = Frames::line(false);
     /// ```
     pub fn line(inverted: bool) -> Frames {
         let pattern = vec![
@@ -611,9 +615,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::line2(false);
+    /// let spinner_frames: Frames = Frames::line2(false);
     /// ```
     pub fn line2(inverted: bool) -> Frames {
         let pattern = vec![
@@ -642,9 +646,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::block(false);
+    /// let spinner_frames: Frames = Frames::block(false);
     /// ```
     pub fn block(inverted: bool) -> Frames {
         let pattern = vec![
@@ -659,9 +663,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::block_spinn(false);
+    /// let spinner_frames: Frames = Frames::block_spinn(false);
     /// ```
     pub fn block_spinn(inverted: bool) -> Frames {
         let pattern = vec!["▖", "▘", "▝", "▗"];
@@ -674,9 +678,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::arrow_spinn(false);
+    /// let spinner_frames: Frames = Frames::arrow_spinn(false);
     /// ```
     pub fn arrow_spinn(inverted: bool) -> Frames {
         let pattern = vec!["←", "↖", "↑", "↗", "→", "↘", "↓", "↙"];
@@ -689,9 +693,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::big_arrow_spinn(false);
+    /// let spinner_frames: Frames = Frames::big_arrow_spinn(false);
     /// ```
     pub fn big_arrow_spinn(inverted: bool) -> Frames {
         let pattern = vec!["⇐", "⇖", "⇑", "⇗", "⇒", "⇘", "⇓", "⇙"];
@@ -704,9 +708,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::line_spinner(false);
+    /// let spinner_frames: Frames = Frames::line_spinner(false);
     /// ```
     pub fn line_spinner(inverted: bool) -> Frames {
         let pattern = vec!["┤", "┘", "┴", "└", "├", "┌", "┬", "┐"];
@@ -719,9 +723,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::line_spinner_simple(false);
+    /// let spinner_frames: Frames = Frames::line_spinner_simple(false);
     /// ```
     pub fn line_spinner_simple(inverted: bool) -> Frames {
         let pattern = vec!["|", "/", "-", "\\"];
@@ -734,9 +738,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::corner(false);
+    /// let spinner_frames: Frames = Frames::corner(false);
     /// ```
     pub fn corner(inverted: bool) -> Frames {
         let pattern = vec!["◢", "◣", "◤", "◥"];
@@ -749,9 +753,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::abc(false);
+    /// let spinner_frames: Frames = Frames::abc(false);
     /// ```
     pub fn abc(inverted: bool) -> Frames {
         let pattern = vec![
@@ -767,9 +771,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::earth(false);
+    /// let spinner_frames: Frames = Frames::earth(false);
     /// ```
     pub fn earth(inverted: bool) -> Frames {
         let pattern = vec!["🌍", "🌎", "🌏"];
@@ -782,9 +786,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::arrow_row(false);
+    /// let spinner_frames: Frames = Frames::arrow_row(false);
     /// ```
     pub fn arrow_row(inverted: bool) -> Frames {
         let pattern = vec!["▹▹▹▹▹", "▸▹▹▹▹", "▹▸▹▹▹", "▹▹▸▹▹", "▹▹▹▸▹", "▹▹▹▹▸"];
@@ -797,9 +801,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::fractions(false);
+    /// let spinner_frames: Frames = Frames::fractions(false);
     /// ```
     pub fn fractions(inverted: bool) -> Frames {
         let pattern = vec!["½", "⅓", "⅔", "¼", "¾", "⅛", "⅜", "⅝", "⅞"];
@@ -812,9 +816,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::star1(false);
+    /// let spinner_frames: Frames = Frames::star1(false);
     /// ```
     pub fn star1(inverted: bool) -> Frames {
         let pattern = vec!["✶", "✸", "✹", "✺", "✹", "✷"];
@@ -826,9 +830,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::star2(false);
+    /// let spinner_frames: Frames = Frames::star2(false);
     /// ```
     pub fn star2(inverted: bool) -> Frames {
         let pattern = vec!["+", "x", "*"];
@@ -841,9 +845,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_bounce(false);
+    /// let spinner_frames: Frames = Frames::dot_bounce(false);
     /// ```
     pub fn dot_bounce(inverted: bool) -> Frames {
         let pattern = vec![".", "o", "O", "°", "O", "o", "."];
@@ -855,9 +859,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::flip(false);
+    /// let spinner_frames: Frames = Frames::flip(false);
     /// ```
     pub fn flip(inverted: bool) -> Frames {
         let pattern = vec!["_", "_", "_", "-", "`", "`", "'", "´", "-", "_", "_", "_"];
@@ -869,9 +873,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::binary(false);
+    /// let spinner_frames: Frames = Frames::binary(false);
     /// ```
     pub fn binary(inverted: bool) -> Frames {
         let pattern = vec![
@@ -887,9 +891,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::big_loading_bar(false);
+    /// let spinner_frames: Frames = Frames::big_loading_bar(false);
     /// ```
     pub fn big_loading_bar(inverted: bool) -> Frames {
         let pattern = vec![
@@ -909,9 +913,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::wall_bounce(false);
+    /// let spinner_frames: Frames = Frames::wall_bounce(false);
     /// ```
     pub fn wall_bounce(inverted: bool) -> Frames {
         let pattern = vec![
@@ -955,9 +959,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::wall_bounce_line(false);
+    /// let spinner_frames: Frames = Frames::wall_bounce_line(false);
     /// ```
     pub fn wall_bounce_line(inverted: bool) -> Frames {
         let pattern = vec![
@@ -997,9 +1001,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::stack(false);
+    /// let spinner_frames: Frames = Frames::stack(false);
     /// ```
     pub fn stack(inverted: bool) -> Frames {
         let pattern = vec!["☱", "☲", "☴"];
@@ -1012,9 +1016,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle(false);
+    /// let spinner_frames: Frames = Frames::toggle(false);
     /// ```
     pub fn toggle(inverted: bool) -> Frames {
         let pattern = vec!["⊶", "⊷"];
@@ -1027,9 +1031,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle2(false);
+    /// let spinner_frames: Frames = Frames::toggle2(false);
     /// ```
     pub fn toggle2(inverted: bool) -> Frames {
         let pattern = vec!["▫", "▪"];
@@ -1042,9 +1046,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle3(false);
+    /// let spinner_frames: Frames = Frames::toggle3(false);
     /// ```
     pub fn toggle3(inverted: bool) -> Frames {
         let pattern = vec!["□", "■"];
@@ -1057,9 +1061,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle4(false);
+    /// let spinner_frames: Frames = Frames::toggle4(false);
     /// ```
     pub fn toggle4(inverted: bool) -> Frames {
         let pattern = vec!["■", "□", "▪", "▫"];
@@ -1072,9 +1076,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle5(false);
+    /// let spinner_frames: Frames = Frames::toggle5(false);
     /// ```
     pub fn toggle5(inverted: bool) -> Frames {
         let pattern = vec!["▮ ", "▯ "];
@@ -1087,9 +1091,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle6(false);
+    /// let spinner_frames: Frames = Frames::toggle6(false);
     /// ```
     pub fn toggle6(inverted: bool) -> Frames {
         let pattern = vec!["ဝ", "၀"];
@@ -1102,9 +1106,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle7(false);
+    /// let spinner_frames: Frames = Frames::toggle7(false);
     /// ```
     pub fn toggle7(inverted: bool) -> Frames {
         let pattern = vec!["⦾", "⦿"];
@@ -1117,9 +1121,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle8(false);
+    /// let spinner_frames: Frames = Frames::toggle8(false);
     /// ```
     pub fn toggle8(inverted: bool) -> Frames {
         let pattern = vec!["◍", "◌"];
@@ -1132,9 +1136,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle9(false);
+    /// let spinner_frames: Frames = Frames::toggle9(false);
     /// ```
     pub fn toggle9(inverted: bool) -> Frames {
         let pattern = vec!["◉", "◎"];
@@ -1147,9 +1151,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle10(false);
+    /// let spinner_frames: Frames = Frames::toggle10(false);
     /// ```
     pub fn toggle10(inverted: bool) -> Frames {
         let pattern = vec!["㊂", "㊀", "㊁"];
@@ -1162,9 +1166,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle11(false);
+    /// let spinner_frames: Frames = Frames::toggle11(false);
     /// ```
     pub fn toggle11(inverted: bool) -> Frames {
         let pattern = vec!["⧇", "⧆"];
@@ -1177,9 +1181,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle12(false);
+    /// let spinner_frames: Frames = Frames::toggle12(false);
     /// ```
     pub fn toggle12(inverted: bool) -> Frames {
         let pattern = vec!["☗", "☖"];
@@ -1192,9 +1196,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::toggle13(false);
+    /// let spinner_frames: Frames = Frames::toggle13(false);
     /// ```
     pub fn toggle13(inverted: bool) -> Frames {
         let pattern = vec!["=", "*", "-"];
@@ -1206,9 +1210,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::arc(false);
+    /// let spinner_frames: Frames = Frames::arc(false);
     /// ```
     pub fn arc(inverted: bool) -> Frames {
         let pattern = vec!["◜", "◠", "◝", "◞", "◡", "◟"];
@@ -1220,9 +1224,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::circle(false);
+    /// let spinner_frames: Frames = Frames::circle(false);
     /// ```
     pub fn circle(inverted: bool) -> Frames {
         let pattern = vec!["◡", "⊙", "◠"];
@@ -1234,9 +1238,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::square_corners(false);
+    /// let spinner_frames: Frames = Frames::square_corners(false);
     /// ```
     pub fn square_corners(inverted: bool) -> Frames {
         let pattern = vec!["◰ ", "◳ ", "◲ ", "◱ "];
@@ -1248,9 +1252,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::circle_corners(false);
+    /// let spinner_frames: Frames = Frames::circle_corners(false);
     /// ```
     pub fn circle_corners(inverted: bool) -> Frames {
         let pattern = vec!["◴ ", "◷ ", "◶ ", "◵ "];
@@ -1262,9 +1266,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::circle_halves(false);
+    /// let spinner_frames: Frames = Frames::circle_halves(false);
     /// ```
     pub fn circle_halves(inverted: bool) -> Frames {
         let pattern = vec!["◐ ", "◓ ", "◑ ", "◒ "];
@@ -1276,9 +1280,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::bouncing_ball(false);
+    /// let spinner_frames: Frames = Frames::bouncing_ball(false);
     /// ```
     pub fn bouncing_ball(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1302,9 +1306,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::smiley(false);
+    /// let spinner_frames: Frames = Frames::smiley(false);
     /// ```
     pub fn smiley(inverted: bool) -> Frames {
         let pattern = vec!["😄 ", "😝 "];
@@ -1317,9 +1321,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::monkey(false);
+    /// let spinner_frames: Frames = Frames::monkey(false);
     /// ```
     pub fn monkey(inverted: bool) -> Frames {
         let pattern = vec!["🙈 ", "🙈 ", "🙉 ", "🙊 "];
@@ -1332,9 +1336,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::hearts(false);
+    /// let spinner_frames: Frames = Frames::hearts(false);
     /// ```
     pub fn hearts(inverted: bool) -> Frames {
         let pattern = vec!["💛 ", "💙 ", "💜 ", "💚 ", "❤️ "];
@@ -1347,9 +1351,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::runner(false);
+    /// let spinner_frames: Frames = Frames::runner(false);
     /// ```
     pub fn runner(inverted: bool) -> Frames {
         let pattern = vec!["🚶 ", "🏃 "];
@@ -1362,9 +1366,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::raining(false);
+    /// let spinner_frames: Frames = Frames::raining(false);
     /// ```
     pub fn raining(inverted: bool) -> Frames {
         let pattern = vec!["🌧 ", "🌨 ", "🌧 ", "🌨 ", "🌧 ", "🌨 ", "🌨 ", "🌧 ", "🌨 "];
@@ -1377,9 +1381,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::weather(false);
+    /// let spinner_frames: Frames = Frames::weather(false);
     /// ```
     pub fn weather(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1394,9 +1398,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::christmas_tree(false);
+    /// let spinner_frames: Frames = Frames::christmas_tree(false);
     /// ```
     pub fn christmas_tree(inverted: bool) -> Frames {
         let pattern = vec!["🌲", "🎄"];
@@ -1408,9 +1412,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::nade(false);
+    /// let spinner_frames: Frames = Frames::nade(false);
     /// ```
     pub fn nade(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1425,9 +1429,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dots_simple_big1(false);
+    /// let spinner_frames: Frames = Frames::dots_simple_big1(false);
     /// ```
     pub fn dots_simple_big1(inverted: bool) -> Frames {
         let pattern = vec!["●∙∙", "∙●∙", "∙∙●"];
@@ -1439,9 +1443,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dots_simple_big2(false);
+    /// let spinner_frames: Frames = Frames::dots_simple_big2(false);
     /// ```
     pub fn dots_simple_big2(inverted: bool) -> Frames {
         let pattern = vec!["∙∙∙", "●∙∙", "∙●∙", "∙∙●"];
@@ -1453,9 +1457,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dots_simple_big3(false);
+    /// let spinner_frames: Frames = Frames::dots_simple_big3(false);
     /// ```
     pub fn dots_simple_big3(inverted: bool) -> Frames {
         let pattern = vec!["∙∙∙", "●∙∙", "●●∙", "●●●", "∙●●", "∙∙●"];
@@ -1467,9 +1471,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dots_simple_big4(false);
+    /// let spinner_frames: Frames = Frames::dots_simple_big4(false);
     /// ```
     pub fn dots_simple_big4(inverted: bool) -> Frames {
         let pattern = vec!["∙∙∙", "●∙∙", "●●∙", "●●●"];
@@ -1481,9 +1485,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::fist_bump(false);
+    /// let spinner_frames: Frames = Frames::fist_bump(false);
     /// ```
     pub fn fist_bump(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1504,9 +1508,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::finger_dance(false);
+    /// let spinner_frames: Frames = Frames::finger_dance(false);
     /// ```
     pub fn finger_dance(inverted: bool) -> Frames {
         let pattern = vec!["🤘 ", "🤟 ", "🖖 ", "✋ ", "🤚 ", "👆 "];
@@ -1518,9 +1522,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::mind_blown(false);
+    /// let spinner_frames: Frames = Frames::mind_blown(false);
     /// ```
     pub fn mind_blown(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1535,9 +1539,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::speaker(false);
+    /// let spinner_frames: Frames = Frames::speaker(false);
     /// ```
     pub fn speaker(inverted: bool) -> Frames {
         let pattern = vec!["🔈 ", "🔉 ", "🔊 ", "🔉 "];
@@ -1549,9 +1553,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::arrows(false);
+    /// let spinner_frames: Frames = Frames::arrows(false);
     /// ```
     pub fn arrows(inverted: bool) -> Frames {
         let pattern = vec!["⇢", "⇨", "⇒", "⇉", "⇶"];
@@ -1563,9 +1567,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_box(false);
+    /// let spinner_frames: Frames = Frames::dot_box(false);
     /// ```
     pub fn dot_box(inverted: bool) -> Frames {
         let pattern = vec![".", "·", "•", "¤", "°", "¤", "•", "·"];
@@ -1577,9 +1581,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::simple_line_spin(false);
+    /// let spinner_frames: Frames = Frames::simple_line_spin(false);
     /// ```
     pub fn simple_line_spin(inverted: bool) -> Frames {
         let pattern = vec!["+", "\\", "|", "!", "/", "-", "x"];
@@ -1591,9 +1595,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::bomb(false);
+    /// let spinner_frames: Frames = Frames::bomb(false);
     /// ```
     pub fn bomb(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1607,9 +1611,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dot_bounce2(false);
+    /// let spinner_frames: Frames = Frames::dot_bounce2(false);
     /// ```
     pub fn dot_bounce2(inverted: bool) -> Frames {
         let pattern = vec![".", "·", "˙", "·", "."];
@@ -1621,9 +1625,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::orange_pulse(false);
+    /// let spinner_frames: Frames = Frames::orange_pulse(false);
     /// ```
     pub fn orange_pulse(inverted: bool) -> Frames {
         let pattern = vec!["🔸", "🔶", "🟠", "🟠", "🔶"];
@@ -1635,9 +1639,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::blue_pulse(false);
+    /// let spinner_frames: Frames = Frames::blue_pulse(false);
     /// ```
     pub fn blue_pulse(inverted: bool) -> Frames {
         let pattern = vec!["🔹", "🔷", "🔵", "🔵", "🔷"];
@@ -1649,9 +1653,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::green_pulse(false);
+    /// let spinner_frames: Frames = Frames::green_pulse(false);
     /// ```
     pub fn green_pulse(inverted: bool) -> Frames {
         let pattern = vec!["🟢", "🟩", "🟩", "🟢"];
@@ -1663,9 +1667,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::red_pulse(false);
+    /// let spinner_frames: Frames = Frames::red_pulse(false);
     /// ```
     pub fn red_pulse(inverted: bool) -> Frames {
         let pattern = vec!["🔴", "🟥", "🟥", "🔴"];
@@ -1677,9 +1681,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::other(false);
+    /// let spinner_frames: Frames = Frames::other(false);
     /// ```
     pub fn other(inverted: bool) -> Frames {
         let pattern = vec!["d", "q", "p", "b"];
@@ -1691,9 +1695,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::pray(false);
+    /// let spinner_frames: Frames = Frames::pray(false);
     /// ```
     pub fn pray(inverted: bool) -> Frames {
         let pattern = vec!["🧍 ", "🚶 ", "🧎 ", "🙇 "];
@@ -1705,9 +1709,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::wavy(false);
+    /// let spinner_frames: Frames = Frames::wavy(false);
     /// ```
     pub fn wavy(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1735,9 +1739,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::wavy2(false);
+    /// let spinner_frames: Frames = Frames::wavy2(false);
     /// ```
     pub fn wavy2(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1759,9 +1763,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::wavy3(false);
+    /// let spinner_frames: Frames = Frames::wavy3(false);
     /// ```
     pub fn wavy3(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1785,9 +1789,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::wavy4(false);
+    /// let spinner_frames: Frames = Frames::wavy4(false);
     /// ```
     pub fn wavy4(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1807,9 +1811,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::soccer(false);
+    /// let spinner_frames: Frames = Frames::soccer(false);
     /// ```
     pub fn soccer(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1834,9 +1838,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::layer(false);
+    /// let spinner_frames: Frames = Frames::layer(false);
     /// ```
     pub fn layer(inverted: bool) -> Frames {
         let pattern = vec!["-", "=", "≡"];
@@ -1848,9 +1852,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::matrix_glitch(false);
+    /// let spinner_frames: Frames = Frames::matrix_glitch(false);
     /// ```
     pub fn matrix_glitch(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1873,9 +1877,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::matrix_glitch2(false);
+    /// let spinner_frames: Frames = Frames::matrix_glitch2(false);
     /// ```
     pub fn matrix_glitch2(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1898,9 +1902,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner_frames: Frames = PreDefined::matrix_glitch2_small(false);
+    /// let spinner_frames: Frames = Frames::matrix_glitch2_small(false);
     /// ```
     pub fn matrix_glitch2_small(inverted: bool) -> Frames {
         let pattern = vec![
@@ -1923,9 +1927,9 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = PreDefined::dwarf_fortress(false);
+    /// let spinner_frames: Frames = Frames::dwarf_fortress(false);
     /// ```
     pub fn dwarf_fortress(inverted: bool) -> Frames {
         let pattern = vec![
@@ -2066,3 +2070,4 @@ impl PreDefined {
         Self::generate_frames(pattern, inverted, 100)
     }
 }
+
