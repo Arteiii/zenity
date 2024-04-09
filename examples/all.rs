@@ -2,7 +2,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::thread::sleep;
 use std::time::Duration;
 
-use zenity::spinner::{MultiSpinner, Frames};
+use zenity::spinner::{Frames, MultiSpinner};
 
 static TOTAL_ANIMATIONS: AtomicUsize = AtomicUsize::new(0);
 
@@ -24,10 +24,7 @@ fn main() {
 
     test_predefined_animation!(Frames::matrix_glitch(false), "matrix_glitch");
     test_predefined_animation!(Frames::matrix_glitch2(false), "matrix_glitch2");
-    test_predefined_animation!(
-        Frames::matrix_glitch2_small(false),
-        "matrix_glitch2_small"
-    );
+    test_predefined_animation!(Frames::matrix_glitch2_small(false), "matrix_glitch2_small");
     test_predefined_animation!(Frames::layer(false), "layer");
     test_predefined_animation!(Frames::soccer(false), "soccer");
     test_predefined_animation!(Frames::wavy(false), "wavy");
@@ -130,10 +127,7 @@ fn main() {
     test_predefined_animation!(Frames::arrow_spinn(false), "arrow_spinn");
     test_predefined_animation!(Frames::line_spinner(false), "line_spinner");
     test_predefined_animation!(Frames::corner(false), "corner");
-    test_predefined_animation!(
-        Frames::line_spinner_simple(false),
-        "line_spinner_simple"
-    );
+    test_predefined_animation!(Frames::line_spinner_simple(false), "line_spinner_simple");
     test_predefined_animation!(Frames::abc(false), "abc");
     test_predefined_animation!(Frames::big_arrow_spinn(false), "big_arrow_spinn");
     test_predefined_animation!(Frames::japanese(false), "japanese");

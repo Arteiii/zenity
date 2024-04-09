@@ -2,13 +2,12 @@
 
 use lazy_static::lazy_static;
 
-
 lazy_static! {
     /// supported color pallet (which colors are supported if ENABLE_COLOR)
     pub static ref COLOR_PALETTE: ColorPalette = {
         CliColorConfig::get_supported_color_palette()
     };
-    
+
     /// lazy static ENABLE color bool true if color should be enabled false otherwise
     pub static ref ENABLE_COLOR: bool = {
         let conf = CliColorConfig::default();
@@ -54,7 +53,6 @@ enum ColorOption {
     /// never enable color output
     Never,
 }
-
 
 /// configuration struct for managing cli color settings
 #[allow(dead_code)]

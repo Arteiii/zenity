@@ -9,7 +9,6 @@ use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
 
-
 /// struct holding multiple bars
 #[derive(Clone)]
 pub struct ProgressBar {

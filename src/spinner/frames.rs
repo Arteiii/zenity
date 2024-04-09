@@ -53,7 +53,6 @@ impl Frames {
         Frames { frames, speed_ms }
     }
 
-
     /// ⠋
     /// ⠹
     /// ⠧
@@ -2070,4 +2069,3 @@ impl Frames {
         Self::generate_frames(pattern, inverted, 100)
     }
 }
-
