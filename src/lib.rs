@@ -64,6 +64,11 @@
 //! **Note**: If the stdout is a pipe or if the terminal doesn't support colors, colors will be automatically disabled
 //!
 //! Check out the examples for more
+//! 
+//! ## Feature Requests and Bug Reports
+//! 
+//! If you have any ideas for new features or encounter any bugs while using Zenity, please don't hesitate to open an issue on [GitHub](https://github.com/Arteiii/zenity/issues). 
+//! Your feedback is valuable and will help improve the library for everyone.
 
 pub mod color;
 mod iterators;

@@ -103,6 +103,23 @@ These projects not only provided delightful animations but also spared me from t
 - [supports_color](https://docs.rs/supports-color/latest/supports_color/)
 
 
+## Contribution
+
+Contributions are welcome!
+
+### How to Contribute
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin feature/YourFeature`)
+5. Create a new Pull Request
+
+## Feature Requests and Bug Reports
+
+If you have any ideas for new features or encounter any bugs while using Zenity, please don't hesitate to open an issue on [GitHub](https://github.com/Arteiii/zenity/issues). Your feedback is valuable and will help improve the library for everyone.
+
+
 ## License
 
 This project is licensed under the **DWFYW** License.
