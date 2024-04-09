@@ -15,8 +15,9 @@ Elevate your Rust command-line interfaces with 100+ spinner animations and Progr
 
 ![progress bar](./images/rustrover64_WupAJU44Lu.gif)
 
-checkout the examples for this^^
 
+
+[**CHANGELOG**](CHANGELOG.md)
 
 Do you often find yourself gazing into the void of your terminal, 
 wondering if your computer has decided to take a coffee break without notifying you?

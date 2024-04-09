@@ -1,15 +1,16 @@
 //! mod for progress bars
-
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-use rand::Rng;
+pub use frames::*;
 
-use crate::animations::frames::progress::ProgressBarFrames;
 use crate::terminal::{console_cursor, console_render};
 
+pub mod frames;
+
 /// bar struct encapsulating the loading bar data animation
+#[derive(Clone)]
 pub struct Bar {
     /// frames to use for animation
     pub frames: Arc<Mutex<ProgressBarFrames>>,
@@ -28,64 +29,140 @@ impl Default for Bar {
     fn default() -> Self {
         Bar {
             frames: Arc::new(Mutex::new(ProgressBarFrames::equal())),
-            size: Arc::new(Mutex::new(31)),
-            goal: Arc::new(Mutex::new(253)),
+            size: Arc::new(Mutex::new(30)),
+            goal: Arc::new(Mutex::new(100)),
             current: Arc::new(Mutex::new(0)),
         }
     }
 }
 
+impl Bar {
+    /// creates a new custom Bar object with the specified progress bar frames
+    ///
+    /// # Arguments
+    ///
+    /// * `frames` - the ProgressBarFrames to use
+    ///
+    /// # Returns
+    ///
+    /// a new Bar object with the specified frames, default size, goal, and current values
+    pub fn new(frames: ProgressBarFrames) -> Self {
+        Bar {
+            frames: Arc::new(Mutex::new(frames)),
+            size: Arc::new(Mutex::new(30)),   // default 30
+            goal: Arc::new(Mutex::new(100)),  // default 100
+            current: Arc::new(Mutex::new(0)), // default 0
+        }
+    }
+
+    /// Sets the size of the progress bar.
+    ///
+    /// # Arguments
+    ///
+    /// * `size` - The size of the progress bar as an usize, where 1 represents one character in the loading bar.
+    ///
+    /// # Returns
+    ///
+    /// A new Bar object with the modified size.
+    pub fn set_size(&self, size: usize) -> Self {
+        *self.size.lock().unwrap() = size;
+        
+        self.clone()
+    }
+
+    /// sets the goal value
+    ///
+    /// # Arguments
+    ///
+    /// * `goal` - the new goal value
+    ///
+    /// # Returns
+    ///
+    /// a new Bar object with the modified goal value
+    pub fn set_goal(&self, goal: usize) -> Self {
+        let mut current = self.current.lock().unwrap();
+        let mut goal_ref = self.goal.lock().unwrap();
+        *goal_ref = goal;
+        *current = current.min(goal);
+        
+        self.clone()
+    }
+
+    /// Increments the current value.
+    ///
+    /// # Arguments
+    ///
+    /// * `num` - The amount to increment by.
+    ///
+    /// # Returns
+    ///
+    /// A new Bar object with the modified current value.
+    pub fn inc(&self, num: &usize) -> Self {
+        let mut current = self.current.lock().unwrap();
+        let goal = *self.goal.lock().unwrap();
+        let new_current = (*current + num).min(goal);
+        *current = new_current;
+
+        self.clone()
+    }
+}
+
 /// struct holding multiple bars
-pub struct Progress {
+pub struct ProgressBar {
     // TODO: instead of random ids go after creation and increment by one
     // this would allow to render them line for line based on this and order them correctly
     bar: Arc<Mutex<HashMap<usize, Bar>>>,
     stop: Arc<Mutex<bool>>,
 }
 
-impl Default for Progress {
+impl Default for ProgressBar {
     fn default() -> Self {
-        Self::new()
+        let mut progress = Self::new();
+        progress.add(Bar::default());
+        progress.run_all();
+
+        progress
     }
 }
 
-impl Progress {
+impl ProgressBar {
     /// creates a new Progress instance
     ///
     /// ## Example
     /// ```
-    /// # use zenity::multi_spinner::MultiSpinner;
-    /// let _spinner = MultiSpinner::new();
+    /// # use zenity::progress::ProgressBar;
+    /// let _spinner = ProgressBar::new();
     /// ```
     pub fn new() -> Self {
         // console_cursor::reset_cursor();
 
         console_cursor::save_hide_cursor();
 
-        Progress {
+        ProgressBar {
             bar: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
         }
     }
 
-    /// add a new progress bar
+    /// adds a new progress bar with an incremental UID starting from 1
+    ///
+    /// # Arguments
+    ///
+    /// * `bar` - the progress bar to add
+    ///
+    /// # Returns
+    ///
+    /// the UID assigned to the added progress bar
     pub fn add(&self, bar: Bar) -> usize {
-        let mut rng = rand::thread_rng();
-        let mut uid: usize;
+        let mut bar_map = self.bar.lock().unwrap();
+        let uid = bar_map.len() + 1; // Incremental UID starting from 1
 
-        loop {
-            uid = rng.gen();
-            if !self.bar.lock().unwrap().contains_key(&uid) {
-                break;
-            }
-        }
-
-        self.bar.lock().unwrap().insert(uid, bar);
+        bar_map.insert(uid, bar);
 
         uid
     }
 
-    /// set the current
+    /// Set the current value
     ///
     /// # Arguments
     ///
@@ -94,11 +171,13 @@ impl Progress {
     ///
     /// **NOTE:**
     /// - if the UID is invalid, this function does nothing
-    /// - this function locks the progress bar associated with the provided uid and updates its current value
+    /// - this function locks the progress bar associated with the provided UID and updates its current value incrementally
     pub fn set(&self, uid: &usize, new_current: &usize) {
         if let Some(bar) = self.bar.lock().unwrap().get(uid) {
-            let mut current = bar.current.lock().unwrap();
-            *current = *new_current;
+            let current = bar.current.lock().unwrap();
+            let diff = new_current.saturating_sub(*current);
+            drop(current);
+            bar.inc(&diff);
         }
     }
 
@@ -149,13 +228,24 @@ impl Progress {
             }
         });
     }
+
+    /// retrieves the UID of the last created progress bar
+    ///
+    /// # Returns
+    ///
+    /// the UID of the last created progress bar
+    pub fn get_last(&self) -> usize {
+        let bar_map = self.bar.lock().unwrap();
+        bar_map.len()
+    }
 }
 
-impl Drop for Progress {
+impl Drop for ProgressBar {
     /// stops the thread when the object is dropped
     fn drop(&mut self) {
+        *self.stop.lock().unwrap() = true;
         // cleanup methods
-        console_render::cleanup();
         console_cursor::reset_cursor();
+        console_cursor::next_line(self.bar.lock().unwrap().len() as u16);
     }
 }

@@ -7,9 +7,12 @@ use std::time::Duration;
 
 use rand::Rng;
 
-use crate::helper::iterators;
-use crate::spinner::Frames;
+pub use frames::*;
+
+use crate::iterators;
 use crate::terminal::{console_cursor, console_render};
+
+pub mod frames;
 
 /// spinner struct encapsulating the spinner animation
 pub struct Spinner {
@@ -36,7 +39,7 @@ impl MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// # use zenity::multi_spinner::MultiSpinner;
+    /// # use zenity::spinner::MultiSpinner;
     /// let _spinner = MultiSpinner::new();
     /// ```
     pub fn new() -> Self {
@@ -55,7 +58,7 @@ impl MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// use zenity::multi_spinner::MultiSpinner;
+    /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::PreDefined;
     ///
     /// let spinner = MultiSpinner::new();
@@ -90,7 +93,7 @@ impl MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// use zenity::multi_spinner::MultiSpinner;
+    /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::PreDefined;
     ///
     /// let spinner = MultiSpinner::new();
@@ -110,7 +113,7 @@ impl MultiSpinner {
     /// ## Example
     ///
     /// ```
-    /// use zenity::multi_spinner::MultiSpinner;
+    /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::PreDefined;
     ///
     /// let spinner = MultiSpinner::new();
@@ -128,7 +131,7 @@ impl MultiSpinner {
     /// ## Example
     ///
     /// ```
-    /// use zenity::multi_spinner::MultiSpinner;
+    /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::PreDefined;
     ///
     /// // make spinner mutable

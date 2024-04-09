@@ -5,7 +5,7 @@
 /// # Example
 ///
 /// ```
-/// use zenity::animations::frames::spinner::Frames;
+/// use zenity::spinner::Frames;
 ///
 /// let frames: Frames = Frames { frames: vec!["◐", "◓", "◑", "◒"], speed_ms: 100 };
 /// assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
@@ -33,7 +33,7 @@ impl PreDefined {
     /// # Example
     ///
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::generate_frames(vec!["◐", "◓", "◑", "◒"], false, 100);
     ///
@@ -56,7 +56,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner1(false);
     /// ```
@@ -69,7 +69,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner2(false);
     /// ```
@@ -82,7 +82,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner3(false);
     /// ```
@@ -95,7 +95,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner4(false);
     /// ```
@@ -110,7 +110,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner5(false);
     /// ```
@@ -142,7 +142,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner6(false);
     /// ```
@@ -155,7 +155,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner7(false);
     /// ```
@@ -168,7 +168,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner8(false);
     /// ```
@@ -185,7 +185,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner9(false);
     /// ```
@@ -203,7 +203,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner10(false);
     /// ```
@@ -216,7 +216,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_spinner11(false);
     /// ```
@@ -233,7 +233,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::kaomoji(false);
     /// ```
@@ -260,7 +260,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::kaomoji(false);
     /// ```
@@ -289,7 +289,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::aesthetic_load(false);
     /// ```
@@ -313,7 +313,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::clock(false);
     /// ```
@@ -330,7 +330,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::small_bouncing_bar(false);
     /// ```
@@ -348,7 +348,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::small_loading_bar(false);
     /// ```
@@ -363,7 +363,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::loading_bar_with_arrow(false);
     /// ```
@@ -389,7 +389,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::short_loading_bar_with_arrow(false);
     /// ```
@@ -419,7 +419,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::material(false);
     /// ```
@@ -527,7 +527,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::moon(false);
     /// ```
@@ -542,7 +542,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dots_simple1(false);
     /// ```
@@ -557,7 +557,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dots_simple2(false);
     /// ```
@@ -572,7 +572,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::japanese(false);
     /// ```
@@ -592,7 +592,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::line(false);
     /// ```
@@ -611,7 +611,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::line2(false);
     /// ```
@@ -642,7 +642,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::block(false);
     /// ```
@@ -659,7 +659,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::block_spinn(false);
     /// ```
@@ -674,7 +674,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::arrow_spinn(false);
     /// ```
@@ -689,7 +689,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::big_arrow_spinn(false);
     /// ```
@@ -704,7 +704,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::line_spinner(false);
     /// ```
@@ -719,7 +719,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::line_spinner_simple(false);
     /// ```
@@ -734,7 +734,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::corner(false);
     /// ```
@@ -749,7 +749,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::abc(false);
     /// ```
@@ -767,7 +767,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::earth(false);
     /// ```
@@ -782,7 +782,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::arrow_row(false);
     /// ```
@@ -797,7 +797,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::fractions(false);
     /// ```
@@ -812,7 +812,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::star1(false);
     /// ```
@@ -826,7 +826,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::star2(false);
     /// ```
@@ -841,7 +841,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_bounce(false);
     /// ```
@@ -855,7 +855,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::flip(false);
     /// ```
@@ -869,7 +869,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::binary(false);
     /// ```
@@ -887,7 +887,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::big_loading_bar(false);
     /// ```
@@ -909,7 +909,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::wall_bounce(false);
     /// ```
@@ -955,7 +955,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::wall_bounce_line(false);
     /// ```
@@ -997,7 +997,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::stack(false);
     /// ```
@@ -1012,7 +1012,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle(false);
     /// ```
@@ -1027,7 +1027,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle2(false);
     /// ```
@@ -1042,7 +1042,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle3(false);
     /// ```
@@ -1057,7 +1057,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle4(false);
     /// ```
@@ -1072,7 +1072,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle5(false);
     /// ```
@@ -1087,7 +1087,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle6(false);
     /// ```
@@ -1102,7 +1102,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle7(false);
     /// ```
@@ -1117,7 +1117,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle8(false);
     /// ```
@@ -1132,7 +1132,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle9(false);
     /// ```
@@ -1147,7 +1147,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle10(false);
     /// ```
@@ -1162,7 +1162,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle11(false);
     /// ```
@@ -1177,7 +1177,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle12(false);
     /// ```
@@ -1192,7 +1192,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::toggle13(false);
     /// ```
@@ -1206,7 +1206,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::arc(false);
     /// ```
@@ -1220,7 +1220,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::circle(false);
     /// ```
@@ -1234,7 +1234,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::square_corners(false);
     /// ```
@@ -1248,7 +1248,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::circle_corners(false);
     /// ```
@@ -1262,7 +1262,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::circle_halves(false);
     /// ```
@@ -1276,7 +1276,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::bouncing_ball(false);
     /// ```
@@ -1302,7 +1302,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::smiley(false);
     /// ```
@@ -1317,7 +1317,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::monkey(false);
     /// ```
@@ -1332,7 +1332,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::hearts(false);
     /// ```
@@ -1347,7 +1347,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::runner(false);
     /// ```
@@ -1362,7 +1362,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::raining(false);
     /// ```
@@ -1377,7 +1377,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::weather(false);
     /// ```
@@ -1394,7 +1394,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::christmas_tree(false);
     /// ```
@@ -1408,7 +1408,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::nade(false);
     /// ```
@@ -1425,7 +1425,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dots_simple_big1(false);
     /// ```
@@ -1439,7 +1439,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dots_simple_big2(false);
     /// ```
@@ -1453,7 +1453,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dots_simple_big3(false);
     /// ```
@@ -1467,7 +1467,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dots_simple_big4(false);
     /// ```
@@ -1481,7 +1481,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::fist_bump(false);
     /// ```
@@ -1504,7 +1504,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::finger_dance(false);
     /// ```
@@ -1518,7 +1518,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::mind_blown(false);
     /// ```
@@ -1535,7 +1535,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::speaker(false);
     /// ```
@@ -1549,7 +1549,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::arrows(false);
     /// ```
@@ -1563,7 +1563,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_box(false);
     /// ```
@@ -1577,7 +1577,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::simple_line_spin(false);
     /// ```
@@ -1591,7 +1591,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::bomb(false);
     /// ```
@@ -1607,7 +1607,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dot_bounce2(false);
     /// ```
@@ -1621,7 +1621,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::orange_pulse(false);
     /// ```
@@ -1635,7 +1635,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::blue_pulse(false);
     /// ```
@@ -1649,7 +1649,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::green_pulse(false);
     /// ```
@@ -1663,7 +1663,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::red_pulse(false);
     /// ```
@@ -1677,7 +1677,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::other(false);
     /// ```
@@ -1691,7 +1691,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::pray(false);
     /// ```
@@ -1705,7 +1705,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::wavy(false);
     /// ```
@@ -1735,7 +1735,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::wavy2(false);
     /// ```
@@ -1759,7 +1759,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::wavy3(false);
     /// ```
@@ -1785,7 +1785,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::wavy4(false);
     /// ```
@@ -1807,7 +1807,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::soccer(false);
     /// ```
@@ -1834,7 +1834,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::layer(false);
     /// ```
@@ -1848,7 +1848,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::matrix_glitch(false);
     /// ```
@@ -1873,7 +1873,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::matrix_glitch2(false);
     /// ```
@@ -1898,7 +1898,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::matrix_glitch2_small(false);
     /// ```
@@ -1923,7 +1923,7 @@ impl PreDefined {
     ///
     /// # Example
     /// ```
-    /// use zenity::animations::frames::spinner::{Frames, PreDefined};
+    /// use zenity::spinner::{Frames, PreDefined};
     ///
     /// let spinner_frames: Frames = PreDefined::dwarf_fortress(false);
     /// ```

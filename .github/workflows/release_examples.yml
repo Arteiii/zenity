@@ -33,6 +33,7 @@ jobs:
             target/release/examples/basic.exe
             target/release/examples/all.exe
             target/release/examples/multi_spinner.exe
+            target/release/examples/progress.exe
 
 
   build_unix:
@@ -62,6 +63,7 @@ jobs:
             target/release/examples/basic
             target/release/examples/all
             target/release/examples/multi_spinner
+            target/release/examples/progress
 
   release:
     needs: [build_windows, build_unix]

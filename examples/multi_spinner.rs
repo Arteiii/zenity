@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use unicode_icons::icons::symbols::{check_mark_button, cross_mark};
 
-use zenity::multi_spinner::MultiSpinner;
+use zenity::spinner::MultiSpinner;
 use zenity::spinner::PreDefined;
 
 fn main() {
