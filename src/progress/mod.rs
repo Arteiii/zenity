@@ -66,7 +66,7 @@ impl Bar {
     /// A new Bar object with the modified size.
     pub fn set_size(&self, size: usize) -> Self {
         *self.size.lock().unwrap() = size;
-        
+
         self.clone()
     }
 
@@ -84,7 +84,7 @@ impl Bar {
         let mut goal_ref = self.goal.lock().unwrap();
         *goal_ref = goal;
         *current = current.min(goal);
-        
+
         self.clone()
     }
 
@@ -108,6 +108,7 @@ impl Bar {
 }
 
 /// struct holding multiple bars
+#[derive(Clone)]
 pub struct ProgressBar {
     // TODO: instead of random ids go after creation and increment by one
     // this would allow to render them line for line based on this and order them correctly
@@ -117,8 +118,8 @@ pub struct ProgressBar {
 
 impl Default for ProgressBar {
     fn default() -> Self {
-        let mut progress = Self::new();
-        progress.add(Bar::default());
+        let progress = Self::new(Bar::default());
+
         progress.run_all();
 
         progress
@@ -130,18 +131,22 @@ impl ProgressBar {
     ///
     /// ## Example
     /// ```
-    /// # use zenity::progress::ProgressBar;
-    /// let _spinner = ProgressBar::new();
+    /// # use zenity::progress::{Bar, ProgressBar};
+    /// let _spinner = ProgressBar::new(Bar::default());
     /// ```
-    pub fn new() -> Self {
+    pub fn new(bar: Bar) -> Self {
         // console_cursor::reset_cursor();
 
         console_cursor::save_hide_cursor();
 
-        ProgressBar {
+        let progress = ProgressBar {
             bar: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
-        }
+        };
+
+        progress.add(bar);
+
+        progress
     }
 
     /// adds a new progress bar with an incremental UID starting from 1
@@ -155,7 +160,7 @@ impl ProgressBar {
     /// the UID assigned to the added progress bar
     pub fn add(&self, bar: Bar) -> usize {
         let mut bar_map = self.bar.lock().unwrap();
-        let uid = bar_map.len() + 1; // Incremental UID starting from 1
+        let uid: usize = bar_map.len() + 1_usize; // Incremental UID starting from 1
 
         bar_map.insert(uid, bar);
 
@@ -182,7 +187,7 @@ impl ProgressBar {
     }
 
     /// start each queued progressbar
-    pub fn run_all(&mut self) {
+    pub fn run_all(&self) {
         let bars = Arc::clone(&self.bar);
         let stop = Arc::clone(&self.stop);
 
