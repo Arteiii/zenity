@@ -5,11 +5,6 @@ use std::time::Duration;
 use zenity::spinner::MultiSpinner;
 
 fn main() {
-    println!("println test");
-    scope_example();
-}
-
-fn scope_example() {
     // create a LoadingAnimation instance using one of the predefined animations
     let spinner = MultiSpinner::default();
 
