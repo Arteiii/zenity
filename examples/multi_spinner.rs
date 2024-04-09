@@ -12,7 +12,7 @@ fn main() {
         let cross_mark_text = cross_mark();
 
         let spinner = MultiSpinner::new(Frames::dot_spinner11(false));
-        let spinner1 = spinner.get_uid();
+        let spinner1 = spinner.get_last();
 
         // main thread operations
         let spinner2 = spinner.add(Frames::binary(false));

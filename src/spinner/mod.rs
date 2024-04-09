@@ -29,7 +29,7 @@ pub struct MultiSpinner {
 
 impl Default for MultiSpinner {
     fn default() -> Self {
-        let spinner = Self::new(PreDefined::dot_spinner11(false));
+        let spinner = Self::new(Frames::dot_spinner11(false));
         spinner.run_all();
 
         spinner
@@ -41,8 +41,8 @@ impl MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// # use zenity::spinner::{MultiSpinner, PreDefined};
-    /// let _spinner = MultiSpinner::new(PreDefined::default());
+    /// # use zenity::spinner::{MultiSpinner, Frames};
+    /// let _spinner = MultiSpinner::new(Frames::default());
     /// ```
     pub fn new(frames: Frames) -> Self {
         let spinner = MultiSpinner {
@@ -65,11 +65,11 @@ impl MultiSpinner {
     /// ## Example
     /// ```
     /// use zenity::spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new(PreDefined::default());
+    /// let spinner = MultiSpinner::new(Frames::default());
     ///
-    /// spinner.add(PreDefined::aesthetic_load(false));
+    /// spinner.add(Frames::aesthetic_load(false));
     /// ```
     pub fn add(&self, frames: Frames) -> usize {
         let mut spinner_map = self.spinner.lock().unwrap();
@@ -95,14 +95,14 @@ impl MultiSpinner {
     /// ## Example
     /// ```
     /// use zenity::spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new(PreDefined::default());
+    /// let spinner = MultiSpinner::new(Frames::default());
     ///
     /// // the return values is an id you will need to edit the spinner later on
-    /// let spinner1_uid = spinner.get_uid();
+    /// let spinner1_uid = spinner.get_last();
     /// ```
-    pub fn get_uid(&self) -> usize {
+    pub fn get_last(&self) -> usize {
         let spinner_map = self.spinner.lock().unwrap();
 
         // get the maximum key value (uid) from the spinner map
@@ -116,11 +116,11 @@ impl MultiSpinner {
     /// ## Example
     /// ```
     /// use zenity::spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new(PreDefined::default());
+    /// let spinner = MultiSpinner::new(Frames::default());
     ///
-    /// spinner.set_text(&spinner.get_uid(), "this is a text...".to_string());
+    /// spinner.set_text(&spinner.get_last(), "this is a text...".to_string());
     /// ```
     pub fn set_text(&self, uid: &usize, new_text: String) {
         if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
@@ -135,11 +135,11 @@ impl MultiSpinner {
     ///
     /// ```
     /// use zenity::spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new(PreDefined::default());
-    /// 
-    /// spinner.stop(&spinner.get_uid());
+    /// let spinner = MultiSpinner::new(Frames::default());
+    ///
+    /// spinner.stop(&spinner.get_last());
     /// ```
     pub fn stop(&self, uid: &usize) {
         if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
@@ -152,14 +152,14 @@ impl MultiSpinner {
     ///
     /// ```
     /// use zenity::spinner::MultiSpinner;
-    /// use zenity::spinner::PreDefined;
+    /// use zenity::spinner::Frames;
     ///
     /// // make spinner mutable
-    /// let mut spinner = MultiSpinner::new(PreDefined::dots_simple_big1(false));
+    /// let mut spinner = MultiSpinner::new(Frames::dots_simple_big1(false));
     ///
     /// // queu spinners for execution
-    /// let spinner_num1 = spinner.get_uid();
-    /// let spinner_num2 = spinner.add(PreDefined::dots_simple_big1(false));
+    /// let spinner_num1 = spinner.get_last();
+    /// let spinner_num2 = spinner.add(Frames::dots_simple_big1(false));
     ///
     /// //start the spinners
     /// spinner.run_all();

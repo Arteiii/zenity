@@ -14,7 +14,7 @@ fn scope_example() {
     let spinner = MultiSpinner::default();
 
     // optional:
-    spinner.set_text(&spinner.get_uid(), "Loading...".to_string()); // sets the text to "Loading..."
+    spinner.set_text(&spinner.get_last(), "Loading...".to_string()); // sets the text to "Loading..."
 
     sleep(Duration::from_secs(5));
     // `loading_animation` will run out of scope now and get dropped,

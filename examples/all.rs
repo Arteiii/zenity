@@ -10,9 +10,9 @@ macro_rules! test_predefined_animation {
     ($animation:expr, $text:expr) => {{
         let custom = MultiSpinner::new($animation);
         custom.run_all();
-        custom.set_text(&custom.get_uid(), $text.to_string());
+        custom.set_text(&custom.get_last(), $text.to_string());
         sleep(Duration::from_secs(5));
-        custom.stop(&custom.get_uid());
+        custom.stop(&custom.get_last());
 
         TOTAL_ANIMATIONS.fetch_add(1, Ordering::Relaxed);
     }};
