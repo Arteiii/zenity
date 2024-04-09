@@ -3,10 +3,6 @@
 
 //! # Yet Another Spinner Lib
 //!
-//! ## Changes
-//!
-//! **CHANGELOG.md**
-//!
 //! ## How to Use?
 //!
 //! It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
