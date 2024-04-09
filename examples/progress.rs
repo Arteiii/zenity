@@ -16,7 +16,7 @@ fn main() {
             progress.set(&progress.get_last(), &loading);
         }
     }
-    
+
     multiple();
     println!("test line ending")
 }
@@ -24,11 +24,19 @@ fn main() {
 fn multiple() {
     println!("multiple progressbar");
 
-    let mut progress = ProgressBar::new();
+    let progress = ProgressBar::new(Bar::new(ProgressBarFrames::rect()).set_goal(253));
+    let progress1 = progress.get_last();
 
-    let progress1 = progress.add(Bar::new(ProgressBarFrames::rect()).set_goal(253));
-    let progress2 = progress.add(Bar::new(ProgressBarFrames::equal()).set_goal(253).set_size(7));
-    let progress3 = progress.add(Bar::new(ProgressBarFrames::hash()).set_goal(253).set_size(60));
+    let progress2 = progress.add(
+        Bar::new(ProgressBarFrames::equal())
+            .set_goal(253)
+            .set_size(7),
+    );
+    let progress3 = progress.add(
+        Bar::new(ProgressBarFrames::hash())
+            .set_goal(253)
+            .set_size(60),
+    );
 
     progress.run_all();
 
