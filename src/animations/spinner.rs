@@ -1,17 +1,15 @@
 //! mod for multiline spinners
 
 use std::collections::HashMap;
-use std::io::stdout;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-use crate::helper::iterators;
-use crossterm::style::Print;
-use crossterm::{cursor, execute, terminal};
 use rand::Rng;
 
+use crate::helper::iterators;
 use crate::spinner::Frames;
+use crate::terminal::{console_cursor, console_render};
 
 /// spinner struct encapsulating the spinner animation
 pub struct Spinner {
@@ -86,7 +84,6 @@ impl MultiSpinner {
         uid
     }
 
-
     /// set text of a specific spinner
     ///
     /// if the uid is invalid this does nothing
@@ -149,6 +146,8 @@ impl MultiSpinner {
         let stop = Arc::clone(&self.stop);
 
         thread::spawn(move || {
+            console_cursor::save_hide_cursor();
+
             let mut index = 1_usize;
 
             while !*stop.lock().unwrap() {
@@ -176,19 +175,6 @@ impl MultiSpinner {
         });
     }
 
-    /// helper function to output frame using crossterm
-    fn render_frame(frame: &str) {
-        execute!(
-            stdout(),
-            cursor::Hide,
-            cursor::MoveTo(0, 1),
-            cursor::SavePosition,
-            terminal::Clear(terminal::ClearType::FromCursorDown),
-            Print(frame),
-        )
-        .unwrap();
-    }
-
     /// helper function to render frames to stdout
     fn render_frames(frames: &[Vec<&str>], index: usize, texts: &[String], should_stop: &[bool]) {
         let first_frame = iterators::balanced_iterator(index, frames);
@@ -207,20 +193,15 @@ impl MultiSpinner {
             .collect::<Vec<String>>()
             .join("\n");
 
-        MultiSpinner::render_frame(&combined_string);
+        console_render::render_frame(&combined_string);
     }
 
     /// helper function to clean-up after animation stop
     fn cleanup(&mut self) {
         *self.stop.lock().unwrap() = true;
 
-        execute!(
-            stdout(),
-            cursor::MoveTo(0, 0),
-            terminal::Clear(terminal::ClearType::FromCursorDown),
-            cursor::Show,
-        )
-        .unwrap();
+        console_render::cleanup();
+        console_cursor::reset_cursor();
     }
 }
 

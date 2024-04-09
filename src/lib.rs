@@ -58,7 +58,8 @@ pub use crate::animations::frames::spinner;
 pub use crate::helper::colors::{combine_attributes, CliColorConfig};
 
 pub mod animations;
-mod helper;
+pub(crate) mod helper;
+pub(crate) mod terminal;
 
 /// `LoadingAnimation` is a struct that provides a straightforward interface for creating and managing customizable loading animations.
 ///

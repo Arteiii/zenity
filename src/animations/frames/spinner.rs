@@ -1,6 +1,5 @@
 //! Predefined Frames and other aniamtions
 
-
 /// represents a collection of frames and their display speed, typically used for animations
 ///
 /// # Example
