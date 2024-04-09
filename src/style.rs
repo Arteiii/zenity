@@ -27,9 +27,7 @@ pub use crossterm::style::*;
 /// ]);
 /// ```
 pub fn combine_attributes(attr_list: &[&Attribute]) -> Attributes {
-    attr_list
-        .iter()
-        .fold(Attributes::default(), |acc, &attr| {
-            acc | Attributes::from(*attr)
-        })
+    attr_list.iter().fold(Attributes::default(), |acc, &attr| {
+        acc | Attributes::from(*attr)
+    })
 }

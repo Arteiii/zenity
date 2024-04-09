@@ -5,24 +5,24 @@
 //! # Yet Another Spinner Lib
 //!
 //! ## Changes
-//! 
+//!
 //! **CHANGELOG.md**
-//! 
+//!
 //! ## How to Use?
 //!
 //! It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
 //!
 //! ## Spinner
-//! 
+//!
 //! ```rust
 //! // example/multi_spinner.rs
-//! 
+//!
 //! # use std::thread::sleep;
 //! # use std::time::Duration;
 //!
 //! use zenity::spinner::MultiSpinner;
 //! use zenity::spinner::PreDefined;
-//! 
+//!
 //! fn main() {
 //!         let mut spinner = MultiSpinner::default();
 //!         let spinner1 = spinner.add(PreDefined::dot_spinner11(false));
@@ -30,19 +30,19 @@
 //!
 //!         // access the spinner through the Arc<Mutex<MultiSpinner>> reference
 //!         spinner.run_all();
-//! 
+//!
 //!         spinner.set_text(&spinner2, "spinner2".to_string());
-//! 
+//!
 //!         sleep(Duration::from_secs(2));
-//! 
+//!
 //!         spinner.stop(&spinner2);
 //!         spinner.set_text(&spinner2, "Successfully".to_string());
-//! 
+//!
 //!         sleep(Duration::from_secs(2));
 //!         spinner.set_text(&spinner1, "spinner1 stopped".to_string());
 //!}
 //! ```
-//! 
+//!
 //! ## Progress Bar
 //!```
 //! // examples/progress.rs
@@ -75,9 +75,9 @@
 //!
 //! Check out the examples for more
 
-pub(crate) mod terminal;
-pub mod progress;
-pub mod style;
-mod iterators;
 mod color;
+mod iterators;
+pub mod progress;
 pub mod spinner;
+pub mod style;
+pub(crate) mod terminal;

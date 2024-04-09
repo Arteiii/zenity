@@ -1,4 +1,3 @@
-
 /// represents different color palettes supported by terminals
 #[allow(dead_code)]
 #[derive(PartialEq)]
@@ -192,6 +191,7 @@ impl CliColorConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::style::*;
 
     #[test]
     fn test_valid_arguments() {
@@ -250,17 +250,11 @@ mod tests {
 
     #[test]
     fn test_combine_attributes() {
-        let attributes = combine_attributes(&[
-            &style::Attribute::Bold,
-            &style::Attribute::Underlined,
-            &style::Attribute::Italic,
-        ]);
+        let attributes =
+            combine_attributes(&[&Attribute::Bold, &Attribute::Underlined, &Attribute::Italic]);
         assert_eq!(
             attributes,
-            style::Attributes::default()
-                | style::Attribute::Bold
-                | style::Attribute::Underlined
-                | style::Attribute::Italic
+            Attributes::default() | Attribute::Bold | Attribute::Underlined | Attribute::Italic
         );
     }
 }
