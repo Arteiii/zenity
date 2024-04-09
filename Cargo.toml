@@ -8,7 +8,7 @@ readme = "README.md"
 categories = ["command-line-utilities", "command-line-interface"]
 
 
-description = "100+ Cool Animations and Support for Multiple Animations at Once (Yet Another Spinner Lib)"
+description = "100+ spinner animations and Progress Bars and Support for Multiple Animations at Once"
 repository = "https://github.com/Arteiii/zenity"
 keywords = ["console", "animations", "cli", "spinner", "loading"]
 homepage = "https://arteiii.github.io"

@@ -1,6 +1,6 @@
 # zenity (Yet Another Spinner Lib)
 
-Elevate your Rust command-line interfaces with 100+ spinner animations and multiline support
+Elevate your Rust command-line interfaces with 100+ spinner animations and Progress Bars + multiline support
 
 [![Publish to Crates](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml)
 [![Compile Rust](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml/badge.svg)](https://github.com/Arteiii/zenity/actions/workflows/release_examples.yml)
@@ -12,6 +12,10 @@ Elevate your Rust command-line interfaces with 100+ spinner animations and multi
 ![multiline preview](./images/rustrover64_4bzlv2mWxK.gif)
 
 ![](./images/rustrover64_tlGiHM9JP0.gif)
+
+![progress bar](./images/rustrover64_WupAJU44Lu.gif)
+
+checkout the examples for this^^
 
 
 Do you often find yourself gazing into the void of your terminal, 
