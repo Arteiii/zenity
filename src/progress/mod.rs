@@ -9,7 +9,34 @@ use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
 
-/// struct holding multiple bars
+/// struct holding multiple ProgressBars / Frames and the uid
+/// 
+/// # Example
+///
+/// ```
+/// use zenity::progress::{Frames, ProgressBar};
+/// use std::thread;
+/// use std::time::Duration;
+///
+/// // create a new ProgressBar instance
+/// let spinner = ProgressBar::default();
+///
+/// // add a progress bar with some frames
+/// let uid = spinner.add(Frames::default());
+///
+/// // start a background thread to update the progress
+/// thread::spawn(move || {
+///     for i in 0..=100 {
+///         // update the progress every 100 milliseconds
+///         spinner.set(&uid, &i);
+///         thread::sleep(Duration::from_millis(100));
+///     }
+/// });
+///
+/// // wait for the background thread to finish
+/// // in a real-world scenario, you might have other tasks to perform here
+/// thread::sleep(Duration::from_secs(5));
+/// ```
 #[derive(Clone)]
 pub struct ProgressBar {
     // TODO: instead of random ids go after creation and increment by one
@@ -19,6 +46,13 @@ pub struct ProgressBar {
 }
 
 impl Default for ProgressBar {
+    /// creates a new Progress instance
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::progress::{Frames, ProgressBar};
+    /// let spinner = ProgressBar::default();
+    /// ```
     fn default() -> Self {
         let progress = Self::new(Frames::default());
 
@@ -33,8 +67,11 @@ impl ProgressBar {
     ///
     /// ## Example
     /// ```
-    /// # use zenity::progress::{Frames, ProgressBar};
-    /// let _spinner = ProgressBar::new(Frames::default());
+    /// use zenity::progress::{Frames, ProgressBar};
+    ///
+    /// let spinner = ProgressBar::new(Frames::default());
+    /// let uid1 = spinner.get_last(); // the last created uid
+    /// # assert_eq!(uid1, 1);
     /// ```
     pub fn new(bar: Frames) -> Self {
         // console_cursor::reset_cursor();
@@ -60,6 +97,16 @@ impl ProgressBar {
     /// # Returns
     ///
     /// the UID assigned to the added progress bar
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::progress::{Frames, ProgressBar};
+    ///
+    /// # let spinner = ProgressBar::new(Frames::default());
+    /// # let uid1 = spinner.get_last();
+    /// let uid2 = spinner.add(Frames::default());
+    /// # assert_eq!(uid2, 2);
+    /// ```
     pub fn add(&self, bar: Frames) -> usize {
         let mut bar_map = self.bar.lock().unwrap();
         let uid: usize = bar_map.len() + 1_usize; // Incremental UID starting from 1
@@ -79,6 +126,19 @@ impl ProgressBar {
     /// **NOTE:**
     /// - if the UID is invalid, this function does nothing
     /// - this function locks the progress bar associated with the provided UID and updates its current value incrementally
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::progress::{Frames, ProgressBar};
+    ///
+    /// let spinner = ProgressBar::default();
+    /// let uid = spinner.add(Frames::default());
+    /// 
+    /// # assert_eq!(spinner.get(&uid), Some(0));
+    /// # 
+    /// spinner.set(&uid, &50);
+    /// # assert_eq!(spinner.get(&uid), Some(50));
+    /// ```
     pub fn set(&self, uid: &usize, new_current: &usize) {
         if let Some(bar) = self.bar.lock().unwrap().get(uid) {
             let current = bar.current.lock().unwrap();
@@ -88,7 +148,53 @@ impl ProgressBar {
         }
     }
 
+    /// Get the current value of a progress bar
+    ///
+    /// # Arguments
+    ///
+    /// * `uid` - the unique identifier of the progress bar
+    ///
+    /// # Returns
+    ///
+    /// The current value of the progress bar if it exists, otherwise `None`.
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::progress::{Frames, ProgressBar};
+    /// #
+    /// # let spinner = ProgressBar::default();
+    /// # let uid = spinner.add(Frames::default());
+    ///
+    /// spinner.set(&uid, &50);
+    /// # assert_eq!(spinner.get(&uid), Some(50));
+    ///
+    /// if let Some(current) = spinner.get(&uid) {
+    ///     spinner.set(&uid, &(current + 10));
+    /// }
+    /// # assert_eq!(spinner.get(&uid), Some(60));
+    /// ```
+    pub fn get(&self, uid: &usize) -> Option<usize> {
+        if let Some(bar) = self.bar.lock().unwrap().get(uid) {
+            let current = *bar.current.lock().unwrap();
+            Some(current)
+        } else {
+            None
+        }
+    }
+
     /// start each queued progressbar
+    ///
+    /// # Returns
+    ///
+    /// the UID of the last created progress bar
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::progress::{Frames, ProgressBar};
+    ///
+    /// let spinner = ProgressBar::new(Frames::default());
+    /// let uid1 = spinner.run_all(); // starts all created bars
+    /// ```
     pub fn run_all(&self) {
         let bars = Arc::clone(&self.bar);
         let stop = Arc::clone(&self.stop);
@@ -140,6 +246,15 @@ impl ProgressBar {
     /// # Returns
     ///
     /// the UID of the last created progress bar
+    /// 
+    /// ## Example
+    /// ```
+    /// use zenity::progress::{Frames, ProgressBar};
+    ///
+    /// let spinner = ProgressBar::new(Frames::default());
+    /// let uid1 = spinner.get_last(); // the last created uid
+    /// # assert_eq!(uid1, 1);
+    /// ```
     pub fn get_last(&self) -> usize {
         let bar_map = self.bar.lock().unwrap();
         bar_map.len()

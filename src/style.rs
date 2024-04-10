@@ -13,18 +13,18 @@ pub use crossterm::style::*;
 ///
 /// # Returns
 ///
-/// A `style::Attributes` instance representing the combined attributes
-///
-/// # Example
+/// a `style::Attributes` instance representing the combined attributes
 ///
 /// ```
-/// use zenity::style::{Attribute, combine_attributes};
+/// use zenity::style::{Attribute, Attributes, combine_attributes};
 ///
-/// let attributes = combine_attributes(&[
-///     &Attribute::Bold,
-///     &Attribute::Underlined,
-///     &Attribute::Italic,
-/// ]);
+/// let attr1 = Attribute::Bold;
+/// let attr2 = Attribute::Underlined;
+/// let attr3 = Attribute::Italic;
+///
+/// let combined_attr = combine_attributes(&[&attr1, &attr2, &attr3]);
+/// # 
+/// # assert_eq!(combine_attributes(&[&attr1, &attr2, &attr3]), combined_attr);
 /// ```
 pub fn combine_attributes(attr_list: &[&Attribute]) -> Attributes {
     attr_list.iter().fold(Attributes::default(), |acc, &attr| {

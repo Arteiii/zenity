@@ -1,25 +1,35 @@
 pub(crate) mod console_render {
-    use std::io::stdout;
+    use std::io::{stdout, Write};
 
+    use crossterm::{cursor, execute, queue, style, terminal};
+
+    use crate::color::ENABLE_COLOR;
     use crate::style::ContentStyle;
-    use crossterm::{cursor, execute, style, terminal};
 
-    // use crossterm::style::ContentStyle;
+// use crossterm::style::ContentStyle;
 
     pub fn render_frame(frame: &str) {
         execute!(stdout(), cursor::RestorePosition, style::Print(frame),).unwrap();
     }
 
-    #[allow(dead_code)]
-    pub fn render_styled_frame(frame: &String, style: ContentStyle) {
-        execute!(
-            stdout(),
-            cursor::RestorePosition,
-            style::SetStyle(style), // set animation color
-            style::Print(frame),
-            style::ResetColor, // reset colors
-        )
-        .unwrap();
+    pub fn render_styled_line(lines: &[String], style: ContentStyle) {
+        if *ENABLE_COLOR {
+            let mut stdout = stdout();
+            for (index, line) in lines.iter().enumerate() {
+                queue!(
+                    stdout,
+                    cursor::RestorePosition,
+                    cursor::MoveToNextLine(index as u16 + 1), // move to next line based on index +1
+                    style::SetStyle(style),                   // set animation color
+                    style::Print(line),
+                    style::ResetColor, // reset colors
+                )
+                .unwrap();
+                stdout.flush().unwrap();
+            }
+        } else {
+            render_frame(&lines.join("\n"));
+        }
     }
 
     pub fn cleanup() {

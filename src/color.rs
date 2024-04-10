@@ -3,20 +3,42 @@
 use lazy_static::lazy_static;
 
 lazy_static! {
-    /// supported color pallet (which colors are supported if ENABLE_COLOR)
+   /// supported color pallet (which colors are supported if ENABLE_COLOR)
+   ///
+   /// Example:
+   ///
+   /// ```
+   /// use zenity::color::{COLOR_PALETTE, ENABLE_COLOR, ColorPalette};
+   /// assert_eq!(*ENABLE_COLOR, false); // if color is supported (will be false in default tests)
+   /// assert_eq!(*COLOR_PALETTE, ColorPalette::None); // which colors are supported
+   /// ```
     pub static ref COLOR_PALETTE: ColorPalette = {
         CliColorConfig::get_supported_color_palette()
     };
 
     /// lazy static ENABLE color bool true if color should be enabled false otherwise
+    ///
+    /// Example:
+    ///
+    /// ```
+    /// use zenity::color::{COLOR_PALETTE, ENABLE_COLOR, ColorPalette};
+    /// assert_eq!(*ENABLE_COLOR, false); // if color is supported
+    /// ```
     pub static ref ENABLE_COLOR: bool = {
         let conf = CliColorConfig::default();
         conf.should_enable_color()
     };
 }
 
+
 /// represents different color palettes supported by terminals
-#[allow(dead_code)]
+/// Example:
+///
+/// ```
+/// use zenity::color::{COLOR_PALETTE, ENABLE_COLOR, ColorPalette};
+/// # assert_eq!(*ENABLE_COLOR, false);
+/// assert_eq!(*COLOR_PALETTE, ColorPalette::None); // None for testing
+/// ```
 #[derive(PartialEq, Debug)]
 pub enum ColorPalette {
     /// color support not available (pipe or otherwise disabled)

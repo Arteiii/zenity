@@ -1,4 +1,4 @@
-//! Predefined Frames and other aniamtions
+//! Predefined Spinner Frames
 
 /// represents a collection of frames and their display speed, typically used for animations
 ///
@@ -19,6 +19,13 @@ pub struct Frames {
 }
 
 impl Default for Frames {
+    /// creates a new Progress instance
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::progress::{Frames, ProgressBar};
+    /// let spinner = ProgressBar::new(Frames::default());
+    /// ```
     fn default() -> Self {
         Self::dots_simple_big1(false)
     }

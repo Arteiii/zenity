@@ -1,4 +1,7 @@
-//! mod for multiline spinners
+//! Module for multiline spinners
+//!
+//! this module provides functionality for creating and managing multiline spinners,
+//! which consist of multiple spinners running simultaneously, each with its own text
 
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -20,6 +23,27 @@ struct Spinner {
 }
 
 /// struct holding multiple spinners
+///
+///
+/// # Single Spinner Example
+///
+/// ```
+/// # use std::thread::sleep;
+/// # use std::time::Duration;
+/// use zenity::spinner::{Frames, MultiSpinner};
+///
+/// let spinner = MultiSpinner::new(Frames::dot_spinner11(false));
+/// let spinner1 = spinner.get_last(); // get last created uid
+/// let spinner2 = spinner.add(Frames::binary(false));
+/// 
+/// spinner.run_all();
+/// sleep(Duration::from_secs(4));
+/// 
+/// spinner.set_text(&spinner2, "spinner2".to_string());
+/// spinner.set_text(&spinner1, "spinner1".to_string());
+/// 
+/// // no need to stop the spinners they will run out of scope and get dropped
+/// ```
 #[derive(Clone)]
 pub struct MultiSpinner {
     spinner: Arc<Mutex<HashMap<usize, Spinner>>>,
@@ -28,6 +52,13 @@ pub struct MultiSpinner {
 }
 
 impl Default for MultiSpinner {
+    /// creates a new Progress instance
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::spinner::{Frames, MultiSpinner};
+    /// let spinner = MultiSpinner::default();
+    /// ```
     fn default() -> Self {
         let spinner = Self::new(Frames::dot_spinner11(false));
         spinner.run_all();
@@ -202,7 +233,7 @@ impl MultiSpinner {
     fn render_frames(frames: &[Vec<&str>], index: usize, texts: &[String], should_stop: &[bool]) {
         let first_frame = iterators::balanced_iterator(index, frames);
 
-        let combined_string: String = first_frame
+        let combined_string: Vec<String> = first_frame
             .iter()
             .zip(texts.iter())
             .zip(should_stop.iter())
@@ -213,10 +244,9 @@ impl MultiSpinner {
                     frame.as_ref().map(|frame| format!("{}  {}", frame, text))
                 }
             })
-            .collect::<Vec<String>>()
-            .join("\n");
+            .collect::<Vec<String>>();
 
-        console_render::render_frame(&combined_string);
+        console_render::render_styled_line(&combined_string, Default::default());
     }
 
     /// helper function to clean-up after animation stop

@@ -67,7 +67,7 @@
 //! Your feedback is valuable and will help improve the library for everyone.
 
 pub mod color;
-mod iterators;
+pub(crate) mod iterators;
 pub mod progress;
 pub mod spinner;
 pub mod style;

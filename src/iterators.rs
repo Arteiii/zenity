@@ -14,7 +14,7 @@
 ///
 /// a vector containing the values from each vector at the specified index position
 ///
-pub fn balanced_iterator<T>(index: usize, vectors: &[Vec<T>]) -> Vec<Option<&T>> {
+pub(crate) fn balanced_iterator<T>(index: usize, vectors: &[Vec<T>]) -> Vec<Option<&T>> {
     vectors
         .iter()
         .map(|vec| {
