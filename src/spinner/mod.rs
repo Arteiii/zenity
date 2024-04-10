@@ -51,13 +51,13 @@ struct Spinner {
 /// let spinner = MultiSpinner::new(Frames::dot_spinner11(false));
 /// let spinner1 = spinner.get_last(); // get last created uid
 /// let spinner2 = spinner.add(Frames::binary(false));
-/// 
+///
 /// spinner.run_all();
 /// sleep(Duration::from_secs(4));
-/// 
+///
 /// spinner.set_text(&spinner2, "spinner2".to_string());
 /// spinner.set_text(&spinner1, "spinner1".to_string());
-/// 
+///
 /// // no need to stop the spinners they will run out of scope and get dropped
 /// ```
 #[derive(Clone)]

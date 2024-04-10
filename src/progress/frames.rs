@@ -17,7 +17,7 @@
 use std::sync::{Arc, Mutex};
 
 /// struct storing the data needed to render a ProgressFrames
-/// 
+///
 /// Example
 /// ```
 /// use std::sync::{Arc, Mutex};
@@ -85,16 +85,15 @@ impl Default for Frames {
     }
 }
 
-
 impl PartialEq for Frames {
     fn eq(&self, other: &Self) -> bool {
-        self.begin == other.begin &&
-            self.bar_complete_char == other.bar_complete_char &&
-            self.bar_incomplete_char == other.bar_incomplete_char &&
-            self.end == other.end &&
-            *self.size.lock().unwrap() == *other.size.lock().unwrap() &&
-            *self.goal.lock().unwrap() == *other.goal.lock().unwrap() &&
-            *self.current.lock().unwrap() == *other.current.lock().unwrap()
+        self.begin == other.begin
+            && self.bar_complete_char == other.bar_complete_char
+            && self.bar_incomplete_char == other.bar_incomplete_char
+            && self.end == other.end
+            && *self.size.lock().unwrap() == *other.size.lock().unwrap()
+            && *self.goal.lock().unwrap() == *other.goal.lock().unwrap()
+            && *self.current.lock().unwrap() == *other.current.lock().unwrap()
     }
 }
 
