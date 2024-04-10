@@ -10,7 +10,7 @@ use crate::terminal::{console_cursor, console_render};
 pub mod frames;
 
 /// struct holding multiple ProgressBars / Frames and the uid
-/// 
+///
 /// # Example
 ///
 /// ```
@@ -133,9 +133,9 @@ impl ProgressBar {
     ///
     /// let spinner = ProgressBar::default();
     /// let uid = spinner.add(Frames::default());
-    /// 
+    ///
     /// # assert_eq!(spinner.get(&uid), Some(0));
-    /// # 
+    /// #
     /// spinner.set(&uid, &50);
     /// # assert_eq!(spinner.get(&uid), Some(50));
     /// ```
@@ -246,7 +246,7 @@ impl ProgressBar {
     /// # Returns
     ///
     /// the UID of the last created progress bar
-    /// 
+    ///
     /// ## Example
     /// ```
     /// use zenity::progress::{Frames, ProgressBar};

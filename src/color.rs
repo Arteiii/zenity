@@ -30,7 +30,6 @@ lazy_static! {
     };
 }
 
-
 /// represents different color palettes supported by terminals
 /// Example:
 ///
