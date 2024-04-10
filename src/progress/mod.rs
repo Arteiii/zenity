@@ -1,4 +1,18 @@
 //! mod for progress bars
+//!
+//! ```
+//! use zenity::progress::{Frames, ProgressBar};
+//! use std::thread;
+//! use std::time::Duration;
+//!
+//! // create a new ProgressBar instance
+//! let progress = ProgressBar::default();
+//!
+//! // wait for the background thread to finish
+//! // in a real-world scenario, you might have other tasks to perform here
+//! thread::sleep(Duration::from_secs(5));
+//! ```
+
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -17,25 +31,25 @@ pub mod frames;
 /// use zenity::progress::{Frames, ProgressBar};
 /// use std::thread;
 /// use std::time::Duration;
+/// use rand::Rng;
 ///
-/// // create a new ProgressBar instance
-/// let spinner = ProgressBar::default();
+///  let progress = ProgressBar::new(Frames::rect().set_goal(253));
+///  let progress1 = progress.get_last();
 ///
-/// // add a progress bar with some frames
-/// let uid = spinner.add(Frames::default());
+///  let progress2 = progress.add(Frames::equal().set_goal(253).set_size(7));
+///  let progress3 = progress.add(Frames::hash().set_goal(253).set_size(60));
 ///
-/// // start a background thread to update the progress
-/// thread::spawn(move || {
-///     for i in 0..=100 {
-///         // update the progress every 100 milliseconds
-///         spinner.set(&uid, &i);
-///         thread::sleep(Duration::from_millis(100));
-///     }
-/// });
+///  progress.run_all();
 ///
-/// // wait for the background thread to finish
-/// // in a real-world scenario, you might have other tasks to perform here
-/// thread::sleep(Duration::from_secs(5));
+///  let loading = 1_usize;
+///
+///  for loading in loading..=253 {
+///     progress.set(&progress1, &loading);
+///     progress.set(&progress2, &loading);
+///     progress.set(&progress3, &loading);
+///
+///     thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(1..=70)));
+///  }
 /// ```
 #[derive(Clone)]
 pub struct ProgressBar {
@@ -50,7 +64,7 @@ impl Default for ProgressBar {
     ///
     /// ## Example
     /// ```
-    /// use zenity::progress::{Frames, ProgressBar};
+    /// use zenity::progress::ProgressBar;
     /// let spinner = ProgressBar::default();
     /// ```
     fn default() -> Self {
@@ -62,6 +76,10 @@ impl Default for ProgressBar {
     }
 }
 
+/// ```
+/// use zenity::progress::ProgressBar;
+/// let spinner = ProgressBar::default();
+/// ```
 impl ProgressBar {
     /// creates a new Progress instance
     ///
@@ -232,11 +250,9 @@ impl ProgressBar {
                     rendered_frames.push(rendered_frame);
                 }
 
-                // Join all the rendered frames from the vector
-                let combined_output = rendered_frames.join("\n");
 
                 // render the frame with the updated incomplete string
-                console_render::render_frame(&combined_output);
+                console_render::render_styled_line(&rendered_frames, Default::default());
             }
         });
     }

@@ -2,6 +2,22 @@
 //!
 //! this module provides functionality for creating and managing multiline spinners,
 //! which consist of multiple spinners running simultaneously, each with its own text
+//! 
+//! ```
+//! use zenity::spinner::MultiSpinner;
+//!
+//! // create a LoadingAnimation instance using one of the predefined animations
+//! let spinner = MultiSpinner::default();
+//!
+//! // optional:
+//! spinner.set_text(&spinner.get_last(), "Loading...".to_string()); // sets the text to "Loading..."
+//!
+//! // here you might have the time intensive task
+//! 
+//! // `loading_animation` will run out of scope now and get dropped,
+//! // thus the animation will stop and remove itself from the console
+//! ```
+
 
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -56,7 +72,7 @@ impl Default for MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// use zenity::spinner::{Frames, MultiSpinner};
+    /// use zenity::spinner::MultiSpinner;
     /// let spinner = MultiSpinner::default();
     /// ```
     fn default() -> Self {
@@ -67,13 +83,17 @@ impl Default for MultiSpinner {
     }
 }
 
+/// ```
+/// use zenity::spinner::MultiSpinner;
+/// let spinner = MultiSpinner::default();
+/// ```
 impl MultiSpinner {
     /// creates a new MultiSpinner instance
     ///
     /// ## Example
     /// ```
-    /// # use zenity::spinner::{MultiSpinner, Frames};
-    /// let _spinner = MultiSpinner::new(Frames::default());
+    /// use zenity::spinner::{MultiSpinner, Frames};
+    /// let spinner = MultiSpinner::new(Frames::default());
     /// ```
     pub fn new(frames: Frames) -> Self {
         let spinner = MultiSpinner {

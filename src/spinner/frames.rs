@@ -1,4 +1,11 @@
 //! Predefined Spinner Frames
+//! ```
+//! use zenity::spinner::Frames;
+//!
+//! let frames: Frames = Frames { frames: vec!["◐", "◓", "◑", "◒"], speed_ms: 100 };
+//! assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
+//! assert_eq!(frames.speed_ms, 100);
+//! ```
 
 /// represents a collection of frames and their display speed, typically used for animations
 ///
@@ -31,6 +38,10 @@ impl Default for Frames {
     }
 }
 
+/// ```
+/// use zenity::progress::{Frames, ProgressBar};
+/// let spinner = ProgressBar::new(Frames::default());
+/// ```
 impl Frames {
     /// generates frames for spinner animation based on the provided pattern, inversion flag, and speed
     ///

@@ -1,4 +1,15 @@
 //! Collection of helper functions and classes related to colors
+//! ```
+//! use zenity::style::{Attribute, Attributes, combine_attributes};
+//!
+//! let attr1 = Attribute::Bold;
+//! let attr2 = Attribute::Underlined;
+//! let attr3 = Attribute::Italic;
+//!
+//! let combined_attr = combine_attributes(&[&attr1, &attr2, &attr3]);
+//! # 
+//! # assert_eq!(combine_attributes(&[&attr1, &attr2, &attr3]), combined_attr);
+//! ```
 
 pub use crossterm::style::*;
 

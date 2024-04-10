@@ -1,4 +1,18 @@
 //! Predefined Progress Frames
+//! ```
+//! use std::sync::{Arc, Mutex};
+//! use zenity::progress::Frames;
+//! 
+//! let spinner_frames = Frames {
+//!             begin: vec!["["],
+//!             bar_complete_char: vec!["="],
+//!             bar_incomplete_char: vec!["-"],
+//!             end: vec!["]"],
+//!             size: Arc::new(Mutex::new(30)),
+//!             goal: Arc::new(Mutex::new(100)),
+//!             current: Arc::new(Mutex::new(0)),
+//!         };
+//! ```
 
 use std::sync::{Arc, Mutex};
 
@@ -87,6 +101,11 @@ impl PartialEq for Frames {
 impl Eq for Frames {}
 
 
+/// ```
+/// use zenity::progress::Frames;
+///
+/// let frames = Frames::default();
+/// ```
 impl Frames {
     /// generates frames for
     ///
@@ -254,4 +273,5 @@ impl Frames {
     }
 
     // TODO: add more
+
 }

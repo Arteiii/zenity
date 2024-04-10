@@ -1,4 +1,11 @@
 //! Mod for color related methods
+//! Example:
+//!
+//! ```
+//! use zenity::color::{COLOR_PALETTE, ENABLE_COLOR, ColorPalette};
+//! assert_eq!(*ENABLE_COLOR, false); // if color is supported (will be false in default tests)
+//! assert_eq!(*COLOR_PALETTE, ColorPalette::None); // which colors are supported
+//! ```
 
 use lazy_static::lazy_static;
 
@@ -8,8 +15,7 @@ lazy_static! {
    /// Example:
    ///
    /// ```
-   /// use zenity::color::{COLOR_PALETTE, ENABLE_COLOR, ColorPalette};
-   /// assert_eq!(*ENABLE_COLOR, false); // if color is supported (will be false in default tests)
+   /// use zenity::color::{COLOR_PALETTE, ColorPalette};
    /// assert_eq!(*COLOR_PALETTE, ColorPalette::None); // which colors are supported
    /// ```
     pub static ref COLOR_PALETTE: ColorPalette = {
@@ -21,7 +27,7 @@ lazy_static! {
     /// Example:
     ///
     /// ```
-    /// use zenity::color::{COLOR_PALETTE, ENABLE_COLOR, ColorPalette};
+    /// use zenity::color::ENABLE_COLOR;
     /// assert_eq!(*ENABLE_COLOR, false); // if color is supported
     /// ```
     pub static ref ENABLE_COLOR: bool = {
@@ -29,7 +35,6 @@ lazy_static! {
         conf.should_enable_color()
     };
 }
-
 
 /// represents different color palettes supported by terminals
 /// Example:
@@ -184,8 +189,9 @@ impl CliColorConfig {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::style::*;
+
+    use super::*;
 
     #[test]
     fn test_valid_arguments() {

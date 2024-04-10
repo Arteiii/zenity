@@ -5,9 +5,7 @@ pub(crate) mod console_render {
 
     use crate::color::ENABLE_COLOR;
     use crate::style::ContentStyle;
-
-// use crossterm::style::ContentStyle;
-
+    
     pub fn render_frame(frame: &str) {
         execute!(stdout(), cursor::RestorePosition, style::Print(frame),).unwrap();
     }
