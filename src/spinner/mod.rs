@@ -19,6 +19,7 @@
 //! ```
 
 use std::collections::HashMap;
+use std::ops::DerefMut;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
@@ -179,6 +180,28 @@ impl MultiSpinner {
         }
     }
 
+    /// set a styled text of a specific spinner
+    ///
+    /// if the uid is invalid this does nothing
+    ///
+    /// ## Example
+    /// ```
+    /// use crossterm::style::Color;
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
+    /// use zenity::style::StyledString;
+    ///
+    /// let spinner = MultiSpinner::new(Frames::default());
+    ///
+    /// spinner.set_styled_text(&spinner.get_last(),
+    ///     StyledString::simple("test string", Some(Color::Red), Some(Color::Black), None));
+    /// ```
+    pub fn set_styled_text(&self, uid: &usize, new_text: StyledString) {
+        if let Some(spinner) = self.spinner.lock().unwrap().get_mut(uid) {
+            spinner.text = new_text;
+        }
+    }
+
     /// stops a spinner if the uid is invalid this does nothing
     ///
     /// ## Example
@@ -192,9 +215,8 @@ impl MultiSpinner {
     /// spinner.stop(&spinner.get_last());
     /// ```
     pub fn stop(&self, uid: &usize) {
-        if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
-            let mut spinner = spinner.clone();
-            spinner.stop = true;
+        if let Some(spinner) = self.spinner.lock().unwrap().get_mut(uid) {
+            spinner.stop = true; // Set spinner.stop to true
         }
     }
 
@@ -227,6 +249,9 @@ impl MultiSpinner {
             while !*stop.lock().unwrap() {
                 // collect frames and texts from all spinners
                 for (line_index, spinner) in spinners.lock().unwrap().iter() {
+                    let mut combined_vec = Vec::new();
+
+                    // if the spinner is not stopped, include new frames and update text
                     if !spinner.stop {
                         let frames = vec![spinner.frames.clone()];
 
@@ -235,14 +260,15 @@ impl MultiSpinner {
                             .map(|opt| opt.cloned().unwrap_or_default())
                             .collect::<Vec<_>>();
 
-                        let mut combined_vec = Vec::new();
                         if let Some(first_frame) = current_frame.first() {
                             combined_vec.push(first_frame.clone());
-                            combined_vec.push(spinner.text.clone());
                         }
-
-                        console_render::render_styled_line(*line_index as u16, &combined_vec);
                     }
+
+                    // always include spinner text
+                    combined_vec.push(spinner.text.clone());
+
+                    console_render::render_styled_line(*line_index as u16, &combined_vec);
                 }
 
                 index += 1;

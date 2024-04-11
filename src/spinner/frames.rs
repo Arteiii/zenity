@@ -42,7 +42,6 @@ pub struct Frames {
     pub speed_ms: u64,
     /// String to display behind the spinner
     pub text: StyledString,
-    // TODO: fix possible issues after merging spinners struct into frames
     /// if the animation is active
     pub stop: bool,
 }
@@ -57,6 +56,12 @@ impl Default for Frames {
     /// ```
     fn default() -> Self {
         Self::dots_simple_big1()
+    }
+}
+
+impl AsRef<Frames> for Frames {
+    fn as_ref(&self) -> &Frames {
+        self
     }
 }
 
@@ -93,6 +98,11 @@ impl Frames {
                 style: Default::default(),
             },
         }
+    }
+
+    /// stops a spinner animation
+    pub fn stop(&mut self) {
+        self.stop = true;
     }
 
     /// ⠋
