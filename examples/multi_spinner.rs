@@ -5,6 +5,7 @@ use unicode_icons::icons::symbols::{check_mark_button, cross_mark};
 
 use zenity::spinner::Frames;
 use zenity::spinner::MultiSpinner;
+use zenity::style::{StyledString, Color};
 
 fn main() {
     {
@@ -24,15 +25,26 @@ fn main() {
         sleep(Duration::from_secs(4));
         spinner.set_text(&spinner2, "  spinner2".to_string());
         // stop spinner1
-        spinner.set_text(&spinner1, "  spinner1".to_string());
+        spinner.set_styled_text(
+            &spinner1,
+            StyledString::simple(" spinner1", Some(Color::Blue), Some(Color::DarkBlue), None),
+        );
 
         sleep(Duration::from_secs(2));
 
         spinner.stop(&spinner2);
-        spinner.set_text(&spinner2, format!("  {}   Successfully", &check_mark_text));
+        spinner.set_styled_text(
+            &spinner2,
+            StyledString::simple(
+                &format!(" {} Successfully", &check_mark_text),
+                Some(Color::Green),
+                None,
+                None,
+            ),
+        );
 
         sleep(Duration::from_secs(2));
-        spinner.set_text(&spinner1, "  spinner1 stopped".to_string());
+        spinner.set_text(&spinner1, " spinner1 stopped".to_string());
 
         spinner.stop(&spinner1);
 
@@ -40,13 +52,27 @@ fn main() {
         spinner.stop(&spinner3);
         spinner.stop(&spinner4);
 
-        spinner.set_text(&spinner3, format!("  {}   Failed!", &cross_mark_text));
-        spinner.set_text(&spinner4, format!("   {}   Failed!", &cross_mark_text));
+        spinner.set_styled_text(
+            &spinner3,
+            StyledString::simple(
+                &format!(" {}  Failed!", &cross_mark_text),
+                Some(Color::Red),
+                None,
+                None,
+            ),
+        );
+        spinner.set_styled_text(
+            &spinner4,
+            StyledString::simple(
+                &format!(" {}  Failed!", &cross_mark_text),
+                Some(Color::Red),
+                None,
+                None,
+            ),
+        );
 
         sleep(Duration::from_secs(1));
     }
-
-    println!("animation stopped");
 
     sleep(Duration::from_secs(5));
 }
