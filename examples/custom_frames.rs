@@ -2,12 +2,16 @@ use std::thread::sleep;
 use std::time::Duration;
 
 use zenity::spinner::{Frames, MultiSpinner};
+use zenity::style::StyledString;
+use zenity::styled_string;
 
 fn main() {
     // custom animations
     let custom_frames: Frames = Frames {
-        frames: vec!["⚫", "⚪", "⚫", "⚪"], // custom frames for animation
-        speed_ms: 150,                        // custom speed for animation in milliseconds
+        frames: styled_string!["⚫", "⚪", "⚫", "⚪"], // custom frames for animation
+        speed_ms: 150, // custom speed for animation in milliseconds
+        text: StyledString::default(),
+        stop: false,
     };
 
     // create a MultiSpinner instance using the new custom animation
