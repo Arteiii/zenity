@@ -4,29 +4,51 @@ pub(crate) mod console_render {
     use crossterm::{cursor, execute, queue, style, terminal};
 
     use crate::color::ENABLE_COLOR;
-    use crate::style::ContentStyle;
+    use crate::style::StyledString;
 
-    pub fn render_frame(frame: &str) {
-        execute!(stdout(), cursor::RestorePosition, style::Print(frame),).unwrap();
+    pub fn render_line(frame: &Vec<String>, row: u16) {
+        let mut stdout = stdout();
+        queue!(
+            stdout,
+            cursor::RestorePosition,
+            cursor::MoveToNextLine(row + 1),
+        );
+        
+        for content in frame {
+            queue!(stdout, style::Print(content),).unwrap();
+        }
+
+        stdout.flush().unwrap();
     }
 
-    pub fn render_styled_line(lines: &[String], style: ContentStyle) {
+    pub fn render_styled_line(row: u16, content: Vec<StyledString>) {
         if *ENABLE_COLOR {
             let mut stdout = stdout();
-            for (index, line) in lines.iter().enumerate() {
+            queue!(
+                stdout,
+                cursor::RestorePosition,
+                cursor::MoveToNextLine(row + 1), // move to next line based on index +1
+            )
+            .unwrap();
+            for content in content {
                 queue!(
                     stdout,
-                    cursor::RestorePosition,
-                    cursor::MoveToNextLine(index as u16 + 1), // move to next line based on index +1
-                    style::SetStyle(style),                   // set animation color
-                    style::Print(line),
+                    style::SetStyle(content.style), // set animation color
+                    style::Print(content.string),
                     style::ResetColor, // reset colors
                 )
                 .unwrap();
-                stdout.flush().unwrap();
             }
+
+            stdout.flush().unwrap();
         } else {
-            render_frame(&lines.join("\n"));
+            render_line(
+                &content
+                    .iter()
+                    .map(|styled_string| styled_string.string.clone())
+                    .collect::<Vec<_>>(),
+                row,
+            );
         }
     }
 
