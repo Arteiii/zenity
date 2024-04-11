@@ -250,7 +250,6 @@ impl ProgressBar {
                     rendered_frames.push(rendered_frame);
                 }
 
-
                 // render the frame with the updated incomplete string
                 console_render::render_styled_line(&rendered_frames, Default::default());
             }

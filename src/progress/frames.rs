@@ -2,7 +2,7 @@
 //! ```
 //! use std::sync::{Arc, Mutex};
 //! use zenity::progress::Frames;
-//! 
+//!
 //! let spinner_frames = Frames {
 //!             begin: vec!["["],
 //!             bar_complete_char: vec!["="],
@@ -98,7 +98,6 @@ impl PartialEq for Frames {
 }
 
 impl Eq for Frames {}
-
 
 /// ```
 /// use zenity::progress::Frames;
@@ -272,5 +271,4 @@ impl Frames {
     }
 
     // TODO: add more
-
 }

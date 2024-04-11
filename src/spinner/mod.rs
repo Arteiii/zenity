@@ -2,7 +2,7 @@
 //!
 //! this module provides functionality for creating and managing multiline spinners,
 //! which consist of multiple spinners running simultaneously, each with its own text
-//! 
+//!
 //! ```
 //! use zenity::spinner::MultiSpinner;
 //!
@@ -13,11 +13,10 @@
 //! spinner.set_text(&spinner.get_last(), "Loading...".to_string()); // sets the text to "Loading..."
 //!
 //! // here you might have the time intensive task
-//! 
+//!
 //! // `loading_animation` will run out of scope now and get dropped,
 //! // thus the animation will stop and remove itself from the console
 //! ```
-
 
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -44,19 +43,18 @@ struct Spinner {
 /// # Single Spinner Example
 ///
 /// ```
-/// # use std::thread::sleep;
-/// # use std::time::Duration;
+/// use std::thread::sleep;
+/// use std::time::Duration;
 /// use zenity::spinner::{Frames, MultiSpinner};
 ///
 /// let spinner = MultiSpinner::new(Frames::dot_spinner11(false));
-/// let spinner1 = spinner.get_last(); // get last created uid
-/// let spinner2 = spinner.add(Frames::binary(false));
-///
 /// spinner.run_all();
-/// sleep(Duration::from_secs(4));
 ///
-/// spinner.set_text(&spinner2, "spinner2".to_string());
-/// spinner.set_text(&spinner1, "spinner1".to_string());
+/// sleep(Duration::from_secs(4));
+/// // do work here...
+///
+/// // get last created uid
+/// spinner.set_text(&spinner.get_last(), "spinner1".to_string());
 ///
 /// // no need to stop the spinners they will run out of scope and get dropped
 /// ```
@@ -64,7 +62,6 @@ struct Spinner {
 pub struct MultiSpinner {
     spinner: Arc<Mutex<HashMap<usize, Spinner>>>,
     stop: Arc<Mutex<bool>>,
-    // index: usize,
 }
 
 impl Default for MultiSpinner {
@@ -82,10 +79,25 @@ impl Default for MultiSpinner {
         spinner
     }
 }
-
 /// ```
-/// use zenity::spinner::MultiSpinner;
-/// let spinner = MultiSpinner::default();
+/// use std::thread::sleep;
+/// use std::time::Duration;
+/// use zenity::spinner::{Frames, MultiSpinner};
+///
+/// let spinner = MultiSpinner::new(Frames::dot_spinner11(false));
+/// let spinner1 = spinner.get_last(); // get last created uid
+/// let spinner2 = spinner.add(Frames::default()); // this already returns the uid
+///
+/// spinner.run_all();
+/// sleep(Duration::from_secs(4));
+///
+/// spinner.set_text(&spinner1, "spinner1".to_string());
+///
+/// spinner.stop(&spinner1); // stop the spinner1
+///
+/// spinner.set_text(&spinner2, "spinner2 :3".to_string());
+///
+/// // no need to stop spinner2 #
 /// ```
 impl MultiSpinner {
     /// creates a new MultiSpinner instance
@@ -99,7 +111,6 @@ impl MultiSpinner {
         let spinner = MultiSpinner {
             spinner: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
-            // index: 1_usize,
         };
 
         spinner.add(frames);
@@ -268,19 +279,14 @@ impl MultiSpinner {
 
         console_render::render_styled_line(&combined_string, Default::default());
     }
-
-    /// helper function to clean-up after animation stop
-    fn cleanup(&mut self) {
-        *self.stop.lock().unwrap() = true;
-
-        console_render::cleanup();
-        console_cursor::reset_cursor();
-    }
 }
 
 impl Drop for MultiSpinner {
     /// stops the loading animation thread when the `LoadingAnimation` object is dropped
     fn drop(&mut self) {
-        self.cleanup();
+        *self.stop.lock().unwrap() = true;
+
+        console_render::cleanup();
+        console_cursor::reset_cursor();
     }
 }
