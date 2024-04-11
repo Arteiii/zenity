@@ -65,12 +65,12 @@ pub fn combine_attributes(attr_list: &[&Attribute]) -> Attributes {
 /// the style is a representation of ``ContentStyle``
 ///
 /// the ``ContentStyle`` is defined like this:
-/// 
+///
 /// ```
 /// # use zenity::style::{Attribute, combine_attributes};
 /// # let combined_attr = combine_attributes(&[&Attribute::Bold, &Attribute::Underlined]);
 /// use zenity::style::ContentStyle;
-/// 
+///
 /// let style = ContentStyle {
 ///     foreground_color: None,
 ///     background_color: None,
@@ -78,10 +78,10 @@ pub fn combine_attributes(attr_list: &[&Attribute]) -> Attributes {
 ///     attributes: combined_attr, // see docs on combine_attributes()
 /// };
 /// ```
-/// 
+///
 /// for more info on combined attributes look up \[combine_attributes\]
-/// 
-/// 
+///
+///
 ///```
 /// # use zenity::style::{Attribute, combine_attributes, ContentStyle};
 /// # let combined_attr = combine_attributes(&[&Attribute::Bold, &Attribute::Underlined]);
@@ -92,19 +92,53 @@ pub fn combine_attributes(attr_list: &[&Attribute]) -> Attributes {
 /// #    attributes: combined_attr,
 /// # };
 /// use zenity::style::StyledString;
-/// 
+///
 /// let styled = StyledString {
 ///    string: "example".to_string(),
 ///    style,
 /// };
-/// # 
+/// #
 /// # assert_eq!(styled.string, "example");
 /// # assert_eq!(styled.style.attributes.contains(Attribute::Bold), true);
 /// # assert_eq!(styled.style.attributes.contains(Attribute::Underlined), true);
 /// ```
+#[derive(Clone)]
 pub struct StyledString {
     /// the string
     pub string: String,
     /// the ContentStyle to apply to the string
     pub style: ContentStyle,
+}
+
+impl Default for StyledString {
+    fn default() -> Self {
+        StyledString::new("")
+    }
+}
+
+impl StyledString {
+    /// creates a new StyledString with default arguments and parameters
+    pub fn new(string: &str) -> Self {
+        StyledString {
+            string: string.to_string(),
+            style: ContentStyle {
+                foreground_color: None,
+                background_color: None,
+                underline_color: None,
+                attributes: combine_attributes(&[&Attribute::Reset]),
+            },
+        }
+    }
+}
+
+/// convert vec string into vec StyledString
+#[macro_export]
+macro_rules! styled_string {
+    ($($string:expr), *) => {{
+        vec![
+            $(
+               StyledString::new($string),
+            )*
+        ]
+    }};
 }
