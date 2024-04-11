@@ -129,6 +129,27 @@ impl StyledString {
             },
         }
     }
+
+    /// creates a new StyledString with:
+    /// - foreground_color
+    /// - background_color
+    /// - underline_color
+    pub fn simple(
+        string: &str,
+        foreground_color: Option<Color>,
+        background_color: Option<Color>,
+        underline_color: Option<Color>,
+    ) -> Self {
+        StyledString {
+            string: string.to_string(),
+            style: ContentStyle {
+                foreground_color,
+                background_color,
+                underline_color,
+                attributes: combine_attributes(&[]),
+            },
+        }
+    }
 }
 
 /// convert vec string into vec StyledString
