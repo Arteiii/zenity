@@ -27,9 +27,12 @@
 /// # assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
 /// # assert_eq!(frames.speed_ms, 100);
 /// ```
+#[derive(Clone)]
 pub struct Frames {
     /// the sequence of frames to be displayed
     pub frames: Vec<&'static str>,
+    /// if the frames are inverted or not
+    pub inverted: bool,
     /// the speed at which each frame should be displayed, in milliseconds
     pub speed_ms: u64,
     /// String to display behind the spinner
@@ -37,6 +40,26 @@ pub struct Frames {
     // TODO: fix possible issues after merging spinners struct into frames
     /// if the animation is active
     pub active: bool,
+}
+
+pub trait FrameInverter {
+    fn invert(&self) -> Self;
+}
+
+impl FrameInverter for Frames {
+    fn invert(&self) -> Self {
+        if self.inverted {
+            Self {
+                frames: self.frames.iter().rev().copied().collect(),
+                speed_ms: self.speed_ms,
+                text: self.text.clone(),
+                active: self.active,
+                inverted: false, // Reset the inversion flag after inverting
+            }
+        } else {
+            self.clone() // Return a new instance with the same data
+        }
+    }
 }
 
 impl Default for Frames {
@@ -68,23 +91,18 @@ impl Frames {
     /// # Example
     ///
     /// ```
-    /// use zenity::spinner::{Frames};
+    /// use zenity::spinner::{FrameInverter, Frames};
     ///
-    /// let spinner_frames = Frames::generate_frames(vec!["◐", "◓", "◑", "◒"], false, 100);
+    /// let spinner_frames = Frames::generate_frames(vec!["◐", "◓", "◑", "◒"], 100).invert();
     /// # assert_eq!(spinner_frames.frames, vec!["◐", "◓", "◑", "◒"]);
     /// # assert_eq!(spinner_frames.speed_ms, 100);
     /// ```
-    pub fn generate_frames(pattern: Vec<&'static str>, inverted: bool, speed_ms: u64) -> Frames {
-        let mut frames = pattern;
-
-        if inverted {
-            frames.reverse();
-        }
-
+    pub fn generate_frames(frames: Vec<&'static str>,  speed_ms: u64) -> Frames {
         Frames {
             frames,
+            inverted: false,
             speed_ms,
-            active: true,
+            active: false,
             text: "".to_string(),
         }
     }
@@ -95,13 +113,14 @@ impl Frames {
     ///
     /// # Example
     /// ```
-    /// use zenity::spinner::Frames;
+    /// use zenity::spinner::{FrameInverter, Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner1(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner1().invert();
+    /// # assert_eq!(spinner_frames.frames, vec!["⠏", "⠇", "⠧", "⠦", "⠴", "⠼", "⠸", "⠹", "⠙", "⠋"]);
     /// ```
-    pub fn dot_spinner1(inverted: bool) -> Frames {
+    pub fn dot_spinner1() -> Frames {
         let pattern = vec!["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner2
