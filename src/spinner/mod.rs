@@ -130,14 +130,9 @@ impl MultiSpinner {
     pub fn add(&self, frames: Frames) -> usize {
         let mut spinner_map = self.spinner.lock().unwrap();
         let uid = spinner_map.len() + 1;
+        
 
-        let new_spinner = Spinner {
-            frames: Arc::new(Mutex::new(frames)),
-            text: Arc::new(Mutex::new("".to_string())),
-            should_stop: Arc::new(Mutex::new(false)),
-        };
-
-        spinner_map.insert(uid, new_spinner);
+        spinner_map.insert(uid, frames);
 
         uid
     }
@@ -271,7 +266,7 @@ impl MultiSpinner {
             })
             .collect::<Vec<String>>();
 
-        console_render::render_styled_line(&combined_string, Default::default());
+        console_render::render_styled_line();
     }
 }
 
