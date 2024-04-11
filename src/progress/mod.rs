@@ -239,6 +239,7 @@ impl ProgressBar {
                     let incomplete_size = size - complete_size;
 
                     // Render the frame with the updated incomplete string and add it to the vector
+
                     let rendered_frame = format!(
                         "{begin}{}{}{end}  {:.2}% | {}/{}",
                         current_complete.repeat(complete_size),

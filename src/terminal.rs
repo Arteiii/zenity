@@ -8,12 +8,8 @@ pub(crate) mod console_render {
 
     pub fn render_line(frame: &Vec<String>, row: u16) {
         let mut stdout = stdout();
-        queue!(
-            stdout,
-            cursor::RestorePosition,
-            cursor::MoveToNextLine(row + 1),
-        );
-        
+        queue!(stdout, cursor::RestorePosition, cursor::MoveTo(0, row + 1),).unwrap();
+
         for content in frame {
             queue!(stdout, style::Print(content),).unwrap();
         }
@@ -21,20 +17,20 @@ pub(crate) mod console_render {
         stdout.flush().unwrap();
     }
 
-    pub fn render_styled_line(row: u16, content: Vec<StyledString>) {
+    pub fn render_styled_line(row: u16, content: &[StyledString]) {
         if *ENABLE_COLOR {
             let mut stdout = stdout();
             queue!(
                 stdout,
                 cursor::RestorePosition,
-                cursor::MoveToNextLine(row + 1), // move to next line based on index +1
+                cursor::MoveTo(0, row + 1), // move to next line based on index +1
             )
             .unwrap();
             for content in content {
                 queue!(
                     stdout,
                     style::SetStyle(content.style), // set animation color
-                    style::Print(content.string),
+                    style::Print(&content.string),
                     style::ResetColor, // reset colors
                 )
                 .unwrap();
@@ -87,6 +83,7 @@ pub(crate) mod console_cursor {
     }
 
     /// resets the cursor to be shown and restores its saved position
+    #[allow(dead_code)]
     pub fn next_line(num: u16) {
         execute!(stdout(), cursor::MoveToNextLine(num)).unwrap();
     }
