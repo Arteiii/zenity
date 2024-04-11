@@ -1,10 +1,14 @@
 //! Predefined Spinner Frames
 //! ```
 //! use zenity::spinner::Frames;
-//!
-//! let frames: Frames = Frames { frames: vec!["◐", "◓", "◑", "◒"], speed_ms: 100 };
-//! assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
-//! assert_eq!(frames.speed_ms, 100);
+//! let frames: Frames = Frames {
+//!         frames: vec!["◐", "◓", "◑", "◒"],
+//!         speed_ms: 100,
+//!         text: "".to_string(),
+//!         active: true,
+//!  };
+//! # assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
+//! # assert_eq!(frames.speed_ms, 100);
 //! ```
 
 /// represents a collection of frames and their display speed, typically used for animations
@@ -13,16 +17,26 @@
 ///
 /// ```
 /// use zenity::spinner::Frames;
-///
-/// let frames: Frames = Frames { frames: vec!["◐", "◓", "◑", "◒"], speed_ms: 100 };
-/// assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
-/// assert_eq!(frames.speed_ms, 100);
+/// 
+/// let frames: Frames = Frames {
+///         frames: vec!["◐", "◓", "◑", "◒"],
+///         speed_ms: 100,
+///         text: "".to_string(),
+///         active: true,
+///  };
+/// # assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
+/// # assert_eq!(frames.speed_ms, 100);
 /// ```
 pub struct Frames {
     /// the sequence of frames to be displayed
     pub frames: Vec<&'static str>,
     /// the speed at which each frame should be displayed, in milliseconds
     pub speed_ms: u64,
+    /// String to display behind the spinner
+    pub text: String,
+    // TODO: fix possible issues after merging spinners struct into frames
+    /// if the animation is active
+    pub active: bool,
 }
 
 impl Default for Frames {
@@ -57,9 +71,8 @@ impl Frames {
     /// use zenity::spinner::{Frames};
     ///
     /// let spinner_frames = Frames::generate_frames(vec!["◐", "◓", "◑", "◒"], false, 100);
-    ///
-    /// assert_eq!(spinner_frames.frames, vec!["◐", "◓", "◑", "◒"]);
-    /// assert_eq!(spinner_frames.speed_ms, 100);
+    /// # assert_eq!(spinner_frames.frames, vec!["◐", "◓", "◑", "◒"]);
+    /// # assert_eq!(spinner_frames.speed_ms, 100);
     /// ```
     pub fn generate_frames(pattern: Vec<&'static str>, inverted: bool, speed_ms: u64) -> Frames {
         let mut frames = pattern;
@@ -68,7 +81,12 @@ impl Frames {
             frames.reverse();
         }
 
-        Frames { frames, speed_ms }
+        Frames {
+            frames,
+            speed_ms,
+            active: true,
+            text: "".to_string(),
+        }
     }
 
     /// ⠋

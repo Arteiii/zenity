@@ -21,8 +21,6 @@
 ![multiline preview](./images/rustrover64_4bzlv2mWxK.gif)
 
 
-[**CHANGELOG**](CHANGELOG.md)
-
 Do you often find yourself gazing into the void of your terminal, 
 wondering if your computer has decided to take a coffee break without notifying you?
 

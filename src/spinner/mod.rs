@@ -30,12 +30,6 @@ use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
 
-/// spinner struct encapsulating the spinner animation
-struct Spinner {
-    frames: Arc<Mutex<Frames>>,
-    text: Arc<Mutex<String>>,
-    should_stop: Arc<Mutex<bool>>,
-}
 
 /// struct holding multiple spinners
 ///
@@ -60,7 +54,7 @@ struct Spinner {
 /// ```
 #[derive(Clone)]
 pub struct MultiSpinner {
-    spinner: Arc<Mutex<HashMap<usize, Spinner>>>,
+    spinner: Arc<Mutex<HashMap<usize, Frames>>>,
     stop: Arc<Mutex<bool>>,
 }
 
