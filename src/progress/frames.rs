@@ -167,7 +167,8 @@ impl Frames {
     ///
     /// # Arguments
     ///
-    /// * `size` - The size of the progress bar as an usize, where 1 represents one character in the loading bar.
+    /// * `Size` - The size of the progress bar as an usize,
+    /// where 1 represents one character in the loading bar.
     ///
     /// # Returns
     ///

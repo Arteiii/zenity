@@ -20,27 +20,26 @@
 
 ![multiline preview](./images/rustrover64_4bzlv2mWxK.gif)
 
-
-Do you often find yourself gazing into the void of your terminal, 
+Do you often find yourself gazing into the void of your terminal,  
 wondering if your computer has decided to take a coffee break without notifying you?
 
 100+ predefined animations
 
-[List Of Animations](https://docs.rs/zenity/latest/zenity/animations/frames/spinner/struct.PreDefined.html)
-
-
-## Introducing
-
-After countless late nights spent wrestling with terminal buffers and ASCII art,
-after enduring more trial and error than we care to admit,
-we proudly present to you our humble attempt to transform loading animations from a headache into a delight
+[Spinner](https://docs.rs/zenity/latest/zenity/spinner/frames/struct.Frames.html)
+[ProgressBar](https://docs.rs/zenity/latest/zenity/progress/frames/struct.Frames.html)
 
 ## How to Use?
 
-It's as easy as pie (or maybe even easier, depending on your pie-making skills)! Just follow these simple steps:
+It's as easy as pie (or maybe even easier, depending on your pie-making skills)!  
+Follow these simple steps:
+
+````shell
+cargo add zenity
+````
 
 ```rust
 // example/basic.rs
+
 use std::thread::sleep;
 use std::time::Duration;
 use zenity::spinner::MultiSpinner;
@@ -48,11 +47,12 @@ use zenity::spinner::MultiSpinner;
 fn main() {
     // create a LoadingAnimation instance using one of the predefined animations
     let spinner = MultiSpinner::default();
+    sleep(Duration::from_secs(5));
 
     // optional:
-    spinner.set_text(&spinner.get_last(), "Loading...".to_string()); // sets the text to "Loading..."
+    spinner.set_text(&spinner.get_last(), "  Loading...".to_string()); // sets the text to "Loading..."
 
-    sleep(Duration::from_secs(5));
+    sleep(Duration::from_secs(500));
     // `loading_animation` will run out of scope now and get dropped,
     // thus the animation will stop and remove itself from the console
 }
@@ -62,16 +62,29 @@ check out the examples for more
 
 **NOTE:**
 
-- the lib already includes checks for `--color` following the conventions by: [Rain's Rust CLI recommendations](https://rust-cli-recommendations.sunshowers.io/colors.html#general-recommendations)
-
+- the lib already includes checks for `--color` following the conventions
+  by:
+  [Rain's Rust CLI recommendations](https://rust-cli-recommendations.sunshowers.io/colors.html#general-recommendations)
 
 ## Disclaimer
 
-Now, we won't promise you that cli_loading_magic will solve all your problems.
-We can't guarantee it won't crash your terminal or cause your computer to sprout legs and walk away in protest.
-But hey, life's an adventure, right? Embrace the chaos, enjoy the ride, and remember: if all else fails, there's always Ctrl+C.
+Now, we won't promise you that cli_loading_magic will solve all your problems.  
+We can't guarantee it won't crash your terminal or cause your computer to sprout legs and walk away in protest.  
 
-Feel free to create an issue with suggestions or bug reports.
+But hey, life's an adventure, right?  
+Embrace the chaos, enjoy the ride, and remember: if all else fails, there's always  
+**Ctrl+C.**
+
+## Contributing
+
+Contributions, bug reports, feature requests, and suggestions are all welcome!
+
+If you encounter any issues or have ideas for improvements, please don't hesitate to open
+an [issue on GitHub](https://github.com/Arteiii/zenity/issues/new).  
+[Pull requests](https://github.com/Arteiii/zenity/pulls) are also highly appreciated.  
+If you find this project helpful or enjoyable, consider giving it a star on [GitHub](https://github.com/Arteiii/zenity).
+
+Thank you for your interest and contributions!
 
 ## Credits
 
@@ -79,7 +92,8 @@ This project wouldn't have been possible without the amazing work of the followi
 
 ### Animations
 
-These projects not only provided delightful animations but also spared me from the arduous task of creating frames myself (who wants to do that anyway?)
+These projects not only provided delightful animations but also spared me from the arduous task of creating frames
+myself
 
 - [Spinner](https://github.com/FGRibreau/spinners)
 - [spinoff](https://github.com/ad4mx/spinoff)
@@ -93,23 +107,8 @@ These projects not only provided delightful animations but also spared me from t
 - [Crossterm](https://github.com/crossterm-rs/crossterm)
 - [supports_color](https://docs.rs/supports-color/latest/supports_color/)
 
-
-## Contributing
-
-Contributions, bug reports, feature requests, and suggestions are all welcome! 
-
-If you encounter any issues or have ideas for improvements, please don't hesitate to open an [issue on GitHub](https://github.com/Arteiii/zenity/issues/new).
-
-[Pull requests](https://github.com/Arteiii/zenity/pulls) are also highly appreciated.
-
-If you find this project helpful or enjoyable, consider giving it a star on [GitHub](https://github.com/Arteiii/zenity). Your support is greatly appreciated and helps to grow the community around this project.
-
-Thank you for your interest and contributions!
-
 ## License
 
 This project is licensed under the **DWFYW** License.
 
 For more information, see the [LICENSE](LICENSE.md) file.
-
-### Copyright (c) 2024 Ben

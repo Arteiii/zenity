@@ -1,6 +1,6 @@
 //! Module for multiline spinners
 //!
-//! this module provides functionality for creating and managing multiline spinners,
+//! This module provides functionality for creating and managing multiline spinners,
 //! which consist of multiple spinners running simultaneously, each with its own text
 //!
 //! ```
@@ -67,7 +67,7 @@ impl Default for MultiSpinner {
     /// let spinner = MultiSpinner::default();
     /// ```
     fn default() -> Self {
-        let spinner = Self::new(Frames::dot_spinner11());
+        let spinner = Self::new(Frames::default());
         spinner.run_all();
 
         spinner
@@ -161,7 +161,7 @@ impl MultiSpinner {
 
     /// set text of a specific spinner
     ///
-    /// if the uid is invalid this does nothing
+    /// if the uid is invalid, this does nothing
     ///
     /// ## Example
     /// ```
@@ -181,7 +181,7 @@ impl MultiSpinner {
 
     /// set a styled text of a specific spinner
     ///
-    /// if the uid is invalid this does nothing
+    /// if the uid is invalid, this does nothing
     ///
     /// ## Example
     /// ```

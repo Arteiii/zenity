@@ -29,7 +29,7 @@ jobs:
         with:
           name: examples_windows-artifact
           path: |
-            target/release/examples/main.exe
+            target/release/examples/custom_frames.exe
             target/release/examples/basic.exe
             target/release/examples/all.exe
             target/release/examples/multi_spinner.exe
@@ -59,7 +59,7 @@ jobs:
         with:
           name: examples_unix-artifact
           path: |
-            target/release/examples/main
+            target/release/examples/custom_frames
             target/release/examples/basic
             target/release/examples/all
             target/release/examples/multi_spinner

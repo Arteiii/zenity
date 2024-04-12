@@ -12,11 +12,11 @@ fn main() {
         let check_mark_text = check_mark_button();
         let cross_mark_text = cross_mark();
 
-        let spinner = MultiSpinner::new(Frames::dot_spinner11());
+        let spinner = MultiSpinner::default();
         let spinner1 = spinner.get_last();
 
         // main thread operations
-        let spinner2 = spinner.add(Frames::binary());
+        let spinner2 = spinner.add(Frames::wavy());
         let spinner3 = spinner.add(Frames::dot_spinner9());
         let spinner4 = spinner.add(Frames::dot_spinner8());
 

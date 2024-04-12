@@ -58,11 +58,11 @@ pub fn combine_attributes(attr_list: &[&Attribute]) -> Attributes {
 
 /// Represents the style of a string, including attributes and colors
 ///
-/// represents a string along with their style
+/// Represents a string along with their style
 ///
-/// the style is a representation of ``ContentStyle``
+/// The style is a representation of ``ContentStyle``
 ///
-/// the ``ContentStyle`` is defined like this:
+/// The ``ContentStyle`` is defined like this:
 ///
 /// ```
 /// # use zenity::style::{Attribute, combine_attributes};
@@ -140,7 +140,8 @@ impl StyledString {
         // create a new StyledString with the repeated string and the same style
         StyledString {
             string: repeated_string,
-            style: self.style, // cloning the style assuming it's a cheap operation
+            style: self.style, // cloning the style assuming it's an economical
+                               // (ide suggestion instead of cheap) operation
         }
     }
 }

@@ -55,7 +55,7 @@ impl Default for Frames {
     /// let spinner = MultiSpinner::new(Frames::default());
     /// ```
     fn default() -> Self {
-        Self::dots_simple_big1()
+        Self::dots_simple_big3()
     }
 }
 
@@ -1497,7 +1497,20 @@ impl Frames {
     /// let spinner_frames: Frames = Frames::dots_simple_big1();
     /// ```
     pub fn dots_simple_big1() -> Frames {
-        let pattern = styled_string!["●∙∙", "∙●∙", "∙∙●"];
+        let pattern = styled_string![
+            "●∙∙",
+            "●∙∙",
+            "●∙∙",
+            "●∙∙",
+            "∙●∙",
+            "∙●∙",
+            "∙●∙",
+            "∙●∙",
+            "∙∙●",
+            "∙∙●",
+            "∙∙●",
+            "∙∙●"
+        ];
         Self::generate_frames(pattern, 240)
     }
 
@@ -1511,7 +1524,24 @@ impl Frames {
     /// let spinner_frames: Frames = Frames::dots_simple_big2();
     /// ```
     pub fn dots_simple_big2() -> Frames {
-        let pattern = styled_string!["∙∙∙", "●∙∙", "∙●∙", "∙∙●"];
+        let pattern = styled_string![
+            "∙∙∙",
+            "∙∙∙",
+            "∙∙∙",
+            "∙∙∙",
+            "●∙∙",
+            "●∙∙",
+            "●∙∙",
+            "●∙∙",
+            "∙●∙",
+            "∙●∙",
+            "∙●∙",
+            "∙●∙",
+            "∙∙●",
+            "∙∙●",
+            "∙∙●",
+            "∙∙●"
+        ];
         Self::generate_frames(pattern, 240)
     }
 
@@ -1525,7 +1555,26 @@ impl Frames {
     /// let spinner_frames: Frames = Frames::dots_simple_big3();
     /// ```
     pub fn dots_simple_big3() -> Frames {
-        let pattern = styled_string!["∙∙∙", "●∙∙", "●●∙", "●●●", "∙●●", "∙∙●"];
+        let pattern = styled_string![
+            "∙∙∙",
+            "∙∙∙",
+            "∙∙∙",
+            "●∙∙",
+            "●∙∙",
+            "●∙∙",
+            "●●∙",
+            "●●∙",
+            "●●∙",
+            "●●●",
+            "●●●",
+            "●●●",
+            "∙●●",
+            "∙●●",
+            "∙●●",
+            "∙∙●",
+            "∙∙●",
+            "∙∙●"
+        ];
         Self::generate_frames(pattern, 180)
     }
 

@@ -141,12 +141,15 @@ impl ProgressBar {
     ///
     /// # Arguments
     ///
-    /// * `uid` - the unique identifier of the progress bar
+    /// * `Uid` - the unique identifier of the progress bar
     /// * `new_current` - the new value to set as the current progress
     ///
-    /// **NOTE:**
-    /// - if the UID is invalid, this function does nothing
-    /// - this function locks the progress bar associated with the provided UID and updates its current value incrementally
+    /// ### NOTE
+    ///
+    /// - If the UID is invalid, this function does nothing
+    /// -
+    /// This function locks the progress bar associated with the provided UID
+    /// and updates its current value incrementally
     ///
     /// ## Example
     /// ```
@@ -172,11 +175,11 @@ impl ProgressBar {
     ///
     /// # Arguments
     ///
-    /// * `uid` - the unique identifier of the progress bar
+    /// * `Uid` - the unique identifier of the progress bar
     ///
     /// # Returns
     ///
-    /// The current value of the progress bar if it exists, otherwise `None`.
+    /// The current value of the progressbar if it exists, otherwise `None`.
     ///
     /// ## Example
     /// ```
@@ -234,13 +237,13 @@ impl ProgressBar {
                     // calculate percentage completion
                     let completion_percentage = (current as f64 / goal as f64) * 100.0;
 
-                    // calculate number of characters to represent the completion percentage
+                    // calculate the number of characters to represent the completion percentage
                     let complete_size = ((completion_percentage / 100.0) * size as f64) as usize;
                     let incomplete_size = size - complete_size;
 
                     // check if it's time to update the frame index
                     if Instant::now() - last_render_time >= Duration::from_millis(100) {
-                        frame_index += 1; // go to next frame for animated progress bars
+                        frame_index += 1; // go to the next frame for animated progress bars
                         last_render_time = Instant::now(); // update last render time
                     }
 

@@ -23,7 +23,7 @@ pub(crate) mod console_render {
             queue!(
                 stdout,
                 cursor::RestorePosition,
-                cursor::MoveTo(0, row + 1), // move to next line based on index +1
+                cursor::MoveTo(0, row + 1), // move to the next line based on index +1
                 terminal::Clear(terminal::ClearType::CurrentLine),
             )
             .unwrap();

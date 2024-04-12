@@ -10,7 +10,7 @@
 use lazy_static::lazy_static;
 
 lazy_static! {
-   /// supported color pallet (which colors are supported if ENABLE_COLOR)
+   /// Supported color pallet (which colors are supported if ENABLE_COLOR)
    ///
    /// Example:
    ///
@@ -22,7 +22,7 @@ lazy_static! {
         CliColorConfig::get_supported_color_palette()
     };
 
-    /// lazy static ENABLE color bool true if color should be enabled false otherwise
+    /// Lazy static ENABLE color bool true if color should be enabled false otherwise
     ///
     /// Example:
     ///
@@ -46,22 +46,24 @@ lazy_static! {
 /// ```
 #[derive(PartialEq, Debug)]
 pub enum ColorPalette {
-    /// color support not available (pipe or otherwise disabled)
+    /// color support is not available (pipe or otherwise disabled)
     None,
 
-    /// 16 colors: 4-bit color (black, red, green, yellow, blue, magenta, cyan, white, and a "bright" version of each)
+    /// colors 16: 4-bit color (black, red, green, yellow, blue, magenta, cyan, white, and a "bright" version of each)
     Palette16,
 
-    /// 256 colors: 8-bit color the 16 colors from Palette16, a 6×6×6 cube for each of red, green and blue,
-    /// and 24 grayscale tones. For more information, see:  [256-Color Palette](https://www.pixelbeat.org/docs/terminal_colours/#256)
+    /// colors 256: 8-bit color the 16 colors from Palette16, a 6×6×6 cube for each of red, green and blue,
+    /// and 24 grayscale tones.
+    /// for more information, see:
+    /// [256-Color Palette](https://www.pixelbeat.org/docs/terminal_colours/#256)
     Palette256,
 
-    /// Truecolor (16 million colors): 24-bit color; 8 bits for each of red, green and blue
+    /// Truecolor (16 million colors): 24-bit color; eight bits for each of red, green and blue
     /// This is the standard that web pages and most monitors support
     Truecolor,
 }
 
-/// represents different options for controlling color output in the cli
+/// Represents different options for controlling color output in the cli
 ///
 /// - Always: always enable color output
 /// - Auto: automatically determine whether to enable color output based on the terminal type and capabilities
