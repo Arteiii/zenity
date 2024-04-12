@@ -19,11 +19,9 @@
 //!     string: "example".to_string(),
 //!     style,
 //! };
-//!
-//! assert_eq!(styled_string.string, "example");
-//! assert_eq!(styled_string.style.attributes.contains(Attribute::Bold), true);
-//! assert_eq!(styled_string.style.attributes.contains(Attribute::Underlined), true);
-//! assert_eq!(styled_string.style.attributes.contains(Attribute::Italic), true);
+//! # assert_eq!(styled_string.string, "example");
+//! # assert_eq!(styled_string.style.attributes, combined_attr);
+//! # assert_eq!(styled_string.style, style);
 //! ```
 
 pub use crossterm::style::*;
@@ -99,15 +97,27 @@ pub fn combine_attributes(attr_list: &[&Attribute]) -> Attributes {
 /// };
 /// #
 /// # assert_eq!(styled.string, "example");
-/// # assert_eq!(styled.style.attributes.contains(Attribute::Bold), true);
-/// # assert_eq!(styled.style.attributes.contains(Attribute::Underlined), true);
+/// # assert_eq!(styled.style.attributes, combined_attr);
+/// # assert_eq!(styled.style, style);
 /// ```
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct StyledString {
     /// the string
     pub string: String,
     /// the ContentStyle to apply to the string
     pub style: ContentStyle,
+}
+
+impl StyledString {
+    pub(crate) fn repeat(&self, count: usize) -> StyledString {
+        // repeat the string `count` times
+        let repeated_string = self.string.repeat(count);
+        // create a new StyledString with the repeated string and the same style
+        StyledString {
+            string: repeated_string,
+            style: self.style, // cloning the style assuming it's a cheap operation
+        }
+    }
 }
 
 impl Default for StyledString {
