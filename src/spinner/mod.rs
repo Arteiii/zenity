@@ -19,7 +19,6 @@
 //! ```
 
 use std::collections::HashMap;
-use std::ops::DerefMut;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
