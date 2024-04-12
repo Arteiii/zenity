@@ -25,17 +25,11 @@ use std::time::Duration;
 
 pub use frames::*;
 
-use crate::iterators;
+use crate::iterators::balanced_iterator;
+use crate::style::StyledString;
 use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
-
-/// spinner struct encapsulating the spinner animation
-struct Spinner {
-    frames: Arc<Mutex<Frames>>,
-    text: Arc<Mutex<String>>,
-    should_stop: Arc<Mutex<bool>>,
-}
 
 /// struct holding multiple spinners
 ///
@@ -47,7 +41,7 @@ struct Spinner {
 /// use std::time::Duration;
 /// use zenity::spinner::{Frames, MultiSpinner};
 ///
-/// let spinner = MultiSpinner::new(Frames::dot_spinner11(false));
+/// let spinner = MultiSpinner::new(Frames::dot_spinner11());
 /// spinner.run_all();
 ///
 /// sleep(Duration::from_secs(4));
@@ -60,7 +54,7 @@ struct Spinner {
 /// ```
 #[derive(Clone)]
 pub struct MultiSpinner {
-    spinner: Arc<Mutex<HashMap<usize, Spinner>>>,
+    spinner: Arc<Mutex<HashMap<usize, Frames>>>,
     stop: Arc<Mutex<bool>>,
 }
 
@@ -73,7 +67,7 @@ impl Default for MultiSpinner {
     /// let spinner = MultiSpinner::default();
     /// ```
     fn default() -> Self {
-        let spinner = Self::new(Frames::dot_spinner11(false));
+        let spinner = Self::new(Frames::dot_spinner11());
         spinner.run_all();
 
         spinner
@@ -84,7 +78,7 @@ impl Default for MultiSpinner {
 /// use std::time::Duration;
 /// use zenity::spinner::{Frames, MultiSpinner};
 ///
-/// let spinner = MultiSpinner::new(Frames::dot_spinner11(false));
+/// let spinner = MultiSpinner::new(Frames::dot_spinner11());
 /// let spinner1 = spinner.get_last(); // get last created uid
 /// let spinner2 = spinner.add(Frames::default()); // this already returns the uid
 ///
@@ -131,19 +125,13 @@ impl MultiSpinner {
     ///
     /// let spinner = MultiSpinner::new(Frames::default());
     ///
-    /// spinner.add(Frames::aesthetic_load(false));
+    /// spinner.add(Frames::aesthetic_load());
     /// ```
     pub fn add(&self, frames: Frames) -> usize {
         let mut spinner_map = self.spinner.lock().unwrap();
         let uid = spinner_map.len() + 1;
 
-        let new_spinner = Spinner {
-            frames: Arc::new(Mutex::new(frames)),
-            text: Arc::new(Mutex::new("".to_string())),
-            should_stop: Arc::new(Mutex::new(false)),
-        };
-
-        spinner_map.insert(uid, new_spinner);
+        spinner_map.insert(uid, frames);
 
         uid
     }
@@ -179,15 +167,37 @@ impl MultiSpinner {
     /// ```
     /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::Frames;
+    /// use zenity::style::StyledString;
     ///
     /// let spinner = MultiSpinner::new(Frames::default());
     ///
-    /// spinner.set_text(&spinner.get_last(), "this is a text...".to_string());
+    /// spinner.set_text(&spinner.get_last(),"example".to_string());
     /// ```
     pub fn set_text(&self, uid: &usize, new_text: String) {
-        if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
-            let mut text = spinner.text.lock().unwrap();
-            *text = new_text;
+        if let Some(spinner) = self.spinner.lock().unwrap().get_mut(uid) {
+            spinner.text = StyledString::new(&new_text);
+        }
+    }
+
+    /// set a styled text of a specific spinner
+    ///
+    /// if the uid is invalid this does nothing
+    ///
+    /// ## Example
+    /// ```
+    /// use crossterm::style::Color;
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
+    /// use zenity::style::StyledString;
+    ///
+    /// let spinner = MultiSpinner::new(Frames::default());
+    ///
+    /// spinner.set_styled_text(&spinner.get_last(),
+    ///     StyledString::simple("test string", Some(Color::Red), Some(Color::Black), None));
+    /// ```
+    pub fn set_styled_text(&self, uid: &usize, new_text: StyledString) {
+        if let Some(spinner) = self.spinner.lock().unwrap().get_mut(uid) {
+            spinner.text = new_text;
         }
     }
 
@@ -204,8 +214,8 @@ impl MultiSpinner {
     /// spinner.stop(&spinner.get_last());
     /// ```
     pub fn stop(&self, uid: &usize) {
-        if let Some(spinner) = self.spinner.lock().unwrap().get(uid) {
-            *spinner.should_stop.lock().unwrap() = true;
+        if let Some(spinner) = self.spinner.lock().unwrap().get_mut(uid) {
+            spinner.stop = true; // Set spinner.stop to true
         }
     }
 
@@ -217,11 +227,11 @@ impl MultiSpinner {
     /// use zenity::spinner::Frames;
     ///
     /// // make spinner mutable
-    /// let mut spinner = MultiSpinner::new(Frames::dots_simple_big1(false));
+    /// let mut spinner = MultiSpinner::new(Frames::dots_simple_big1());
     ///
-    /// // queu spinners for execution
+    /// // queue spinners for execution
     /// let spinner_num1 = spinner.get_last();
-    /// let spinner_num2 = spinner.add(Frames::dots_simple_big1(false));
+    /// let spinner_num2 = spinner.add(Frames::dots_simple_big1());
     ///
     /// //start the spinners
     /// spinner.run_all();
@@ -233,51 +243,38 @@ impl MultiSpinner {
         thread::spawn(move || {
             console_cursor::save_hide_cursor();
 
-            let mut index = 1_usize;
+            let mut index = 1_u16;
 
             while !*stop.lock().unwrap() {
-                let mut all_frames = Vec::new();
-                let mut all_texts = Vec::new();
-                let mut all_should_stop = Vec::new();
-
                 // collect frames and texts from all spinners
-                for (_, spinner) in spinners.lock().unwrap().iter() {
-                    let frames = spinner.frames.lock().unwrap().frames.clone();
-                    let text = spinner.text.lock().unwrap().clone();
-                    let should_stop = *spinner.should_stop.lock().unwrap();
-                    all_should_stop.push(should_stop);
-                    all_frames.push(frames);
-                    all_texts.push(text);
-                }
+                for (line_index, spinner) in spinners.lock().unwrap().iter() {
+                    let mut combined_vec = Vec::new();
 
-                // render frames with corresponding texts
-                MultiSpinner::render_frames(&all_frames, index, &all_texts, &all_should_stop);
+                    // if the spinner is not stopped, include new frames and update text
+                    if !spinner.stop {
+                        let frames = vec![spinner.frames.clone()];
+
+                        let current_frame = balanced_iterator(index as usize, &frames)
+                            .iter()
+                            .map(|opt| opt.cloned().unwrap_or_default())
+                            .collect::<Vec<_>>();
+
+                        if let Some(first_frame) = current_frame.first() {
+                            combined_vec.push(first_frame.clone());
+                        }
+                    }
+
+                    // always include spinner text
+                    combined_vec.push(spinner.text.clone());
+
+                    console_render::render_styled_line(*line_index as u16, &combined_vec);
+                }
 
                 index += 1;
 
                 thread::sleep(Duration::from_millis(80));
             }
         });
-    }
-
-    /// helper function to render frames to stdout
-    fn render_frames(frames: &[Vec<&str>], index: usize, texts: &[String], should_stop: &[bool]) {
-        let first_frame = iterators::balanced_iterator(index, frames);
-
-        let combined_string: Vec<String> = first_frame
-            .iter()
-            .zip(texts.iter())
-            .zip(should_stop.iter())
-            .filter_map(|((frame, text), should_stop)| {
-                if *should_stop {
-                    Some(text.to_string())
-                } else {
-                    frame.as_ref().map(|frame| format!("{}  {}", frame, text))
-                }
-            })
-            .collect::<Vec<String>>();
-
-        console_render::render_styled_line(&combined_string, Default::default());
     }
 }
 

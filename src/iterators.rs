@@ -28,6 +28,15 @@ pub(crate) fn balanced_iterator<T>(index: usize, vectors: &[Vec<T>]) -> Vec<Opti
         .collect()
 }
 
+/// iterates over a collection of vectors in a balanced manner based on indices
+///
+/// works just like the ``balanced_iterator`` but with single vecs and a single response
+pub(crate) fn balanced_single<T>(index: usize, vector: &[T]) -> &T {
+    assert!(!vector.is_empty(), "The vector must not be empty");
+    let modulo_index = index % vector.len();
+    &vector[modulo_index]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

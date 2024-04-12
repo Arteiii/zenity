@@ -1,11 +1,20 @@
 //! Predefined Spinner Frames
 //! ```
 //! use zenity::spinner::Frames;
-//!
-//! let frames: Frames = Frames { frames: vec!["◐", "◓", "◑", "◒"], speed_ms: 100 };
-//! assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
-//! assert_eq!(frames.speed_ms, 100);
+//! use zenity::style::StyledString;
+//! use zenity::styled_string;
+//! let frames: Frames = Frames {
+//!         frames: styled_string!["◐", "◓", "◑", "◒"],
+//!         speed_ms: 100,
+//!         text: StyledString{string: "".to_string(),style: Default::default()},
+//!         stop: true,
+//!  };
+//! # assert_eq!(frames.frames, styled_string!["◐", "◓", "◑", "◒"]);
+//! # assert_eq!(frames.speed_ms, 100);
 //! ```
+
+use crate::style::StyledString;
+use crate::styled_string;
 
 /// represents a collection of frames and their display speed, typically used for animations
 ///
@@ -13,16 +22,28 @@
 ///
 /// ```
 /// use zenity::spinner::Frames;
+/// use zenity::style::StyledString;
+/// use zenity::styled_string;
 ///
-/// let frames: Frames = Frames { frames: vec!["◐", "◓", "◑", "◒"], speed_ms: 100 };
-/// assert_eq!(frames.frames, vec!["◐", "◓", "◑", "◒"]);
-/// assert_eq!(frames.speed_ms, 100);
+/// let frames: Frames = Frames {
+///         frames: styled_string!["◐", "◓", "◑", "◒"],
+///         speed_ms: 100,
+///         text: StyledString{string: "".to_string(),style: Default::default()},
+///         stop: true,
+///  };
+/// # assert_eq!(frames.frames, styled_string!["◐", "◓", "◑", "◒"]);
+/// # assert_eq!(frames.speed_ms, 100);
 /// ```
+#[derive(Clone)]
 pub struct Frames {
     /// the sequence of frames to be displayed
-    pub frames: Vec<&'static str>,
+    pub frames: Vec<StyledString>,
     /// the speed at which each frame should be displayed, in milliseconds
     pub speed_ms: u64,
+    /// String to display behind the spinner
+    pub text: StyledString,
+    /// if the animation is active
+    pub stop: bool,
 }
 
 impl Default for Frames {
@@ -30,17 +51,23 @@ impl Default for Frames {
     ///
     /// ## Example
     /// ```
-    /// use zenity::progress::{Frames, ProgressBar};
-    /// let spinner = ProgressBar::new(Frames::default());
+    /// use zenity::spinner::{Frames, MultiSpinner};
+    /// let spinner = MultiSpinner::new(Frames::default());
     /// ```
     fn default() -> Self {
-        Self::dots_simple_big1(false)
+        Self::dots_simple_big1()
+    }
+}
+
+impl AsRef<Frames> for Frames {
+    fn as_ref(&self) -> &Frames {
+        self
     }
 }
 
 /// ```
-/// use zenity::progress::{Frames, ProgressBar};
-/// let spinner = ProgressBar::new(Frames::default());
+/// use zenity::spinner::{Frames, MultiSpinner};
+/// let spinner = MultiSpinner::new(Frames::default());
 /// ```
 impl Frames {
     /// generates frames for spinner animation based on the provided pattern, inversion flag, and speed
@@ -55,20 +82,37 @@ impl Frames {
     ///
     /// ```
     /// use zenity::spinner::{Frames};
+    /// use zenity::style::StyledString;
+    /// use zenity::{style, styled_string};
     ///
-    /// let spinner_frames = Frames::generate_frames(vec!["◐", "◓", "◑", "◒"], false, 100);
-    ///
-    /// assert_eq!(spinner_frames.frames, vec!["◐", "◓", "◑", "◒"]);
-    /// assert_eq!(spinner_frames.speed_ms, 100);
+    /// let spinner_frames = Frames::generate_frames(styled_string!["◐", "◓", "◑", "◒"], 100);
+    /// # assert_eq!(spinner_frames.frames, styled_string!["◐", "◓", "◑", "◒"]);
+    /// # assert_eq!(spinner_frames.speed_ms, 100);
     /// ```
-    pub fn generate_frames(pattern: Vec<&'static str>, inverted: bool, speed_ms: u64) -> Frames {
-        let mut frames = pattern;
-
-        if inverted {
-            frames.reverse();
+    pub fn generate_frames(frames: Vec<StyledString>, speed_ms: u64) -> Frames {
+        Frames {
+            frames,
+            speed_ms,
+            stop: false,
+            text: StyledString {
+                string: "".to_string(),
+                style: Default::default(),
+            },
         }
+    }
 
-        Frames { frames, speed_ms }
+    /// stops a spinner animation
+    ///
+    /// ```
+    /// # use zenity::spinner::MultiSpinner;
+    /// #
+    /// # let spinner = MultiSpinner::default();
+    /// #
+    /// // stop spinner manual:
+    /// spinner.stop(&spinner.get_last());
+    /// ```
+    pub fn stop(&mut self) {
+        self.stop = true;
     }
 
     /// ⠋
@@ -78,12 +122,15 @@ impl Frames {
     /// # Example
     /// ```
     /// use zenity::spinner::Frames;
+    /// use zenity::style::StyledString;
+    /// use zenity::styled_string;
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner1(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner1();
+    /// # assert_eq!(spinner_frames.frames, styled_string!["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]);
     /// ```
-    pub fn dot_spinner1(inverted: bool) -> Frames {
-        let pattern = vec!["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn dot_spinner1() -> Frames {
+        let pattern = styled_string!["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner2
@@ -92,11 +139,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner2(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner2();
     /// ```
-    pub fn dot_spinner2(inverted: bool) -> Frames {
-        let pattern = vec!["⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn dot_spinner2() -> Frames {
+        let pattern = styled_string!["⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner3
@@ -105,11 +152,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner3(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner3();
     /// ```
-    pub fn dot_spinner3(inverted: bool) -> Frames {
-        let pattern = vec!["⠋", "⠙", "⠚", "⠞", "⠖", "⠦", "⠴", "⠲", "⠳", "⠓"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn dot_spinner3() -> Frames {
+        let pattern = styled_string!["⠋", "⠙", "⠚", "⠞", "⠖", "⠦", "⠴", "⠲", "⠳", "⠓"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner4
@@ -118,13 +165,13 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner4(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner4();
     /// ```
-    pub fn dot_spinner4(inverted: bool) -> Frames {
-        let pattern = vec![
-            "⠄", "⠆", "⠇", "⠋", "⠙", "⠸", "⠰", "⠠", "⠰", "⠸", "⠙", "⠋", "⠇", "⠆",
+    pub fn dot_spinner4() -> Frames {
+        let pattern = styled_string![
+            "⠄", "⠆", "⠇", "⠋", "⠙", "⠸", "⠰", "⠠", "⠰", "⠸", "⠙", "⠋", "⠇", "⠆"
         ];
-        Self::generate_frames(pattern, inverted, 120)
+        Self::generate_frames(pattern, 120)
     }
 
     /// # dot_spinner5
@@ -133,10 +180,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner5(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner5();
     /// ```
-    pub fn dot_spinner5(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn dot_spinner5() -> Frames {
+        let pattern = styled_string![
             "⠀", "⠁", "⠂", "⠃", "⠄", "⠅", "⠆", "⠇", "⡀", "⡁", "⡂", "⡃", "⡄", "⡅", "⡆", "⡇", "⠈",
             "⠉", "⠊", "⠋", "⠌", "⠍", "⠎", "⠏", "⡈", "⡉", "⡊", "⡋", "⡌", "⡍", "⡎", "⡏", "⠐", "⠑",
             "⠒", "⠓", "⠔", "⠕", "⠖", "⠗", "⡐", "⡑", "⡒", "⡓", "⡔", "⡕", "⡖", "⡗", "⠘", "⠙", "⠚",
@@ -152,9 +199,9 @@ impl Frames {
             "⣤", "⣥", "⣦", "⣧", "⢨", "⢩", "⢪", "⢫", "⢬", "⢭", "⢮", "⢯", "⣨", "⣩", "⣪", "⣫", "⣬",
             "⣭", "⣮", "⣯", "⢰", "⢱", "⢲", "⢳", "⢴", "⢵", "⢶", "⢷", "⣰", "⣱", "⣲", "⣳", "⣴", "⣵",
             "⣶", "⣷", "⢸", "⢹", "⢺", "⢻", "⢼", "⢽", "⢾", "⢿", "⣸", "⣹", "⣺", "⣻", "⣼", "⣽", "⣾",
-            "⣿",
+            "⣿"
         ];
-        Self::generate_frames(pattern, inverted, 60)
+        Self::generate_frames(pattern, 60)
     }
 
     /// # dot_spinner6
@@ -165,11 +212,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner6(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner6();
     /// ```
-    pub fn dot_spinner6(inverted: bool) -> Frames {
-        let pattern = vec!["⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn dot_spinner6() -> Frames {
+        let pattern = styled_string!["⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner7
@@ -178,11 +225,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner7(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner7();
     /// ```
-    pub fn dot_spinner7(inverted: bool) -> Frames {
-        let pattern = vec!["⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn dot_spinner7() -> Frames {
+        let pattern = styled_string!["⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner8
@@ -191,15 +238,15 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner8(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner8();
     /// ```
-    pub fn dot_spinner8(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn dot_spinner8() -> Frames {
+        let pattern = styled_string![
             "⠁", "⠂", "⠄", "⡀", "⡈", "⡐", "⡠", "⣀", "⣁", "⣂", "⣄", "⣌", "⣔", "⣤", "⣥", "⣦", "⣮",
             "⣶", "⣷", "⣿", "⡿", "⠿", "⢟", "⠟", "⡛", "⠛", "⠫", "⢋", "⠋", "⠍", "⡉", "⠉", "⠑", "⠡",
-            "⢁",
+            "⢁"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner9
@@ -208,16 +255,16 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner9(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner9();
     /// ```
-    pub fn dot_spinner9(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn dot_spinner9() -> Frames {
+        let pattern = styled_string![
             "⢀⠀", "⡀⠀", "⠄⠀", "⢂⠀", "⡂⠀", "⠅⠀", "⢃⠀", "⡃⠀", "⠍⠀", "⢋⠀", "⡋⠀", "⠍⠁", "⢋⠁", "⡋⠁",
             "⠍⠉", "⠋⠉", "⠋⠉", "⠉⠙", "⠉⠙", "⠉⠩", "⠈⢙", "⠈⡙", "⢈⠩", "⡀⢙", "⠄⡙", "⢂⠩", "⡂⢘", "⠅⡘",
             "⢃⠨", "⡃⢐", "⠍⡐", "⢋⠠", "⡋⢀", "⠍⡁", "⢋⠁", "⡋⠁", "⠍⠉", "⠋⠉", "⠋⠉", "⠉⠙", "⠉⠙", "⠉⠩",
-            "⠈⢙", "⠈⡙", "⠈⠩", "⠀⢙", "⠀⡙", "⠀⠩", "⠀⢘", "⠀⡘", "⠀⠨", "⠀⢐", "⠀⡐", "⠀⠠", "⠀⢀", "⠀⡀",
+            "⠈⢙", "⠈⡙", "⠈⠩", "⠀⢙", "⠀⡙", "⠀⠩", "⠀⢘", "⠀⡘", "⠀⠨", "⠀⢐", "⠀⡐", "⠀⠠", "⠀⢀", "⠀⡀"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner10
@@ -226,11 +273,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner10(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner10();
     /// ```
-    pub fn dot_spinner10(inverted: bool) -> Frames {
-        let pattern = vec!["⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn dot_spinner10() -> Frames {
+        let pattern = styled_string!["⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_spinner11
@@ -239,11 +286,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_spinner11(false);
+    /// let spinner_frames: Frames = Frames::dot_spinner11();
     /// ```
-    pub fn dot_spinner11(inverted: bool) -> Frames {
-        let pattern = vec!["⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn dot_spinner11() -> Frames {
+        let pattern = styled_string!["⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # kaomoji
@@ -256,10 +303,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::kaomoji(false);
+    /// let spinner_frames: Frames = Frames::kaomoji();
     /// ```
-    pub fn kaomoji(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn kaomoji() -> Frames {
+        let pattern = styled_string![
             "(　´･ω)",
             "( ´･ω･)",
             "(´･ω･`)",
@@ -268,9 +315,9 @@ impl Frames {
             "(･ω･` )",
             "(´･ω･`)",
             "( ´･ω･)",
-            "(　´･ω)",
+            "(　´･ω)"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # kaomoji
@@ -283,10 +330,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::kaomoji(false);
+    /// let spinner_frames: Frames = Frames::kaomoji();
     /// ```
-    pub fn aesthetic_spin(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn aesthetic_spin() -> Frames {
+        let pattern = styled_string![
             "▱ ▱ ▱ ▱ ▱ ▱ ▱ ",
             "▰ ▱ ▱ ▱ ▱ ▱ ▱ ",
             "▰ ▰ ▱ ▱ ▱ ▱ ▱ ",
@@ -301,9 +348,9 @@ impl Frames {
             "▱ ▱ ▱ ▱ ▰ ▰ ▰ ",
             "▱ ▱ ▱ ▱ ▱ ▰ ▰ ",
             "▱ ▱ ▱ ▱ ▱ ▱ ▰ ",
-            "▱ ▱ ▱ ▱ ▱ ▱ ▱ ",
+            "▱ ▱ ▱ ▱ ▱ ▱ ▱ "
         ];
-        Self::generate_frames(pattern, inverted, 120)
+        Self::generate_frames(pattern, 120)
     }
 
     /// # aesthetic_load
@@ -312,10 +359,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::aesthetic_load(false);
+    /// let spinner_frames: Frames = Frames::aesthetic_load();
     /// ```
-    pub fn aesthetic_load(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn aesthetic_load() -> Frames {
+        let pattern = styled_string![
             "▱ ▱ ▱ ▱ ▱ ▱ ▱ ",
             "▰ ▱ ▱ ▱ ▱ ▱ ▱ ",
             "▰ ▰ ▱ ▱ ▱ ▱ ▱ ",
@@ -323,9 +370,9 @@ impl Frames {
             "▰ ▰ ▰ ▰ ▱ ▱ ▱ ",
             "▰ ▰ ▰ ▰ ▰ ▱ ▱ ",
             "▰ ▰ ▰ ▰ ▰ ▰ ▱ ",
-            "▰ ▰ ▰ ▰ ▰ ▰ ▰ ",
+            "▰ ▰ ▰ ▰ ▰ ▰ ▰ "
         ];
-        Self::generate_frames(pattern, inverted, 180)
+        Self::generate_frames(pattern, 180)
     }
 
     /// # clock
@@ -336,13 +383,13 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::clock(false);
+    /// let spinner_frames: Frames = Frames::clock();
     /// ```
-    pub fn clock(inverted: bool) -> Frames {
-        let pattern = vec![
-            "🕛 ", "🕐 ", "🕑 ", "🕒 ", "🕓 ", "🕔 ", "🕕 ", "🕖 ", "🕗 ", "🕘 ", "🕙 ", "🕚 ",
+    pub fn clock() -> Frames {
+        let pattern = styled_string![
+            "🕛 ", "🕐 ", "🕑 ", "🕒 ", "🕓 ", "🕔 ", "🕕 ", "🕖 ", "🕗 ", "🕘 ", "🕙 ", "🕚 "
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # small_bouncing_bar
@@ -353,14 +400,14 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::small_bouncing_bar(false);
+    /// let spinner_frames: Frames = Frames::small_bouncing_bar();
     /// ```
-    pub fn small_bouncing_bar(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn small_bouncing_bar() -> Frames {
+        let pattern = styled_string![
             "[    ]", "[=   ]", "[==  ]", "[=== ]", "[ ===]", "[  ==]", "[   =]", "[    ]",
-            "[   =]", "[  ==]", "[ ===]", "[====]", "[=== ]", "[==  ]", "[=   ]",
+            "[   =]", "[  ==]", "[ ===]", "[====]", "[=== ]", "[==  ]", "[=   ]"
         ];
-        Self::generate_frames(pattern, inverted, 80)
+        Self::generate_frames(pattern, 80)
     }
 
     /// # small_loading_bar
@@ -371,13 +418,12 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::small_loading_bar(false);
+    /// let spinner_frames: Frames = Frames::small_loading_bar();
     /// ```
-    pub fn small_loading_bar(inverted: bool) -> Frames {
-        let pattern = vec![
-            "[    ]", "[=   ]", "[==  ]", "[=== ]", "[ ===]", "[  ==]", "[   =]",
-        ];
-        Self::generate_frames(pattern, inverted, 80)
+    pub fn small_loading_bar() -> Frames {
+        let pattern =
+            styled_string!["[    ]", "[=   ]", "[==  ]", "[=== ]", "[ ===]", "[  ==]", "[   =]"];
+        Self::generate_frames(pattern, 80)
     }
 
     /// # loading_bar_with_arrow
@@ -386,10 +432,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::loading_bar_with_arrow(false);
+    /// let spinner_frames: Frames = Frames::loading_bar_with_arrow();
     /// ```
-    pub fn loading_bar_with_arrow(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn loading_bar_with_arrow() -> Frames {
+        let pattern = styled_string![
             "[                    ]",
             "[=>                  ]",
             "[===>                ]",
@@ -401,9 +447,9 @@ impl Frames {
             "[==============>     ]",
             "[================>   ]",
             "[==================> ]",
-            "[===================>]",
+            "[===================>]"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # short_loading_bar_with_arrow
@@ -412,10 +458,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::short_loading_bar_with_arrow(false);
+    /// let spinner_frames: Frames = Frames::short_loading_bar_with_arrow();
     /// ```
-    pub fn short_loading_bar_with_arrow(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn short_loading_bar_with_arrow() -> Frames {
+        let pattern = styled_string![
             "[>]         >>>]",
             "[>>>         >>]",
             "[>>>>        |>]",
@@ -427,9 +473,9 @@ impl Frames {
             "[ ]    >>>>  [ ]",
             "[ ]     >>>> [ ]",
             "[ ]      >>>>| ]",
-            "[ ]       >>>> ]",
+            "[ ]       >>>> ]"
         ];
-        Self::generate_frames(pattern, inverted, 130)
+        Self::generate_frames(pattern, 130)
     }
 
     /// # material
@@ -442,10 +488,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::material(false);
+    /// let spinner_frames: Frames = Frames::material();
     /// ```
-    pub fn material(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn material() -> Frames {
+        let pattern = styled_string![
             "█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",
             "██▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",
             "███▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",
@@ -537,9 +583,9 @@ impl Frames {
             "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",
             "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",
             "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",
-            "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",
+            "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁"
         ];
-        Self::generate_frames(pattern, inverted, 17)
+        Self::generate_frames(pattern, 17)
     }
 
     /// # moon
@@ -550,11 +596,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::moon(false);
+    /// let spinner_frames: Frames = Frames::moon();
     /// ```
-    pub fn moon(inverted: bool) -> Frames {
-        let pattern = vec!["🌑 ", "🌒 ", "🌓 ", "🌔 ", "🌕 ", "🌖 ", "🌗 ", "🌘 "];
-        Self::generate_frames(pattern, inverted, 130)
+    pub fn moon() -> Frames {
+        let pattern = styled_string!["🌑 ", "🌒 ", "🌓 ", "🌔 ", "🌕 ", "🌖 ", "🌗 ", "🌘 "];
+        Self::generate_frames(pattern, 130)
     }
 
     /// # dots_simple1
@@ -565,11 +611,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dots_simple1(false);
+    /// let spinner_frames: Frames = Frames::dots_simple1();
     /// ```
-    pub fn dots_simple1(inverted: bool) -> Frames {
-        let pattern = vec![".  ", ".. ", "...", " ..", "  .", "   "];
-        Self::generate_frames(pattern, inverted, 260)
+    pub fn dots_simple1() -> Frames {
+        let pattern = styled_string![".  ", ".. ", "...", " ..", "  .", "   "];
+        Self::generate_frames(pattern, 260)
     }
 
     /// # dots_simple2
@@ -580,11 +626,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dots_simple2(false);
+    /// let spinner_frames: Frames = Frames::dots_simple2();
     /// ```
-    pub fn dots_simple2(inverted: bool) -> Frames {
-        let pattern = vec!["   ", ".  ", ".. ", "..."];
-        Self::generate_frames(pattern, inverted, 360)
+    pub fn dots_simple2() -> Frames {
+        let pattern = styled_string!["   ", ".  ", ".. ", "..."];
+        Self::generate_frames(pattern, 360)
     }
 
     /// # japanese
@@ -595,16 +641,16 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::japanese(false);
+    /// let spinner_frames: Frames = Frames::japanese();
     /// ```
-    pub fn japanese(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn japanese() -> Frames {
+        let pattern = styled_string![
             "ｦ", "ｧ", "ｨ", "ｩ", "ｪ", "ｫ", "ｬ", "ｭ", "ｮ", "ｯ", "ｱ", "ｲ", "ｳ", "ｴ", "ｵ", "ｶ", "ｷ",
             "ｸ", "ｹ", "ｺ", "ｻ", "ｼ", "ｽ", "ｾ", "ｿ", "ﾀ", "ﾁ", "ﾂ", "ﾃ", "ﾄ", "ﾅ", "ﾆ", "ﾇ", "ﾈ",
             "ﾉ", "ﾊ", "ﾋ", "ﾌ", "ﾍ", "ﾎ", "ﾏ", "ﾐ", "ﾑ", "ﾒ", "ﾓ", "ﾔ", "ﾕ", "ﾖ", "ﾗ", "ﾘ", "ﾙ",
-            "ﾚ", "ﾛ", "ﾜ", "ﾝ",
+            "ﾚ", "ﾛ", "ﾜ", "ﾝ"
         ];
-        Self::generate_frames(pattern, inverted, 180)
+        Self::generate_frames(pattern, 180)
     }
 
     /// # line
@@ -615,15 +661,15 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::line(false);
+    /// let spinner_frames: Frames = Frames::line();
     /// ```
-    pub fn line(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn line() -> Frames {
+        let pattern = styled_string![
             "________", "-_______", "_-______", "__-_____", "___-____", "____-___", "_____-__",
             "______-_", "_______-", "________", "_______-", "______-_", "_____-__", "____-___",
-            "___-____", "__-_____", "_-______", "-_______", "________",
+            "___-____", "__-_____", "_-______", "-_______", "________"
         ];
-        Self::generate_frames(pattern, inverted, 120)
+        Self::generate_frames(pattern, 120)
     }
 
     /// # line2
@@ -634,10 +680,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::line2(false);
+    /// let spinner_frames: Frames = Frames::line2();
     /// ```
-    pub fn line2(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn line2() -> Frames {
+        let pattern = styled_string![
             "|_______",
             "_/______",
             "__-_____",
@@ -652,9 +698,9 @@ impl Frames {
             "____/___",
             "___|____",
             "__\\_____",
-            "_-______",
+            "_-______"
         ];
-        Self::generate_frames(pattern, inverted, 120)
+        Self::generate_frames(pattern, 120)
     }
 
     /// # block
@@ -665,13 +711,13 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::block(false);
+    /// let spinner_frames: Frames = Frames::block();
     /// ```
-    pub fn block(inverted: bool) -> Frames {
-        let pattern = vec![
-            "▁", "▃", "▄", "▅", "▆", "▇", "█", "▇", "▆", "▅", "▄", "▃", "▁",
+    pub fn block() -> Frames {
+        let pattern = styled_string![
+            "▁", "▃", "▄", "▅", "▆", "▇", "█", "▇", "▆", "▅", "▄", "▃", "▁"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # block_spinn
@@ -682,11 +728,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::block_spinn(false);
+    /// let spinner_frames: Frames = Frames::block_spinn();
     /// ```
-    pub fn block_spinn(inverted: bool) -> Frames {
-        let pattern = vec!["▖", "▘", "▝", "▗"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn block_spinn() -> Frames {
+        let pattern = styled_string!["▖", "▘", "▝", "▗"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # arrow_spinn
@@ -697,11 +743,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::arrow_spinn(false);
+    /// let spinner_frames: Frames = Frames::arrow_spinn();
     /// ```
-    pub fn arrow_spinn(inverted: bool) -> Frames {
-        let pattern = vec!["←", "↖", "↑", "↗", "→", "↘", "↓", "↙"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn arrow_spinn() -> Frames {
+        let pattern = styled_string!["←", "↖", "↑", "↗", "→", "↘", "↓", "↙"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # big_arrow_spinn
@@ -712,11 +758,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::big_arrow_spinn(false);
+    /// let spinner_frames: Frames = Frames::big_arrow_spinn();
     /// ```
-    pub fn big_arrow_spinn(inverted: bool) -> Frames {
-        let pattern = vec!["⇐", "⇖", "⇑", "⇗", "⇒", "⇘", "⇓", "⇙"];
-        Self::generate_frames(pattern, inverted, 140)
+    pub fn big_arrow_spinn() -> Frames {
+        let pattern = styled_string!["⇐", "⇖", "⇑", "⇗", "⇒", "⇘", "⇓", "⇙"];
+        Self::generate_frames(pattern, 140)
     }
 
     /// # line_spinner
@@ -727,11 +773,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::line_spinner(false);
+    /// let spinner_frames: Frames = Frames::line_spinner();
     /// ```
-    pub fn line_spinner(inverted: bool) -> Frames {
-        let pattern = vec!["┤", "┘", "┴", "└", "├", "┌", "┬", "┐"];
-        Self::generate_frames(pattern, inverted, 120)
+    pub fn line_spinner() -> Frames {
+        let pattern = styled_string!["┤", "┘", "┴", "└", "├", "┌", "┬", "┐"];
+        Self::generate_frames(pattern, 120)
     }
 
     /// # line_spinner_simple
@@ -742,11 +788,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::line_spinner_simple(false);
+    /// let spinner_frames: Frames = Frames::line_spinner_simple();
     /// ```
-    pub fn line_spinner_simple(inverted: bool) -> Frames {
-        let pattern = vec!["|", "/", "-", "\\"];
-        Self::generate_frames(pattern, inverted, 120)
+    pub fn line_spinner_simple() -> Frames {
+        let pattern = styled_string!["|", "/", "-", "\\"];
+        Self::generate_frames(pattern, 120)
     }
 
     /// # corner
@@ -757,11 +803,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::corner(false);
+    /// let spinner_frames: Frames = Frames::corner();
     /// ```
-    pub fn corner(inverted: bool) -> Frames {
-        let pattern = vec!["◢", "◣", "◤", "◥"];
-        Self::generate_frames(pattern, inverted, 160)
+    pub fn corner() -> Frames {
+        let pattern = styled_string!["◢", "◣", "◤", "◥"];
+        Self::generate_frames(pattern, 160)
     }
 
     /// # abc
@@ -772,14 +818,14 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::abc(false);
+    /// let spinner_frames: Frames = Frames::abc();
     /// ```
-    pub fn abc(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn abc() -> Frames {
+        let pattern = styled_string![
             "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
-            "r", "s", "t", "u", "v", "w", "x", "y", "z",
+            "r", "s", "t", "u", "v", "w", "x", "y", "z"
         ];
-        Self::generate_frames(pattern, inverted, 150)
+        Self::generate_frames(pattern, 150)
     }
 
     /// # earth
@@ -790,11 +836,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::earth(false);
+    /// let spinner_frames: Frames = Frames::earth();
     /// ```
-    pub fn earth(inverted: bool) -> Frames {
-        let pattern = vec!["🌍", "🌎", "🌏"];
-        Self::generate_frames(pattern, inverted, 200)
+    pub fn earth() -> Frames {
+        let pattern = styled_string!["🌍", "🌎", "🌏"];
+        Self::generate_frames(pattern, 200)
     }
 
     /// # arrow_row
@@ -805,11 +851,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::arrow_row(false);
+    /// let spinner_frames: Frames = Frames::arrow_row();
     /// ```
-    pub fn arrow_row(inverted: bool) -> Frames {
-        let pattern = vec!["▹▹▹▹▹", "▸▹▹▹▹", "▹▸▹▹▹", "▹▹▸▹▹", "▹▹▹▸▹", "▹▹▹▹▸"];
-        Self::generate_frames(pattern, inverted, 140)
+    pub fn arrow_row() -> Frames {
+        let pattern = styled_string!["▹▹▹▹▹", "▸▹▹▹▹", "▹▸▹▹▹", "▹▹▸▹▹", "▹▹▹▸▹", "▹▹▹▹▸"];
+        Self::generate_frames(pattern, 140)
     }
 
     /// # fractions
@@ -820,11 +866,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::fractions(false);
+    /// let spinner_frames: Frames = Frames::fractions();
     /// ```
-    pub fn fractions(inverted: bool) -> Frames {
-        let pattern = vec!["½", "⅓", "⅔", "¼", "¾", "⅛", "⅜", "⅝", "⅞"];
-        Self::generate_frames(pattern, inverted, 100)
+    pub fn fractions() -> Frames {
+        let pattern = styled_string!["½", "⅓", "⅔", "¼", "¾", "⅛", "⅜", "⅝", "⅞"];
+        Self::generate_frames(pattern, 100)
     }
 
     /// # star1
@@ -835,11 +881,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::star1(false);
+    /// let spinner_frames: Frames = Frames::star1();
     /// ```
-    pub fn star1(inverted: bool) -> Frames {
-        let pattern = vec!["✶", "✸", "✹", "✺", "✹", "✷"];
-        Self::generate_frames(pattern, inverted, 180)
+    pub fn star1() -> Frames {
+        let pattern = styled_string!["✶", "✸", "✹", "✺", "✹", "✷"];
+        Self::generate_frames(pattern, 180)
     }
 
     /// # star2
@@ -849,11 +895,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::star2(false);
+    /// let spinner_frames: Frames = Frames::star2();
     /// ```
-    pub fn star2(inverted: bool) -> Frames {
-        let pattern = vec!["+", "x", "*"];
-        Self::generate_frames(pattern, inverted, 180)
+    pub fn star2() -> Frames {
+        let pattern = styled_string!["+", "x", "*"];
+        Self::generate_frames(pattern, 180)
     }
 
     /// # dot_bounce
@@ -864,11 +910,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_bounce(false);
+    /// let spinner_frames: Frames = Frames::dot_bounce();
     /// ```
-    pub fn dot_bounce(inverted: bool) -> Frames {
-        let pattern = vec![".", "o", "O", "°", "O", "o", "."];
-        Self::generate_frames(pattern, inverted, 120)
+    pub fn dot_bounce() -> Frames {
+        let pattern = styled_string![".", "o", "O", "°", "O", "o", "."];
+        Self::generate_frames(pattern, 120)
     }
 
     /// # flip
@@ -878,11 +924,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::flip(false);
+    /// let spinner_frames: Frames = Frames::flip();
     /// ```
-    pub fn flip(inverted: bool) -> Frames {
-        let pattern = vec!["_", "_", "_", "-", "`", "`", "'", "´", "-", "_", "_", "_"];
-        Self::generate_frames(pattern, inverted, 120)
+    pub fn flip() -> Frames {
+        let pattern = styled_string!["_", "_", "_", "-", "`", "`", "'", "´", "-", "_", "_", "_"];
+        Self::generate_frames(pattern, 120)
     }
 
     /// # binary
@@ -892,14 +938,14 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::binary(false);
+    /// let spinner_frames: Frames = Frames::binary();
     /// ```
-    pub fn binary(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn binary() -> Frames {
+        let pattern = styled_string![
             "010010", "001100", "100101", "111010", "111101", "010111", "101011", "111000",
-            "110011", "110101",
+            "110011", "110101"
         ];
-        Self::generate_frames(pattern, inverted, 80)
+        Self::generate_frames(pattern, 80)
     }
 
     /// # big_loading_bar
@@ -910,18 +956,18 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::big_loading_bar(false);
+    /// let spinner_frames: Frames = Frames::big_loading_bar();
     /// ```
-    pub fn big_loading_bar(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn big_loading_bar() -> Frames {
+        let pattern = styled_string![
             "▒▒▒▒▒▒▒▒▒▒",
             "█▒▒▒▒▒▒▒▒▒",
             "███▒▒▒▒▒▒▒",
             "█████▒▒▒▒▒",
             "███████▒▒▒",
-            "██████████",
+            "██████████"
         ];
-        Self::generate_frames(pattern, inverted, 240)
+        Self::generate_frames(pattern, 240)
     }
 
     /// # wall_bounce
@@ -932,10 +978,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::wall_bounce(false);
+    /// let spinner_frames: Frames = Frames::wall_bounce();
     /// ```
-    pub fn wall_bounce(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn wall_bounce() -> Frames {
+        let pattern = styled_string![
             "▐⠂       ▌",
             "▐⠈       ▌",
             "▐ ⠂      ▌",
@@ -965,9 +1011,9 @@ impl Frames {
             "▐  ⠂     ▌",
             "▐ ⠠      ▌",
             "▐ ⡀      ▌",
-            "▐⠠       ▌",
+            "▐⠠       ▌"
         ];
-        Self::generate_frames(pattern, inverted, 140)
+        Self::generate_frames(pattern, 140)
     }
 
     /// # wall_bounce_line
@@ -978,10 +1024,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::wall_bounce_line(false);
+    /// let spinner_frames: Frames = Frames::wall_bounce_line();
     /// ```
-    pub fn wall_bounce_line(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn wall_bounce_line() -> Frames {
+        let pattern = styled_string![
             "▐|\\____________▌",
             "▐_|\\___________▌",
             "▐__|\\__________▌",
@@ -1007,9 +1053,9 @@ impl Frames {
             "▐___/|_________▌",
             "▐__/|__________▌",
             "▐_/|___________▌",
-            "▐/|____________▌",
+            "▐/|____________▌"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # stack
@@ -1020,11 +1066,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::stack(false);
+    /// let spinner_frames: Frames = Frames::stack();
     /// ```
-    pub fn stack(inverted: bool) -> Frames {
-        let pattern = vec!["☱", "☲", "☴"];
-        Self::generate_frames(pattern, inverted, 200)
+    pub fn stack() -> Frames {
+        let pattern = styled_string!["☱", "☲", "☴"];
+        Self::generate_frames(pattern, 200)
     }
 
     /// # toggle
@@ -1035,11 +1081,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle(false);
+    /// let spinner_frames: Frames = Frames::toggle();
     /// ```
-    pub fn toggle(inverted: bool) -> Frames {
-        let pattern = vec!["⊶", "⊷"];
-        Self::generate_frames(pattern, inverted, 250)
+    pub fn toggle() -> Frames {
+        let pattern = styled_string!["⊶", "⊷"];
+        Self::generate_frames(pattern, 250)
     }
 
     /// # toggle2
@@ -1050,11 +1096,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle2(false);
+    /// let spinner_frames: Frames = Frames::toggle2();
     /// ```
-    pub fn toggle2(inverted: bool) -> Frames {
-        let pattern = vec!["▫", "▪"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle2() -> Frames {
+        let pattern = styled_string!["▫", "▪"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle3
@@ -1065,11 +1111,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle3(false);
+    /// let spinner_frames: Frames = Frames::toggle3();
     /// ```
-    pub fn toggle3(inverted: bool) -> Frames {
-        let pattern = vec!["□", "■"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle3() -> Frames {
+        let pattern = styled_string!["□", "■"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle4
@@ -1080,11 +1126,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle4(false);
+    /// let spinner_frames: Frames = Frames::toggle4();
     /// ```
-    pub fn toggle4(inverted: bool) -> Frames {
-        let pattern = vec!["■", "□", "▪", "▫"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle4() -> Frames {
+        let pattern = styled_string!["■", "□", "▪", "▫"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle5
@@ -1095,11 +1141,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle5(false);
+    /// let spinner_frames: Frames = Frames::toggle5();
     /// ```
-    pub fn toggle5(inverted: bool) -> Frames {
-        let pattern = vec!["▮ ", "▯ "];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle5() -> Frames {
+        let pattern = styled_string!["▮ ", "▯ "];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle6
@@ -1110,11 +1156,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle6(false);
+    /// let spinner_frames: Frames = Frames::toggle6();
     /// ```
-    pub fn toggle6(inverted: bool) -> Frames {
-        let pattern = vec!["ဝ", "၀"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle6() -> Frames {
+        let pattern = styled_string!["ဝ", "၀"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle7
@@ -1125,11 +1171,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle7(false);
+    /// let spinner_frames: Frames = Frames::toggle7();
     /// ```
-    pub fn toggle7(inverted: bool) -> Frames {
-        let pattern = vec!["⦾", "⦿"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle7() -> Frames {
+        let pattern = styled_string!["⦾", "⦿"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle8
@@ -1140,11 +1186,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle8(false);
+    /// let spinner_frames: Frames = Frames::toggle8();
     /// ```
-    pub fn toggle8(inverted: bool) -> Frames {
-        let pattern = vec!["◍", "◌"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle8() -> Frames {
+        let pattern = styled_string!["◍", "◌"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle9
@@ -1155,11 +1201,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle9(false);
+    /// let spinner_frames: Frames = Frames::toggle9();
     /// ```
-    pub fn toggle9(inverted: bool) -> Frames {
-        let pattern = vec!["◉", "◎"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle9() -> Frames {
+        let pattern = styled_string!["◉", "◎"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle10
@@ -1170,11 +1216,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle10(false);
+    /// let spinner_frames: Frames = Frames::toggle10();
     /// ```
-    pub fn toggle10(inverted: bool) -> Frames {
-        let pattern = vec!["㊂", "㊀", "㊁"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle10() -> Frames {
+        let pattern = styled_string!["㊂", "㊀", "㊁"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle11
@@ -1185,11 +1231,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle11(false);
+    /// let spinner_frames: Frames = Frames::toggle11();
     /// ```
-    pub fn toggle11(inverted: bool) -> Frames {
-        let pattern = vec!["⧇", "⧆"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle11() -> Frames {
+        let pattern = styled_string!["⧇", "⧆"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle12
@@ -1200,11 +1246,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle12(false);
+    /// let spinner_frames: Frames = Frames::toggle12();
     /// ```
-    pub fn toggle12(inverted: bool) -> Frames {
-        let pattern = vec!["☗", "☖"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle12() -> Frames {
+        let pattern = styled_string!["☗", "☖"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # toggle13
@@ -1215,11 +1261,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::toggle13(false);
+    /// let spinner_frames: Frames = Frames::toggle13();
     /// ```
-    pub fn toggle13(inverted: bool) -> Frames {
-        let pattern = vec!["=", "*", "-"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn toggle13() -> Frames {
+        let pattern = styled_string!["=", "*", "-"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # arc
@@ -1229,11 +1275,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::arc(false);
+    /// let spinner_frames: Frames = Frames::arc();
     /// ```
-    pub fn arc(inverted: bool) -> Frames {
-        let pattern = vec!["◜", "◠", "◝", "◞", "◡", "◟"];
-        Self::generate_frames(pattern, inverted, 120)
+    pub fn arc() -> Frames {
+        let pattern = styled_string!["◜", "◠", "◝", "◞", "◡", "◟"];
+        Self::generate_frames(pattern, 120)
     }
 
     /// # circle
@@ -1243,11 +1289,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::circle(false);
+    /// let spinner_frames: Frames = Frames::circle();
     /// ```
-    pub fn circle(inverted: bool) -> Frames {
-        let pattern = vec!["◡", "⊙", "◠"];
-        Self::generate_frames(pattern, inverted, 200)
+    pub fn circle() -> Frames {
+        let pattern = styled_string!["◡", "⊙", "◠"];
+        Self::generate_frames(pattern, 200)
     }
 
     /// # square_corners
@@ -1257,11 +1303,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::square_corners(false);
+    /// let spinner_frames: Frames = Frames::square_corners();
     /// ```
-    pub fn square_corners(inverted: bool) -> Frames {
-        let pattern = vec!["◰ ", "◳ ", "◲ ", "◱ "];
-        Self::generate_frames(pattern, inverted, 200)
+    pub fn square_corners() -> Frames {
+        let pattern = styled_string!["◰ ", "◳ ", "◲ ", "◱ "];
+        Self::generate_frames(pattern, 200)
     }
 
     /// # circle_corners
@@ -1271,11 +1317,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::circle_corners(false);
+    /// let spinner_frames: Frames = Frames::circle_corners();
     /// ```
-    pub fn circle_corners(inverted: bool) -> Frames {
-        let pattern = vec!["◴ ", "◷ ", "◶ ", "◵ "];
-        Self::generate_frames(pattern, inverted, 200)
+    pub fn circle_corners() -> Frames {
+        let pattern = styled_string!["◴ ", "◷ ", "◶ ", "◵ "];
+        Self::generate_frames(pattern, 200)
     }
 
     /// # circle_halves
@@ -1285,11 +1331,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::circle_halves(false);
+    /// let spinner_frames: Frames = Frames::circle_halves();
     /// ```
-    pub fn circle_halves(inverted: bool) -> Frames {
-        let pattern = vec!["◐ ", "◓ ", "◑ ", "◒ "];
-        Self::generate_frames(pattern, inverted, 200)
+    pub fn circle_halves() -> Frames {
+        let pattern = styled_string!["◐ ", "◓ ", "◑ ", "◒ "];
+        Self::generate_frames(pattern, 200)
     }
 
     /// # bouncing_ball
@@ -1299,10 +1345,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::bouncing_ball(false);
+    /// let spinner_frames: Frames = Frames::bouncing_ball();
     /// ```
-    pub fn bouncing_ball(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn bouncing_ball() -> Frames {
+        let pattern = styled_string![
             "( ●    )",
             "(  ●   )",
             "(   ●  )",
@@ -1312,9 +1358,9 @@ impl Frames {
             "(   ●  )",
             "(  ●   )",
             "( ●    )",
-            "(●     )",
+            "(●     )"
         ];
-        Self::generate_frames(pattern, inverted, 160)
+        Self::generate_frames(pattern, 160)
     }
 
     /// # smiley
@@ -1325,11 +1371,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::smiley(false);
+    /// let spinner_frames: Frames = Frames::smiley();
     /// ```
-    pub fn smiley(inverted: bool) -> Frames {
-        let pattern = vec!["😄 ", "😝 "];
-        Self::generate_frames(pattern, inverted, 460)
+    pub fn smiley() -> Frames {
+        let pattern = styled_string!["😄 ", "😝 "];
+        Self::generate_frames(pattern, 460)
     }
 
     /// # monkey
@@ -1340,11 +1386,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::monkey(false);
+    /// let spinner_frames: Frames = Frames::monkey();
     /// ```
-    pub fn monkey(inverted: bool) -> Frames {
-        let pattern = vec!["🙈 ", "🙈 ", "🙉 ", "🙊 "];
-        Self::generate_frames(pattern, inverted, 440)
+    pub fn monkey() -> Frames {
+        let pattern = styled_string!["🙈 ", "🙈 ", "🙉 ", "🙊 "];
+        Self::generate_frames(pattern, 440)
     }
 
     /// # hearts
@@ -1355,11 +1401,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::hearts(false);
+    /// let spinner_frames: Frames = Frames::hearts();
     /// ```
-    pub fn hearts(inverted: bool) -> Frames {
-        let pattern = vec!["💛 ", "💙 ", "💜 ", "💚 ", "❤️ "];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn hearts() -> Frames {
+        let pattern = styled_string!["💛 ", "💙 ", "💜 ", "💚 ", "❤️ "];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # runner
@@ -1370,11 +1416,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::runner(false);
+    /// let spinner_frames: Frames = Frames::runner();
     /// ```
-    pub fn runner(inverted: bool) -> Frames {
-        let pattern = vec!["🚶 ", "🏃 "];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn runner() -> Frames {
+        let pattern = styled_string!["🚶 ", "🏃 "];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # raining
@@ -1385,11 +1431,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::raining(false);
+    /// let spinner_frames: Frames = Frames::raining();
     /// ```
-    pub fn raining(inverted: bool) -> Frames {
-        let pattern = vec!["🌧 ", "🌨 ", "🌧 ", "🌨 ", "🌧 ", "🌨 ", "🌨 ", "🌧 ", "🌨 "];
-        Self::generate_frames(pattern, inverted, 140)
+    pub fn raining() -> Frames {
+        let pattern = styled_string!["🌧 ", "🌨 ", "🌧 ", "🌨 ", "🌧 ", "🌨 ", "🌨 ", "🌧 ", "🌨 "];
+        Self::generate_frames(pattern, 140)
     }
 
     /// # weather
@@ -1400,13 +1446,13 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::weather(false);
+    /// let spinner_frames: Frames = Frames::weather();
     /// ```
-    pub fn weather(inverted: bool) -> Frames {
-        let pattern = vec![
-            "☀️ ", "☀️ ", "⛅️ ", "⛅️ ", "☁️ ", "☁️ ", "⛅️ ", "⛅️ ", "☀️ ", "☀️ ",
+    pub fn weather() -> Frames {
+        let pattern = styled_string![
+            "☀️ ", "☀️ ", "⛅️ ", "⛅️ ", "☁️ ", "☁️ ", "⛅️ ", "⛅️ ", "☀️ ", "☀️ "
         ];
-        Self::generate_frames(pattern, inverted, 440)
+        Self::generate_frames(pattern, 440)
     }
 
     /// # christmas_tree
@@ -1417,11 +1463,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::christmas_tree(false);
+    /// let spinner_frames: Frames = Frames::christmas_tree();
     /// ```
-    pub fn christmas_tree(inverted: bool) -> Frames {
-        let pattern = vec!["🌲", "🎄"];
-        Self::generate_frames(pattern, inverted, 340)
+    pub fn christmas_tree() -> Frames {
+        let pattern = styled_string!["🌲", "🎄"];
+        Self::generate_frames(pattern, 340)
     }
 
     /// # nade
@@ -1431,14 +1477,14 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::nade(false);
+    /// let spinner_frames: Frames = Frames::nade();
     /// ```
-    pub fn nade(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn nade() -> Frames {
+        let pattern = styled_string![
             "،  ", "′  ", " ´ ", " ‾ ", "  ⸌", "  ⸊", "  |", "  ⁎", "  ⁕", " ෴ ", "  ⁓", "   ",
-            "   ", "   ",
+            "   ", "   "
         ];
-        Self::generate_frames(pattern, inverted, 180)
+        Self::generate_frames(pattern, 180)
     }
 
     /// # dots_simple_big1
@@ -1448,11 +1494,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dots_simple_big1(false);
+    /// let spinner_frames: Frames = Frames::dots_simple_big1();
     /// ```
-    pub fn dots_simple_big1(inverted: bool) -> Frames {
-        let pattern = vec!["●∙∙", "∙●∙", "∙∙●"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn dots_simple_big1() -> Frames {
+        let pattern = styled_string!["●∙∙", "∙●∙", "∙∙●"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # dots_simple_big2
@@ -1462,11 +1508,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dots_simple_big2(false);
+    /// let spinner_frames: Frames = Frames::dots_simple_big2();
     /// ```
-    pub fn dots_simple_big2(inverted: bool) -> Frames {
-        let pattern = vec!["∙∙∙", "●∙∙", "∙●∙", "∙∙●"];
-        Self::generate_frames(pattern, inverted, 240)
+    pub fn dots_simple_big2() -> Frames {
+        let pattern = styled_string!["∙∙∙", "●∙∙", "∙●∙", "∙∙●"];
+        Self::generate_frames(pattern, 240)
     }
 
     /// # dots_simple_big3
@@ -1476,11 +1522,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dots_simple_big3(false);
+    /// let spinner_frames: Frames = Frames::dots_simple_big3();
     /// ```
-    pub fn dots_simple_big3(inverted: bool) -> Frames {
-        let pattern = vec!["∙∙∙", "●∙∙", "●●∙", "●●●", "∙●●", "∙∙●"];
-        Self::generate_frames(pattern, inverted, 180)
+    pub fn dots_simple_big3() -> Frames {
+        let pattern = styled_string!["∙∙∙", "●∙∙", "●●∙", "●●●", "∙●●", "∙∙●"];
+        Self::generate_frames(pattern, 180)
     }
 
     /// # dots_simple_big4
@@ -1490,11 +1536,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dots_simple_big4(false);
+    /// let spinner_frames: Frames = Frames::dots_simple_big4();
     /// ```
-    pub fn dots_simple_big4(inverted: bool) -> Frames {
-        let pattern = vec!["∙∙∙", "●∙∙", "●●∙", "●●●"];
-        Self::generate_frames(pattern, inverted, 180)
+    pub fn dots_simple_big4() -> Frames {
+        let pattern = styled_string!["∙∙∙", "●∙∙", "●●∙", "●●●"];
+        Self::generate_frames(pattern, 180)
     }
 
     /// # fist_bump
@@ -1504,10 +1550,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::fist_bump(false);
+    /// let spinner_frames: Frames = Frames::fist_bump();
     /// ```
-    pub fn fist_bump(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn fist_bump() -> Frames {
+        let pattern = styled_string![
             "🤜                        🤛 ",
             " 🤜                       🤛 ",
             "  🤜                     🤛  ",
@@ -1515,9 +1561,9 @@ impl Frames {
             "      🤜             🤛      ",
             "         🤜       🤛         ",
             "           🤜✨🤛            ",
-            "         🤜      🤛          ",
+            "         🤜      🤛          "
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # finger_dance
@@ -1527,11 +1573,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::finger_dance(false);
+    /// let spinner_frames: Frames = Frames::finger_dance();
     /// ```
-    pub fn finger_dance(inverted: bool) -> Frames {
-        let pattern = vec!["🤘 ", "🤟 ", "🖖 ", "✋ ", "🤚 ", "👆 "];
-        Self::generate_frames(pattern, inverted, 280)
+    pub fn finger_dance() -> Frames {
+        let pattern = styled_string!["🤘 ", "🤟 ", "🖖 ", "✋ ", "🤚 ", "👆 "];
+        Self::generate_frames(pattern, 280)
     }
 
     /// # mind_blown
@@ -1541,14 +1587,14 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::mind_blown(false);
+    /// let spinner_frames: Frames = Frames::mind_blown();
     /// ```
-    pub fn mind_blown(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn mind_blown() -> Frames {
+        let pattern = styled_string![
             "😐 ", "😐 ", "😮 ", "😮 ", "😦 ", "😦 ", "😧 ", "😧 ", "🤯 ", "🤯 ", "💥 ", "💥 ",
-            "✨ ",
+            "✨ "
         ];
-        Self::generate_frames(pattern, inverted, 280)
+        Self::generate_frames(pattern, 280)
     }
 
     /// # speaker
@@ -1558,11 +1604,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::speaker(false);
+    /// let spinner_frames: Frames = Frames::speaker();
     /// ```
-    pub fn speaker(inverted: bool) -> Frames {
-        let pattern = vec!["🔈 ", "🔉 ", "🔊 ", "🔉 "];
-        Self::generate_frames(pattern, inverted, 200)
+    pub fn speaker() -> Frames {
+        let pattern = styled_string!["🔈 ", "🔉 ", "🔊 ", "🔉 "];
+        Self::generate_frames(pattern, 200)
     }
 
     /// # arrows
@@ -1572,11 +1618,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::arrows(false);
+    /// let spinner_frames: Frames = Frames::arrows();
     /// ```
-    pub fn arrows(inverted: bool) -> Frames {
-        let pattern = vec!["⇢", "⇨", "⇒", "⇉", "⇶"];
-        Self::generate_frames(pattern, inverted, 150)
+    pub fn arrows() -> Frames {
+        let pattern = styled_string!["⇢", "⇨", "⇒", "⇉", "⇶"];
+        Self::generate_frames(pattern, 150)
     }
 
     /// # dot_box
@@ -1586,11 +1632,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_box(false);
+    /// let spinner_frames: Frames = Frames::dot_box();
     /// ```
-    pub fn dot_box(inverted: bool) -> Frames {
-        let pattern = vec![".", "·", "•", "¤", "°", "¤", "•", "·"];
-        Self::generate_frames(pattern, inverted, 150)
+    pub fn dot_box() -> Frames {
+        let pattern = styled_string![".", "·", "•", "¤", "°", "¤", "•", "·"];
+        Self::generate_frames(pattern, 150)
     }
 
     /// # simple_line_spin
@@ -1600,11 +1646,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::simple_line_spin(false);
+    /// let spinner_frames: Frames = Frames::simple_line_spin();
     /// ```
-    pub fn simple_line_spin(inverted: bool) -> Frames {
-        let pattern = vec!["+", "\\", "|", "!", "/", "-", "x"];
-        Self::generate_frames(pattern, inverted, 150)
+    pub fn simple_line_spin() -> Frames {
+        let pattern = styled_string!["+", "\\", "|", "!", "/", "-", "x"];
+        Self::generate_frames(pattern, 150)
     }
 
     /// # bomb
@@ -1614,13 +1660,13 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::bomb(false);
+    /// let spinner_frames: Frames = Frames::bomb();
     /// ```
-    pub fn bomb(inverted: bool) -> Frames {
-        let pattern = vec![
-            "💣  ", " 💣  ", "  💣 ", "   💣", "   💣", "   💣", "   💣", "   💥", "    ", "    ",
+    pub fn bomb() -> Frames {
+        let pattern = styled_string![
+            "💣  ", " 💣  ", "  💣 ", "   💣", "   💣", "   💣", "   💣", "   💥", "    ", "    "
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dot_bounce2
@@ -1630,11 +1676,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dot_bounce2(false);
+    /// let spinner_frames: Frames = Frames::dot_bounce2();
     /// ```
-    pub fn dot_bounce2(inverted: bool) -> Frames {
-        let pattern = vec![".", "·", "˙", "·", "."];
-        Self::generate_frames(pattern, inverted, 110)
+    pub fn dot_bounce2() -> Frames {
+        let pattern = styled_string![".", "·", "˙", "·", "."];
+        Self::generate_frames(pattern, 110)
     }
 
     /// # orange_pulse
@@ -1644,11 +1690,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::orange_pulse(false);
+    /// let spinner_frames: Frames = Frames::orange_pulse();
     /// ```
-    pub fn orange_pulse(inverted: bool) -> Frames {
-        let pattern = vec!["🔸", "🔶", "🟠", "🟠", "🔶"];
-        Self::generate_frames(pattern, inverted, 110)
+    pub fn orange_pulse() -> Frames {
+        let pattern = styled_string!["🔸", "🔶", "🟠", "🟠", "🔶"];
+        Self::generate_frames(pattern, 110)
     }
 
     /// # blue_pulse
@@ -1658,11 +1704,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::blue_pulse(false);
+    /// let spinner_frames: Frames = Frames::blue_pulse();
     /// ```
-    pub fn blue_pulse(inverted: bool) -> Frames {
-        let pattern = vec!["🔹", "🔷", "🔵", "🔵", "🔷"];
-        Self::generate_frames(pattern, inverted, 110)
+    pub fn blue_pulse() -> Frames {
+        let pattern = styled_string!["🔹", "🔷", "🔵", "🔵", "🔷"];
+        Self::generate_frames(pattern, 110)
     }
 
     /// # green_pulse
@@ -1672,11 +1718,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::green_pulse(false);
+    /// let spinner_frames: Frames = Frames::green_pulse();
     /// ```
-    pub fn green_pulse(inverted: bool) -> Frames {
-        let pattern = vec!["🟢", "🟩", "🟩", "🟢"];
-        Self::generate_frames(pattern, inverted, 110)
+    pub fn green_pulse() -> Frames {
+        let pattern = styled_string!["🟢", "🟩", "🟩", "🟢"];
+        Self::generate_frames(pattern, 110)
     }
 
     /// # red_pulse
@@ -1686,11 +1732,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::red_pulse(false);
+    /// let spinner_frames: Frames = Frames::red_pulse();
     /// ```
-    pub fn red_pulse(inverted: bool) -> Frames {
-        let pattern = vec!["🔴", "🟥", "🟥", "🔴"];
-        Self::generate_frames(pattern, inverted, 110)
+    pub fn red_pulse() -> Frames {
+        let pattern = styled_string!["🔴", "🟥", "🟥", "🔴"];
+        Self::generate_frames(pattern, 110)
     }
 
     /// # other
@@ -1700,11 +1746,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::other(false);
+    /// let spinner_frames: Frames = Frames::other();
     /// ```
-    pub fn other(inverted: bool) -> Frames {
-        let pattern = vec!["d", "q", "p", "b"];
-        Self::generate_frames(pattern, inverted, 110)
+    pub fn other() -> Frames {
+        let pattern = styled_string!["d", "q", "p", "b"];
+        Self::generate_frames(pattern, 110)
     }
 
     /// # pray
@@ -1714,11 +1760,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::pray(false);
+    /// let spinner_frames: Frames = Frames::pray();
     /// ```
-    pub fn pray(inverted: bool) -> Frames {
-        let pattern = vec!["🧍 ", "🚶 ", "🧎 ", "🙇 "];
-        Self::generate_frames(pattern, inverted, 210)
+    pub fn pray() -> Frames {
+        let pattern = styled_string!["🧍 ", "🚶 ", "🧎 ", "🙇 "];
+        Self::generate_frames(pattern, 210)
     }
 
     /// # wavy
@@ -1728,10 +1774,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::wavy(false);
+    /// let spinner_frames: Frames = Frames::wavy();
     /// ```
-    pub fn wavy(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn wavy() -> Frames {
+        let pattern = styled_string![
             "¸¸¸¸¸¸¸¸¸",
             ".¸¸¸¸¸¸¸¸",
             "·.¸¸¸¸¸¸¸",
@@ -1746,9 +1792,9 @@ impl Frames {
             "¸¸¸¸¸.·´¯",
             "¸¸¸¸¸¸.·´",
             "¸¸¸¸¸¸¸.·",
-            "¸¸¸¸¸¸¸¸·",
+            "¸¸¸¸¸¸¸¸·"
         ];
-        Self::generate_frames(pattern, inverted, 80)
+        Self::generate_frames(pattern, 80)
     }
 
     /// # wavy2
@@ -1758,10 +1804,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::wavy2(false);
+    /// let spinner_frames: Frames = Frames::wavy2();
     /// ```
-    pub fn wavy2(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn wavy2() -> Frames {
+        let pattern = styled_string![
             "¸.·´¯`·.¸",
             "¸¸.·´¯`·.",
             ".¸¸.·´¯`·",
@@ -1770,9 +1816,9 @@ impl Frames {
             "¯`·.¸¸.·´",
             "´¯`·.¸¸.·",
             "·´¯`·.¸¸.",
-            ".·´¯`·.¸¸",
+            ".·´¯`·.¸¸"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # wavy3
@@ -1782,10 +1828,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::wavy3(false);
+    /// let spinner_frames: Frames = Frames::wavy3();
     /// ```
-    pub fn wavy3(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn wavy3() -> Frames {
+        let pattern = styled_string![
             "▃▄▅",
             "▆▇█",
             "▇█▇",
@@ -1796,9 +1842,9 @@ impl Frames {
             "▄▂▁",
             "▂▁▂",
             "▁▂▃",
-            "▂▃▄",
+            "▂▃▄"
         ];
-        Self::generate_frames(pattern, inverted, 40)
+        Self::generate_frames(pattern, 40)
     }
 
     /// # wavy4
@@ -1808,19 +1854,19 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::wavy4(false);
+    /// let spinner_frames: Frames = Frames::wavy4();
     /// ```
-    pub fn wavy4(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn wavy4() -> Frames {
+        let pattern = styled_string![
             "ρββββββ",
             "βρβββββ",
             "ββρββββ",
             "βββρβββ",
             "ββββρββ",
             "βββββρβ",
-            "ββββββρ",
+            "ββββββρ"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # soccer
@@ -1830,10 +1876,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::soccer(false);
+    /// let spinner_frames: Frames = Frames::soccer();
     /// ```
-    pub fn soccer(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn soccer() -> Frames {
+        let pattern = styled_string![
             " 🧑⚽️       🧑 ",
             "🧑  ⚽️      🧑 ",
             "🧑   ⚽️     🧑 ",
@@ -1845,9 +1891,9 @@ impl Frames {
             "🧑     ⚽️   🧑 ",
             "🧑    ⚽️    🧑 ",
             "🧑   ⚽️     🧑 ",
-            "🧑  ⚽️      🧑 ",
+            "🧑  ⚽️      🧑 "
         ];
-        Self::generate_frames(pattern, inverted, 80)
+        Self::generate_frames(pattern, 80)
     }
 
     /// # layer
@@ -1857,11 +1903,11 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::layer(false);
+    /// let spinner_frames: Frames = Frames::layer();
     /// ```
-    pub fn layer(inverted: bool) -> Frames {
-        let pattern = vec!["-", "=", "≡"];
-        Self::generate_frames(pattern, inverted, 250)
+    pub fn layer() -> Frames {
+        let pattern = styled_string!["-", "=", "≡"];
+        Self::generate_frames(pattern, 250)
     }
 
     /// # matrix_glitch
@@ -1871,10 +1917,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::matrix_glitch(false);
+    /// let spinner_frames: Frames = Frames::matrix_glitch();
     /// ```
-    pub fn matrix_glitch(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn matrix_glitch() -> Frames {
+        let pattern = styled_string![
             "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏",
             "⠙⠹⠸⠼⠴⠦⠧⠇⠏⠋",
             "⠹⠸⠼⠴⠦⠧⠇⠏⠋⠙",
@@ -1884,9 +1930,9 @@ impl Frames {
             "⠦⠧⠇⠏⠋⠙⠹⠸⠼⠴",
             "⠧⠇⠏⠋⠙⠹⠸⠼⠴⠦",
             "⠇⠏⠋⠙⠹⠸⠼⠴⠦⠧",
-            "⠏⠋⠙⠹⠸⠼⠴⠦⠧⠇",
+            "⠏⠋⠙⠹⠸⠼⠴⠦⠧⠇"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # matrix_glitch2
@@ -1896,10 +1942,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::matrix_glitch2(false);
+    /// let spinner_frames: Frames = Frames::matrix_glitch2();
     /// ```
-    pub fn matrix_glitch2(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn matrix_glitch2() -> Frames {
+        let pattern = styled_string![
             "█▒▓░█░▒▒▓░░▓▒▓▒█▓░░▓▓░░▓░",
             "█▒▓▒█░▒▓░▓▒▓█▒░▒▓█▒░▓░▓░▓",
             "▒█░░█▒░░▓▓▒░▒▓░░▒▒█▓░▓▓░░",
@@ -1909,9 +1955,9 @@ impl Frames {
             "▒▓█▒▓▓░▓▓▒▓▒▒▒▓▓▒░▓░▒▒▓▓▒",
             "▓░▒▓▒▒▓▓▒░▒▓▒▒░▓▒░▒▓▓▒▒▓▓",
             "▓░░░▓▒▓░░░▒▒▓░░░░▓▓░░▓▒▒▒",
-            "▓▒▓▒▓▓▒▓▒▒▓▒▓▓▓▓▒▓▒▓▓▒▒▓▒",
+            "▓▒▓▒▓▓▒▓▒▒▓▒▓▓▓▓▒▓▒▓▓▒▒▓▒"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # matrix_glitch2_small
@@ -1921,10 +1967,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::Frames;
     ///
-    /// let spinner_frames: Frames = Frames::matrix_glitch2_small(false);
+    /// let spinner_frames: Frames = Frames::matrix_glitch2_small();
     /// ```
-    pub fn matrix_glitch2_small(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn matrix_glitch2_small() -> Frames {
+        let pattern = styled_string![
             "█▒▓░█░▒▒▓",
             "█▒▓▒█░▒▓░",
             "▒█░░█▒░░▓",
@@ -1934,9 +1980,9 @@ impl Frames {
             "▒▓█▒▓▓░▓▓",
             "▓░▒▓▒▒▓▓▒",
             "▓░░░▓▒▓░░",
-            "▓▒▓▒▓▓▒▓▒",
+            "▓▒▓▒▓▓▒▓▒"
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 
     /// # dwarf_fortress
@@ -1946,10 +1992,10 @@ impl Frames {
     /// ```
     /// use zenity::spinner::{Frames};
     ///
-    /// let spinner_frames: Frames = Frames::dwarf_fortress(false);
+    /// let spinner_frames: Frames = Frames::dwarf_fortress();
     /// ```
-    pub fn dwarf_fortress(inverted: bool) -> Frames {
-        let pattern = vec![
+    pub fn dwarf_fortress() -> Frames {
+        let pattern = styled_string![
             " ██████£££  ",
             "☺██████£££  ",
             "☺██████£££  ",
@@ -2082,8 +2128,8 @@ impl Frames {
             " ▒█████£££  ",
             " ▓█████£££  ",
             " ██████£££  ",
-            " ██████£££  ",
+            " ██████£££  "
         ];
-        Self::generate_frames(pattern, inverted, 100)
+        Self::generate_frames(pattern, 100)
     }
 }

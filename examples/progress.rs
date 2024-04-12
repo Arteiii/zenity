@@ -29,6 +29,7 @@ fn multiple() {
 
     let progress2 = progress.add(Frames::equal().set_goal(253).set_size(7));
     let progress3 = progress.add(Frames::hash().set_goal(253).set_size(60));
+    let progress4 = progress.add(Frames::rich().set_goal(253).set_size(60));
 
     progress.run_all();
 
@@ -38,6 +39,7 @@ fn multiple() {
         progress.set(&progress1, &loading);
         progress.set(&progress2, &loading);
         progress.set(&progress3, &loading);
+        progress.set(&progress4, &loading);
 
         thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(1..=70)));
     }

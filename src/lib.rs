@@ -17,39 +17,28 @@
 //! # use std::time::Duration;
 //! use zenity::spinner::{MultiSpinner, Frames};
 //!
-//! # fn main() {
 //! let spinner = MultiSpinner::default();
-//! let spinner1 = spinner.get_last();
-//! let spinner2 = spinner.add(Frames::binary(false));
-//!
-//! // start all spinners
-//! spinner.run_all();
 //! # sleep(Duration::from_secs(2));
 //!
-//! spinner.stop(&spinner2);
-//! spinner.set_text(&spinner2, "Successfully".to_string());
-//!# }
+//!  // do work...
+//!
+//! spinner.stop(&spinner.get_last());
+//! spinner.set_text(&spinner.get_last(), "Successfully".to_string());
 //! ```
 //!
 //! ## Progress Bar
 //!```
 //! // examples/progress.rs
-//! # use rand::Rng;
-//! # use std::thread;
-//! # use std::time::Duration;
 //! use zenity::progress::ProgressBar;
 //!
-//! # fn main() {
 //! let progress = ProgressBar::default();
-//!# let loading = 1_usize;
 //!
+//! let loading = 1_usize;
 //! for loading in loading..=100 {
-//!   # thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(1..=70)));
 //!   // do work...
+//!
 //!   progress.set(&progress.get_last(), &loading);
 //! }
-//!     
-//! # }
 //! ```
 //! # Color Configuration
 //!
