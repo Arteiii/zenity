@@ -16,9 +16,12 @@
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::time::{Duration, Instant};
 
 pub use frames::*;
 
+use crate::iterators::balanced_single;
+use crate::style::StyledString;
 use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
@@ -158,10 +161,9 @@ impl ProgressBar {
     /// # assert_eq!(spinner.get(&uid), Some(50));
     /// ```
     pub fn set(&self, uid: &usize, new_current: &usize) {
-        if let Some(bar) = self.bar.lock().unwrap().get(uid) {
-            let current = bar.current.lock().unwrap();
-            let diff = new_current.saturating_sub(*current);
-            drop(current);
+        if let Some(bar) = self.bar.lock().unwrap().get_mut(uid) {
+            let current = bar.current;
+            let diff = new_current.saturating_sub(current);
             bar.inc(&diff);
         }
     }
@@ -193,7 +195,7 @@ impl ProgressBar {
     /// ```
     pub fn get(&self, uid: &usize) -> Option<usize> {
         if let Some(bar) = self.bar.lock().unwrap().get(uid) {
-            let current = *bar.current.lock().unwrap();
+            let current = bar.current;
             Some(current)
         } else {
             None
@@ -217,19 +219,17 @@ impl ProgressBar {
         let bars = Arc::clone(&self.bar);
         let stop = Arc::clone(&self.stop);
 
+        let mut last_render_time = Instant::now();
+
         thread::spawn(move || {
+            let mut frame_index = 0_usize;
             while !*stop.lock().unwrap() {
-                let mut rendered_frames = Vec::new();
+                for (index, frames) in bars.lock().unwrap().iter() {
+                    let mut line = Vec::new();
 
-                for (_, frames) in bars.lock().unwrap().iter() {
-                    let begin: &str = frames.begin[0];
-                    let end: &str = frames.end[0];
-                    let current_incomplete: &str = frames.bar_incomplete_char[0];
-                    let current_complete: &str = frames.bar_complete_char[0];
-
-                    let size: usize = *frames.size.lock().unwrap();
-                    let goal = *frames.goal.lock().unwrap();
-                    let current: usize = *frames.current.lock().unwrap();
+                    let size: usize = frames.size;
+                    let goal = frames.goal;
+                    let current: usize = frames.current;
 
                     // calculate percentage completion
                     let completion_percentage = (current as f64 / goal as f64) * 100.0;
@@ -238,21 +238,32 @@ impl ProgressBar {
                     let complete_size = ((completion_percentage / 100.0) * size as f64) as usize;
                     let incomplete_size = size - complete_size;
 
-                    // Render the frame with the updated incomplete string and add it to the vector
+                    // check if it's time to update the frame index
+                    if Instant::now() - last_render_time >= Duration::from_millis(100) {
+                        frame_index += 1; // go to next frame for animated progress bars
+                        last_render_time = Instant::now(); // update last render time
+                    }
 
-                    let rendered_frame = format!(
-                        "{begin}{}{}{end}  {:.2}% | {}/{}",
-                        current_complete.repeat(complete_size),
-                        current_incomplete.repeat(incomplete_size),
-                        completion_percentage,
-                        current,
-                        goal,
+                    line.push(balanced_single(frame_index, &frames.begin.clone()).clone());
+                    line.push(
+                        balanced_single(frame_index, &frames.bar_complete_char.clone())
+                            .repeat(complete_size),
                     );
-                    rendered_frames.push(rendered_frame);
-                }
+                    line.push(balanced_single(frame_index, &frames.limiter.clone()).clone());
+                    line.push(
+                        balanced_single(frame_index, &frames.bar_incomplete_char.clone())
+                            .repeat(incomplete_size),
+                    );
+                    line.push(balanced_single(frame_index, &frames.end.clone()).clone());
+                    line.push(StyledString::new(&format!(" {:.2}", completion_percentage)));
+                    line.push(StyledString::new("%"));
+                    line.push(StyledString::new(" | "));
+                    line.push(StyledString::new(&format!("{}", current)));
+                    line.push(StyledString::new("/"));
+                    line.push(StyledString::new(&format!("{}", goal)));
 
-                // render the frame with the updated incomplete string
-                console_render::render_styled_line(&rendered_frames, Default::default());
+                    console_render::render_styled_line(*index as u16, &line);
+                }
             }
         });
     }
