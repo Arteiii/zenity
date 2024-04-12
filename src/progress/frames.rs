@@ -7,6 +7,7 @@
 //! let spinner_frames = Frames {
 //!             begin: styled_string!["["],
 //!             bar_complete_char: styled_string!["="],
+//!             limiter: styled_string![""],
 //!             bar_incomplete_char: styled_string!["-"],
 //!             end: styled_string!["]"],
 //!             size: 30,
@@ -17,11 +18,11 @@
 
 use crossterm::style::{Attribute, ContentStyle};
 
+use crate::style::combine_attributes;
 use crate::{
     style::{Color, StyledString},
     styled_string,
 };
-use crate::style::combine_attributes;
 
 /// struct storing the data needed to render a ProgressFrames
 ///
@@ -34,6 +35,7 @@ use crate::style::combine_attributes;
 /// let spinner_frames = Frames {
 ///             begin: styled_string!["["],
 ///             bar_complete_char: styled_string!["="],
+///             limiter: styled_string![""],
 ///             bar_incomplete_char: styled_string!["-"],
 ///             end: styled_string!["]"],
 ///             size: 30,
@@ -44,9 +46,9 @@ use crate::style::combine_attributes;
 /// # assert_eq!(spinner_frames.bar_complete_char, styled_string!["="]);
 /// # assert_eq!(spinner_frames.bar_incomplete_char, styled_string!["-"]);
 /// # assert_eq!(spinner_frames.end, styled_string!["]"]);
-/// # assert_eq!(*spinner_frames.size, 30);
-/// # assert_eq!(*spinner_frames.goal, 100);
-/// # assert_eq!(*spinner_frames.current, 0);
+/// # assert_eq!(spinner_frames.size, 30);
+/// # assert_eq!(spinner_frames.goal, 100);
+/// # assert_eq!(spinner_frames.current, 0);
 /// ```
 #[derive(Clone, Debug)]
 pub struct Frames {
@@ -128,11 +130,13 @@ impl Frames {
     ///
     /// ```
     /// use zenity::progress::Frames;
+    /// use zenity::style::StyledString;
     /// use zenity::styled_string;
     ///
     /// let spinner_frames = Frames::new(
     ///     styled_string!["["],
     ///     styled_string!["="],
+    ///     styled_string![""],
     ///     styled_string!["-"],
     ///     styled_string!["]"]
     /// );
@@ -175,7 +179,7 @@ impl Frames {
     /// use zenity::progress::Frames;
     ///
     /// let bar = Frames::default().set_size(20);
-    /// # assert_eq!(bar, 20);
+    /// # assert_eq!(bar.size, 20);
     /// ```
     pub fn set_size(&mut self, size: usize) -> Self {
         self.size = size;
@@ -237,12 +241,14 @@ impl Frames {
     ///
     /// ```
     /// use zenity::progress::Frames;
+    /// use zenity::style::StyledString;
+    /// use zenity::styled_string;
     ///
     /// let bar = Frames::equal();
-    /// # assert_eq!(bar.begin, vec!["["]);
-    /// # assert_eq!(bar.bar_complete_char, vec!["="]);
-    /// # assert_eq!(bar.bar_incomplete_char, vec!["-"]);
-    /// # assert_eq!(bar.end, vec!["]"]);
+    /// # assert_eq!(bar.begin, styled_string!["["]);
+    /// # assert_eq!(bar.bar_complete_char, styled_string!["="]);
+    /// # assert_eq!(bar.bar_incomplete_char, styled_string!["-"]);
+    /// # assert_eq!(bar.end, styled_string!["]"]);
     /// ```
     pub fn equal() -> Self {
         Self::new(
@@ -260,6 +266,7 @@ impl Frames {
     ///
     /// ```
     /// use zenity::progress::Frames;
+    /// use zenity::style::StyledString;
     /// use zenity::styled_string;
     ///
     /// let bar = Frames::hash();
@@ -284,6 +291,7 @@ impl Frames {
     ///
     /// ```
     /// use zenity::progress::Frames;
+    /// use zenity::style::StyledString;
     /// use zenity::styled_string;
     ///
     /// let bar = Frames::rect();
@@ -302,6 +310,19 @@ impl Frames {
         )
     }
 
+    /// '■' as the complete char and ' ' as the incomplete char
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use zenity::progress::Frames;
+    /// use zenity::style::StyledString;
+    /// use zenity::styled_string;
+    ///
+    /// let bar = Frames::dotted_rich();
+    /// # assert_eq!(bar.begin, styled_string![" "]);
+    /// # assert_eq!(bar.end, styled_string![" "]);
+    /// ```
     pub fn dotted_rich() -> Self {
         Self::new(
             styled_string![" "],
@@ -332,6 +353,19 @@ impl Frames {
         )
     }
 
+    /// '━' as the complete char and '━' as the incomplete char
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use zenity::progress::Frames;
+    /// use zenity::style::StyledString;
+    /// use zenity::styled_string;
+    ///
+    /// let bar = Frames::rich();
+    /// # assert_eq!(bar.begin, styled_string![" "]);
+    /// # assert_eq!(bar.end, styled_string![" "]);
+    /// ```
     pub fn rich() -> Self {
         Self::new(
             styled_string![" "],

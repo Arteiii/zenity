@@ -108,8 +108,33 @@ pub struct StyledString {
     pub style: ContentStyle,
 }
 
+/// Example:
+/// ```
+/// use zenity::style::{ContentStyle,StyledString};
+///
+/// let styled_text = StyledString {
+///     string: "Hello, ".to_string(),
+///     style: ContentStyle::default(),
+/// };
+///
+/// let repeated_styled_text = styled_text.repeat(3);
+/// assert_eq!(repeated_styled_text.string, "Hello, Hello, Hello, ");
+/// ```
 impl StyledString {
-    pub(crate) fn repeat(&self, count: usize) -> StyledString {
+    /// repeats the StyledString `count` times
+    ///
+    /// Example:
+    ///
+    /// ```
+    /// use zenity::style::{ContentStyle,StyledString};
+    /// # let styled_text = StyledString {
+    /// #     string: "Hello, ".to_string(),
+    /// #     style: ContentStyle::default(),
+    /// # };
+    ///
+    /// let repeated_styled_text = styled_text.repeat(3);
+    /// ```
+    pub fn repeat(&self, count: usize) -> StyledString {
         // repeat the string `count` times
         let repeated_string = self.string.repeat(count);
         // create a new StyledString with the repeated string and the same style
@@ -126,8 +151,24 @@ impl Default for StyledString {
     }
 }
 
+/// ```
+/// use zenity::style::StyledString;
+///
+/// let text = "Hello, world!";
+/// let styled_text = StyledString::new(text);
+/// ```
 impl StyledString {
     /// creates a new StyledString with default arguments and parameters
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use zenity::style::StyledString;
+    ///
+    /// let text = "Hello, world!";
+    ///
+    /// let styled_text = StyledString::new(text);
+    /// ```
     pub fn new(string: &str) -> Self {
         StyledString {
             string: string.to_string(),
@@ -144,6 +185,18 @@ impl StyledString {
     /// - foreground_color
     /// - background_color
     /// - underline_color
+    /// # Example
+    ///
+    /// ```
+    /// use zenity::style::{Color,StyledString};
+    ///
+    /// let text = "Hello, world!";
+    /// let foreground_color = Some(Color::Red);
+    /// let background_color = Some(Color::Blue);
+    /// let underline_color = Some(Color::Green);
+    ///
+    /// let styled_text = StyledString::simple(text, foreground_color, background_color, underline_color);
+    /// ```
     pub fn simple(
         string: &str,
         foreground_color: Option<Color>,

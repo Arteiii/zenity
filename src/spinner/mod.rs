@@ -41,7 +41,7 @@ pub mod frames;
 /// use std::time::Duration;
 /// use zenity::spinner::{Frames, MultiSpinner};
 ///
-/// let spinner = MultiSpinner::new(Frames::dot_spinner11(false));
+/// let spinner = MultiSpinner::new(Frames::dot_spinner11());
 /// spinner.run_all();
 ///
 /// sleep(Duration::from_secs(4));

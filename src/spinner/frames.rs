@@ -82,7 +82,8 @@ impl Frames {
     ///
     /// ```
     /// use zenity::spinner::{Frames};
-    /// use zenity::styled_string;
+    /// use zenity::style::StyledString;
+    /// use zenity::{style, styled_string};
     ///
     /// let spinner_frames = Frames::generate_frames(styled_string!["◐", "◓", "◑", "◒"], 100);
     /// # assert_eq!(spinner_frames.frames, styled_string!["◐", "◓", "◑", "◒"]);
@@ -101,6 +102,15 @@ impl Frames {
     }
 
     /// stops a spinner animation
+    ///
+    /// ```
+    /// # use zenity::spinner::MultiSpinner;
+    /// #
+    /// # let spinner = MultiSpinner::default();
+    /// #
+    /// // stop spinner manual:
+    /// spinner.stop(&spinner.get_last());
+    /// ```
     pub fn stop(&mut self) {
         self.stop = true;
     }
@@ -112,6 +122,7 @@ impl Frames {
     /// # Example
     /// ```
     /// use zenity::spinner::Frames;
+    /// use zenity::style::StyledString;
     /// use zenity::styled_string;
     ///
     /// let spinner_frames: Frames = Frames::dot_spinner1();
