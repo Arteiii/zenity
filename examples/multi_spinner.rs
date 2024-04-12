@@ -5,7 +5,7 @@ use unicode_icons::icons::symbols::{check_mark_button, cross_mark};
 
 use zenity::spinner::Frames;
 use zenity::spinner::MultiSpinner;
-use zenity::style::{StyledString, Color};
+use zenity::style::{Color, StyledString};
 
 fn main() {
     {
