@@ -84,4 +84,4 @@ pub mod progress;
 pub mod spinner;
 pub mod style;
 pub(crate) mod terminal;
-mod menu;
+pub mod menu;
