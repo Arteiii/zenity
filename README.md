@@ -110,7 +110,7 @@ We can't guarantee it won't crash your terminal or cause your computer to sprout
 But hey, life's an adventure, right?
 
 Embrace the chaos, enjoy the ride, and remember:  
-if all else fails, there's always  **Ctrl+C.**
+if all else fails, there's always **Ctrl+C.**
 
 ## Credits
 
