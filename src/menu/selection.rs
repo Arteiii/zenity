@@ -1,21 +1,25 @@
-//! selection menus
+//! selection menus work in progress
 
-use std::sync::{Arc, Mutex};
+use crate::style::StyledString;
+use crate::terminal::{console_cursor, console_render};
 
 /// Represents an option in a selection menu
-#[derive(Clone)]
-pub struct Option {
+#[derive(Clone, Debug, PartialEq)] 
+pub struct MenuOption {
     /// Text to display for this option
-    pub text: String,
+    pub text: StyledString,
     /// Additional notes or information about this option
-    pub notes: String,
+    pub notes: StyledString,
 }
 
 /// Represents a selection menu
 #[derive(Clone)]
 pub struct SelectionMenu {
+    /// the title for the
+    pub title: StyledString,
+
     /// List of options along with the correct return id
-    pub options: Arc<Mutex<Vec<Option>>>,
+    pub options: Vec<MenuOption>,
 }
 
 impl Default for SelectionMenu {
@@ -26,15 +30,20 @@ impl Default for SelectionMenu {
 }
 
 impl SelectionMenu {
-    /// Creates a new selection menu with the given option
-    pub fn new(option: Option) -> Self {
-        SelectionMenu {
-            options: Arc::new(Mutex::new(vec![option.clone()])),
-        }
-    }
+    /// render the single selection
+    pub fn single(self) -> MenuOption{
+        let title = self.title.clone();
 
-    /// Adds a new option to the selection menu
-    pub fn add_option(&mut self, new_option: Option) {
-        self.options.lock().unwrap().push(new_option);
+        console_cursor::save_hide_cursor();
+        
+        console_render::render_styled_line(1, &[title]);
+        
+        console_cursor::next_line(4);
+
+        for (index, option) in self.options.iter().enumerate().clone() {
+            console_render::render_styled_line((index + 2).try_into().unwrap(), &[option.text.clone()]);
+        }
+        
+        self.options[0].clone()
     }
 }
