@@ -20,13 +20,21 @@
 
 ![multiline preview](./images/rustrover64_4bzlv2mWxK.gif)
 
+![menu input preview](./images/rustrover64_Qgn5icero6.gif)
+
 Do you often find yourself gazing into the void of your terminal,  
 wondering if your computer has decided to take a coffee break without notifying you?
 
 100+ predefined animations
 
+
+
 - [Spinner](https://docs.rs/zenity/latest/zenity/spinner/frames/struct.Frames.html)  
 - [ProgressBar](https://docs.rs/zenity/latest/zenity/progress/frames/struct.Frames.html)
+
+
+
+
 
 ## How to Use?
 
