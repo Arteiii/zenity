@@ -80,8 +80,8 @@
 
 pub mod color;
 pub(crate) mod iterators;
+pub mod menu;
 pub mod progress;
 pub mod spinner;
 pub mod style;
 pub(crate) mod terminal;
-pub mod menu;

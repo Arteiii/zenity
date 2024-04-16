@@ -8,7 +8,12 @@ pub(crate) mod console_render {
 
     pub fn render_line(frame: &Vec<String>, row: u16) {
         let mut stdout = stdout();
-        queue!(stdout, cursor::RestorePosition, cursor::MoveToNextLine(row + 1),).unwrap();
+        queue!(
+            stdout,
+            cursor::RestorePosition,
+            cursor::MoveToNextLine(row + 1),
+        )
+        .unwrap();
 
         for content in frame {
             queue!(stdout, style::Print(content),).unwrap();
