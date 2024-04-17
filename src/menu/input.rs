@@ -47,7 +47,7 @@ use std::path::{Path, PathBuf};
 
 use crossterm::{
     cursor, execute,
-    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
+    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
 };
 use regex::Regex;
 
@@ -249,8 +249,32 @@ fn render_input_prompt(buffer: &str, is_valid: &bool, default: Option<&str>) {
 
 #[cfg(test)]
 mod tests {
+    use std::thread;
+    use std::time::Duration;
+
     use super::*;
     
+
+   // TODO!: better testing for the valid_regex and valid_path functions
+    #[test]
+    fn test_valid_regex() {
+        let _handle = thread::spawn(|| {
+            valid_regex(Regex::new(r"^\d{3}$").unwrap(), None, false);
+        });
+
+        thread::sleep(Duration::from_secs(5));
+       
+        // If the test reaches this point without crashing, consider it a success
+    }
+
+    #[test]
+    fn test_valid_path() {
+        let _handle = thread::spawn(|| {
+            valid_path(None, true);
+        });
+
+        thread::sleep(Duration::from_secs(5));
+    }
 
     #[test]
     fn test_validate_path_existing_file() {

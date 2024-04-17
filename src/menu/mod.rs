@@ -56,7 +56,6 @@ fn handle_key_input_windows(buffer: &mut String, event: Event, force: &mut bool)
         let KeyEvent {
             code, modifiers, ..
         } = key_event;
-        
 
         // TODO!: fix unsafe usage!!!
         match code {
