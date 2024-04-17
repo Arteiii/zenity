@@ -42,7 +42,7 @@ use crossterm::{
     cursor::MoveTo,
     event::{Event, KeyCode, KeyEvent},
     execute,
-    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
+    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 use regex::Regex;
 
