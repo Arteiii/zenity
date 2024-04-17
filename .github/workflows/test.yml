@@ -54,7 +54,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: results.xml
       - name: Upload to CodeCov
-        uses: codecov/codecov-action@4.0.1
+        uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./lcov.info
