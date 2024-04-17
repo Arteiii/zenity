@@ -41,9 +41,9 @@ use std::path::{Path, PathBuf};
 use crossterm::{
     cursor::MoveTo,
     event::{Event, KeyCode, KeyEvent},
-    ExecutableCommand,
     execute,
     terminal::{disable_raw_mode, enable_raw_mode},
+    ExecutableCommand,
 };
 use regex::Regex;
 
@@ -185,7 +185,7 @@ fn validate_input(buffer: &str, regex: &Regex, stdout: &mut std::io::Stdout) -> 
                 crossterm::terminal::ClearType::CurrentLine,
             ))
             .unwrap();
-        false 
+        false
     }
 }
 
