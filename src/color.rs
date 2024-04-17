@@ -71,7 +71,6 @@ pub enum ColorPalette {
 /// - Never: never enable color output
 ///
 /// [Read More](https://rust-cli-recommendations.sunshowers.io/colors.html#general-recommendations)
-#[allow(dead_code)]
 #[derive(Debug, PartialEq)]
 enum ColorOption {
     /// always enable color output
@@ -85,17 +84,14 @@ enum ColorOption {
 }
 
 /// configuration struct for managing cli color settings
-#[allow(dead_code)]
 struct CliColorConfig {
     /// the chosen color option for cli output
-    #[allow(dead_code)]
     color_option: ColorOption,
 
     /// the color palette supported by the terminal
     color_palette: ColorPalette,
 }
 
-#[allow(dead_code)]
 impl Default for CliColorConfig {
     /// creates a new `CliColorConfig` instance with default settings
     ///
@@ -108,13 +104,10 @@ impl Default for CliColorConfig {
 
         let color_palette = CliColorConfig::get_supported_color_palette(Stream::Stdout);
 
-        Self {
-            color_option,
-            color_palette,
-        }
+        CliColorConfig::new(color_option, color_palette)
     }
 }
-#[allow(dead_code)]
+
 impl CliColorConfig {
     /// creates a new `CliColorConfig` instance with custom settings
     ///

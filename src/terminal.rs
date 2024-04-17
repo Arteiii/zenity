@@ -24,34 +24,42 @@ pub(crate) mod console_render {
 
     pub fn render_styled_line(row: u16, content: &[StyledString]) {
         if *ENABLE_COLOR {
-            let mut stdout = stdout();
+            render_styled(row, content);
+        } else {
+            render_unstyled(row, content);
+        }
+    }
+
+    pub fn render_unstyled(row: u16, content: &[StyledString]) {
+        render_line(
+            &content
+                .iter()
+                .map(|styled_string| styled_string.string.clone())
+                .collect::<Vec<_>>(),
+            row,
+        );
+    }
+
+    pub fn render_styled(row: u16, content: &[StyledString]) {
+        let mut stdout = stdout();
+        queue!(
+            stdout,
+            cursor::RestorePosition,
+            cursor::MoveToNextLine(row + 1), // move to the next line based on index +1
+            terminal::Clear(terminal::ClearType::CurrentLine),
+        )
+        .unwrap();
+        for content in content {
             queue!(
                 stdout,
-                cursor::RestorePosition,
-                cursor::MoveToNextLine(row + 1), // move to the next line based on index +1
-                terminal::Clear(terminal::ClearType::CurrentLine),
+                style::SetStyle(content.style), // set animation color
+                style::Print(&content.string),
+                style::ResetColor, // reset colors
             )
             .unwrap();
-            for content in content {
-                queue!(
-                    stdout,
-                    style::SetStyle(content.style), // set animation color
-                    style::Print(&content.string),
-                    style::ResetColor, // reset colors
-                )
-                .unwrap();
-            }
-
-            stdout.flush().unwrap();
-        } else {
-            render_line(
-                &content
-                    .iter()
-                    .map(|styled_string| styled_string.string.clone())
-                    .collect::<Vec<_>>(),
-                row,
-            );
         }
+
+        stdout.flush().unwrap();
     }
 
     pub fn cleanup() {
@@ -89,8 +97,40 @@ pub(crate) mod console_cursor {
     }
 
     /// resets the cursor to be shown and restores its saved position
-    #[allow(dead_code)]
     pub fn next_line(num: u16) {
         execute!(stdout(), cursor::MoveToNextLine(num)).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::style::Color;
+
+    use crate::style::StyledString;
+
+    use super::*;
+
+    #[test]
+    fn test_render_unstyled() {
+        let content = vec![
+            StyledString::simple("Hello, ", Some(Color::Red), None, None),
+            StyledString::simple(" world", Some(Color::Green), None, None),
+        ];
+
+        console_render::render_unstyled(4, &content);
+
+        assert!(true);
+    }
+
+    #[test]
+    fn test_render_styled() {
+        let content = vec![
+            StyledString::simple("Hello, ", Some(Color::Red), None, None),
+            StyledString::simple(" world", Some(Color::Green), None, None),
+        ];
+
+        console_render::render_styled(4, &content);
+
+        assert!(true);
     }
 }
