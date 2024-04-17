@@ -21,24 +21,19 @@ fn handle_key_input_unix(buffer: &mut String, event: Event, force: &mut bool) ->
             code, modifiers, ..
         } = key_event;
 
-        // shift enter forces current input
-        if code == KeyCode::Enter && modifiers.contains(KeyModifiers::SHIFT) {
-            *force = true;
-            return true;
-        }
-
-        // shift delete clear input
-        if code == KeyCode::Backspace && modifiers.contains(KeyModifiers::SHIFT) {
-            buffer.clear();
-            return true;
-        }
-
         match code {
             KeyCode::Enter => {
+                if modifiers.contains(KeyModifiers::SHIFT) {
+                    *force = true;
+                }
                 return true;
             }
             KeyCode::Backspace => {
-                buffer.pop();
+                if modifiers.contains(KeyModifiers::SHIFT) {
+                    buffer.clear();
+                } else {
+                    buffer.pop();
+                }
             }
             KeyCode::Char(c) => {
                 buffer.push(c);
@@ -61,24 +56,16 @@ fn handle_key_input_windows(buffer: &mut String, event: Event, force: &mut bool)
         let KeyEvent {
             code, modifiers, ..
         } = key_event;
-
-        // shift enter forces current input
-        if code == KeyCode::Enter && modifiers.contains(KeyModifiers::SHIFT) {
-            *force = true;
-            return true;
-        }
-
-        // shift delete clear input
-        if code == KeyCode::Backspace && modifiers.contains(KeyModifiers::SHIFT) {
-            buffer.clear();
-            return true;
-        }
+        
 
         // TODO!: fix unsafe usage!!!
         match code {
             KeyCode::Enter => unsafe {
                 if !SKIP_NEXT_ENTER {
                     SKIP_NEXT_ENTER = true;
+                    if modifiers.contains(KeyModifiers::SHIFT) {
+                        *force = true;
+                    }
                     return true;
                 } else {
                     SKIP_NEXT_ENTER = false
@@ -86,7 +73,11 @@ fn handle_key_input_windows(buffer: &mut String, event: Event, force: &mut bool)
             },
             KeyCode::Backspace => unsafe {
                 if !SKIP_NEXT_BACK {
-                    buffer.pop();
+                    if modifiers.contains(KeyModifiers::SHIFT) {
+                        buffer.clear();
+                    } else {
+                        buffer.pop();
+                    }
                     SKIP_NEXT_BACK = true
                 } else {
                     SKIP_NEXT_BACK = false
@@ -123,7 +114,7 @@ mod tests {
             kind: KeyEventKind::Press,
             state: KeyEventState::empty(),
         });
-        assert!(!handle_key_input_unix(&mut buffer, event, &mut false));
+        assert!(handle_key_input_unix(&mut buffer, event, &mut false));
     }
 
     #[cfg(unix)]
@@ -164,7 +155,7 @@ mod tests {
             kind: KeyEventKind::Press,
             state: KeyEventState::empty(),
         });
-        assert!(!handle_key_input_windows(&mut buffer, event, &mut false));
+        assert!(handle_key_input_windows(&mut buffer, event, &mut false));
     }
 
     #[cfg(windows)]
