@@ -27,14 +27,8 @@ wondering if your computer has decided to take a coffee break without notifying 
 
 100+ predefined animations
 
-
-
-- [Spinner](https://docs.rs/zenity/latest/zenity/spinner/frames/struct.Frames.html)  
+- [Spinner](https://docs.rs/zenity/latest/zenity/spinner/frames/struct.Frames.html)
 - [ProgressBar](https://docs.rs/zenity/latest/zenity/progress/frames/struct.Frames.html)
-
-
-
-
 
 ## How to Use?
 
@@ -59,7 +53,7 @@ fn main() {
 
     // optional:
     // set the text to "Loading..."
-    spinner.set_text(&spinner.get_last(), "  Loading...".to_string()); 
+    spinner.set_text(&spinner.get_last(), "  Loading...".to_string());
 
     sleep(Duration::from_secs(500));
     // `loading_animation` will run out of scope now and get dropped,

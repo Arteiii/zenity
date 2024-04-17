@@ -2,6 +2,7 @@
 
 on:
   pull_request:
+    types: [ opened, synchronize, reopened, edited, unlocked, review_requested ]
   push:
     branches:
       - main
