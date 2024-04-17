@@ -77,8 +77,9 @@ fn handle_key_input_windows(buffer: &mut String, event: Event) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crossterm::event::{KeyEventKind, KeyEventState, KeyModifiers};
+
+    use super::*;
 
     #[cfg(unix)]
     #[test]
@@ -121,6 +122,7 @@ mod tests {
         assert_eq!(buffer, "a");
     }
 
+    #[cfg(windows)]
     #[test]
     fn test_handle_key_input_windows_enter() {
         let mut buffer = String::new();
@@ -133,6 +135,7 @@ mod tests {
         assert!(handle_key_input_windows(&mut buffer, event));
     }
 
+    #[cfg(windows)]
     #[test]
     fn test_handle_key_input_windows_backspace() {
         let mut buffer = String::from("test");
@@ -146,6 +149,7 @@ mod tests {
         assert_eq!(buffer, "tes");
     }
 
+    #[cfg(windows)]
     #[test]
     fn test_handle_key_input_windows_char() {
         let mut buffer = String::new();
