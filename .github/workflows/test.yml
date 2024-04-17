@@ -24,7 +24,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: default
+          toolchain: stable
           override: true
 
       - name: Cache dependencies

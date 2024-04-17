@@ -189,7 +189,6 @@ mod tests {
         thread::sleep(Duration::from_secs(5));
 
         // If the test reaches this point without crashing, consider it a success
-        assert!(true);
     }
 
     #[test]
@@ -199,8 +198,6 @@ mod tests {
         });
 
         thread::sleep(Duration::from_secs(5));
-
-        assert!(true);
     }
 
     #[test]
@@ -210,7 +207,7 @@ mod tests {
         std::fs::File::create(file_path).expect("Failed to create file");
 
         // Validate the path of the temporary file
-        assert_eq!(validate_path(file_path), true);
+        assert!(validate_path(file_path));
 
         // Delete the temporary file
         std::fs::remove_file(file_path).expect("Failed to delete file");
@@ -222,7 +219,7 @@ mod tests {
         let file_path = "nonexistent_file.txt";
 
         // Validate the path of the nonexistent file
-        assert_eq!(validate_path(file_path), false);
+        assert!(validate_path(file_path));
     }
 
     #[test]
