@@ -12,12 +12,12 @@ keywords = ["console", "animations", "cli", "spinner", "loading"]
 homepage = "https://arteiii.github.io"
 
 
-exclude = [
-    ".github/**",
-    "images/**",
-    "examples/**",
-    "Cargo.lock",
+include = [
+    "Cargo.toml",
+    "LICENSE.md",
+    "src/**/*",
 ]
+
 
 [lib]
 name = "zenity"
@@ -25,13 +25,12 @@ path = "src/lib.rs"
 test = true
 
 
-
 [dependencies]
 crossterm = "0.27.0"
-rand = "0.9.0-alpha.1"
+rand = "0.8.5"
 supports-color = "3.0.0"
 lazy_static = "1.4.0"
 regex = "1.10.4"
 
 [dev-dependencies]
-unicode-icons = { version = "2.1.2", default-features = false, features = ["symbols"]  }
+unicode-icons = { version = "2.1.2", default-features = false, features = ["symbols"] }
