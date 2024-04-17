@@ -44,7 +44,7 @@ jobs:
           cargo install cargo2junit grcov;
           cargo test $CARGO_OPTIONS -- -Z unstable-options --format json | cargo2junit > results.xml;
           zip -0 ccov.zip `find . \( -name "$PROJECT_NAME_UNDERSCORE*.gc*" \) -print`;
-          grcov ccov.zip -s . -t lcov --llvm --ignore-not-existing --ignore "/*" --ignore "tests/*" --exclude "examples/*" -o lcov.info;
+          grcov ccov.zip -s . -t lcov --llvm --ignore-not-existing --ignore "/*" --ignore "tests/*" --ignore "examples/*" -o lcov.info;
 
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v1
