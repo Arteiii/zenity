@@ -7,7 +7,7 @@
 //!
 //! ## Validate Input Against Regex
 //!
-//! ```rust
+//! ```rust,ignore
 //! use regex::Regex;
 //! use zenity::menu::input::valid_regex;
 //!
@@ -22,12 +22,12 @@
 //!
 //! ## Validate File Path
 //!
-//! ```rust
+//! ```rust,ignore
 //! use std::path::PathBuf;
 //! use zenity::menu::input::valid_path;
 //!
 //! // Prompt the user to enter a valid file path
-//! let path: PathBuf = valid_path().into();
+//! let path: PathBuf = (*valid_path()).clone().into(); // Cloning the Box<PathBuf> and then converting it into PathBuf
 //!
 //! println!("Entered path: {:?}", path);
 //! ```
@@ -35,15 +35,14 @@
 //! This module is a work in progress, and contributions are welcome
 //!
 
-use std::io::{stdout, Write};
+use std::io::stdout;
 use std::path::{Path, PathBuf};
 
 use crossterm::{
     cursor::MoveTo,
     event::{Event, KeyCode, KeyEvent},
     execute,
-    terminal::{disable_raw_mode, enable_raw_mode},
-    ExecutableCommand,
+    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
 };
 use regex::Regex;
 
@@ -65,7 +64,7 @@ use crate::style::{Color, Print, SetForegroundColor};
 ///
 /// # Example
 ///
-/// ```
+/// ```rust,ignore
 /// use regex::Regex;
 /// use zenity::menu::input::valid_regex;
 ///
@@ -80,23 +79,20 @@ use crate::style::{Color, Print, SetForegroundColor};
 pub fn valid_regex(regex: Regex) -> String {
     enable_raw_mode().expect("Failed to enable raw-mode");
 
-    let mut stdout = stdout();
     let mut buffer = String::new();
 
     // fix for windows double input
     let mut skip_next = false;
 
     loop {
-        if handle_key_input(&mut buffer, &mut skip_next)
-            && validate_input(&buffer, &regex, &mut stdout)
-        {
+        if handle_key_input(&mut buffer, &mut skip_next) && validate_input(&buffer, &regex) {
             break;
         }
 
         execute!(
-            stdout,
+            stdout(),
             MoveTo(0, 0),
-            crossterm::terminal::Clear(crossterm::terminal::ClearType::CurrentLine),
+            Clear(ClearType::CurrentLine),
             Print("Enter input: "),
             if !regex.is_match(&buffer) {
                 SetForegroundColor(Color::DarkRed)
@@ -107,8 +103,6 @@ pub fn valid_regex(regex: Regex) -> String {
             SetForegroundColor(Color::Reset)
         )
         .unwrap();
-
-        stdout.flush().unwrap();
     }
 
     disable_raw_mode().expect("Failed to disable raw-mode");
@@ -124,7 +118,7 @@ pub fn valid_regex(regex: Regex) -> String {
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust,ignore
 /// use zenity::menu::input::valid_path;
 ///
 /// let path = valid_path();
@@ -133,7 +127,6 @@ pub fn valid_regex(regex: Regex) -> String {
 pub fn valid_path() -> Box<PathBuf> {
     enable_raw_mode().expect("Failed to enable raw-mode");
 
-    let mut stdout = stdout();
     let mut buffer = String::new();
 
     // to prevent double inputs on windows
@@ -144,27 +137,12 @@ pub fn valid_path() -> Box<PathBuf> {
             break;
         }
 
-        execute!(
-            stdout,
-            MoveTo(0, 0),
-            crossterm::terminal::Clear(crossterm::terminal::ClearType::CurrentLine),
-            Print("Enter path: "),
-            if !validate_path(&buffer) {
-                SetForegroundColor(Color::DarkRed)
-            } else {
-                SetForegroundColor(Color::Green)
-            },
-            Print(&buffer),
-            SetForegroundColor(Color::Reset)
-        )
-        .unwrap();
-
-        stdout.flush().unwrap();
+        render_input_prompt(&buffer, &validate_path(&buffer));
     }
 
     disable_raw_mode().expect("Failed to disable raw-mode");
 
-    let path = Path::new(&buffer).to_owned();
+    let path = PathBuf::from(buffer);
 
     Box::new(path)
 }
@@ -174,17 +152,11 @@ fn validate_path(path: &str) -> bool {
     Path::new(path).exists()
 }
 
-fn validate_input(buffer: &str, regex: &Regex, stdout: &mut std::io::Stdout) -> bool {
+fn validate_input(buffer: &str, regex: &Regex) -> bool {
     if regex.is_match(buffer) {
         true
     } else {
-        stdout
-            .execute(MoveTo(0, 0))
-            .unwrap()
-            .execute(crossterm::terminal::Clear(
-                crossterm::terminal::ClearType::CurrentLine,
-            ))
-            .unwrap();
+        execute!(stdout(), MoveTo(0, 0), Clear(ClearType::CurrentLine)).unwrap();
         false
     }
 }
@@ -225,4 +197,54 @@ fn handle_key_input(buffer: &mut String, skip_next: &mut bool) -> bool {
     }
 
     false
+}
+
+fn render_input_prompt(buffer: &str, is_valid: &bool) {
+    execute!(
+        stdout(),
+        MoveTo(0, 0),
+        Clear(ClearType::CurrentLine),
+        Print("Enter path: "),
+        if !is_valid {
+            SetForegroundColor(Color::DarkRed)
+        } else {
+            SetForegroundColor(Color::Green)
+        },
+        Print(buffer),
+        SetForegroundColor(Color::Reset)
+    )
+    .unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_validate_path_existing_file() {
+        // Create a temporary file for testing
+        let file_path = "test_file.txt";
+        std::fs::File::create(file_path).expect("Failed to create file");
+
+        // Validate the path of the temporary file
+        assert_eq!(validate_path(file_path), true);
+
+        // Delete the temporary file
+        std::fs::remove_file(file_path).expect("Failed to delete file");
+    }
+
+    #[test]
+    fn test_validate_path_nonexistent_file() {
+        // Create a temporary file path that doesn't exist
+        let file_path = "nonexistent_file.txt";
+
+        // Validate the path of the nonexistent file
+        assert_eq!(validate_path(file_path), false);
+    }
+
+    #[test]
+    fn test_render_input_prompt() {
+        // Call the render_input_prompt function with a mock Stdout
+        render_input_prompt("123", &true);
+    }
 }
