@@ -250,7 +250,7 @@ fn render_input_prompt(buffer: &str, is_valid: &bool, default: Option<&str>) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_validate_path_existing_file() {
         // Create a temporary file for testing
