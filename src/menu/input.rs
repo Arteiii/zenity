@@ -47,7 +47,7 @@ use std::path::{Path, PathBuf};
 
 use crossterm::{
     cursor, execute,
-    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
+    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 use regex::Regex;
 
@@ -253,9 +253,8 @@ mod tests {
     use std::time::Duration;
 
     use super::*;
-    
 
-   // TODO!: better testing for the valid_regex and valid_path functions
+    // TODO!: better testing for the valid_regex and valid_path functions
     #[test]
     fn test_valid_regex() {
         let _handle = thread::spawn(|| {
@@ -263,7 +262,7 @@ mod tests {
         });
 
         thread::sleep(Duration::from_secs(5));
-       
+
         // If the test reaches this point without crashing, consider it a success
     }
 
