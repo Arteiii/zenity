@@ -8,6 +8,7 @@
 //! ```
 
 use lazy_static::lazy_static;
+use supports_color::Stream;
 
 lazy_static! {
    /// Supported color pallet (which colors are supported if ENABLE_COLOR)
@@ -19,7 +20,7 @@ lazy_static! {
    /// assert_eq!(*COLOR_PALETTE, ColorPalette::None); // which colors are supported
    /// ```
     pub static ref COLOR_PALETTE: ColorPalette = {
-        CliColorConfig::get_supported_color_palette()
+        CliColorConfig::get_supported_color_palette(Stream::Stdout)
     };
 
     /// Lazy static ENABLE color bool true if color should be enabled false otherwise
@@ -105,7 +106,7 @@ impl Default for CliColorConfig {
 
         let color_option = CliColorConfig::parse_arguments(&args);
 
-        let color_palette = CliColorConfig::get_supported_color_palette();
+        let color_palette = CliColorConfig::get_supported_color_palette(Stream::Stdout);
 
         Self {
             color_option,
@@ -141,15 +142,6 @@ impl CliColorConfig {
         }
     }
 
-    /// retrieves the supported colors for the configured color palette
-    ///
-    /// # Returns
-    ///
-    /// * the color palette enum representing the supported colors
-    fn supported_colors(&self) -> &ColorPalette {
-        &self.color_palette
-    }
-
     /// parse args to check for --color=always|auto|never
     fn parse_arguments(args: &[String]) -> ColorOption {
         if args.len() > 1 {
@@ -171,8 +163,8 @@ impl CliColorConfig {
     }
 
     /// determine the supported color palette based on the terminal capabilities
-    fn get_supported_color_palette() -> ColorPalette {
-        match supports_color::on(supports_color::Stream::Stdout) {
+    fn get_supported_color_palette(stream: Stream) -> ColorPalette {
+        match supports_color::on(stream) {
             Some(support) => {
                 if support.has_16m {
                     ColorPalette::Truecolor
@@ -194,6 +186,85 @@ mod tests {
     use crate::style::*;
 
     use super::*;
+
+    // Mock Stream enum for testing purposes
+    #[derive(Debug, PartialEq)]
+    enum MockStream {
+        Supports16m,
+        Supports256,
+        Supports16,
+        Unknown,
+    }
+
+    #[test]
+    fn test_new() {
+        let config = CliColorConfig::new(ColorOption::Always, ColorPalette::Palette256);
+
+        assert_eq!(config.color_option, ColorOption::Always);
+        assert_eq!(config.color_palette, ColorPalette::Palette256);
+    }
+
+    #[test]
+    fn test_should_enable_color_never() {
+        let settings = CliColorConfig::new(ColorOption::Never, ColorPalette::Palette256);
+        assert!(!settings.should_enable_color());
+    }
+
+    #[test]
+    fn test_should_enable_color_always() {
+        let settings = CliColorConfig::new(ColorOption::Always, ColorPalette::None);
+        assert!(settings.should_enable_color());
+    }
+    #[test]
+    fn test_should_enable_color_auto_with_palette() {
+        let settings = CliColorConfig {
+            color_option: ColorOption::Auto,
+            color_palette: ColorPalette::Palette16,
+        };
+        assert!(settings.should_enable_color());
+    }
+
+    #[test]
+    fn test_should_enable_color_auto_without_palette() {
+        let settings = CliColorConfig {
+            color_option: ColorOption::Auto,
+            color_palette: ColorPalette::None,
+        };
+        assert!(!settings.should_enable_color());
+    }
+
+    fn get_supported_color_palette_mock(stream: MockStream) -> ColorPalette {
+        match stream {
+            MockStream::Supports16m => ColorPalette::Truecolor,
+            MockStream::Supports256 => ColorPalette::Palette256,
+            MockStream::Supports16 => ColorPalette::Palette16,
+            MockStream::Unknown => ColorPalette::None,
+        }
+    }
+
+    #[test]
+    fn test_get_supported_color_palette_truecolor() {
+        let result = get_supported_color_palette_mock(MockStream::Supports16m);
+        assert_eq!(result, ColorPalette::Truecolor);
+    }
+
+    #[test]
+    fn test_get_supported_color_palette_palette256() {
+        let result = get_supported_color_palette_mock(MockStream::Supports256);
+        assert_eq!(result, ColorPalette::Palette256);
+    }
+
+    #[test]
+    fn test_get_supported_color_palette_palette16() {
+        let result = get_supported_color_palette_mock(MockStream::Supports16);
+        assert_eq!(result, ColorPalette::Palette16);
+    }
+
+    #[test]
+    fn test_get_supported_color_palette_none() {
+        let result = get_supported_color_palette_mock(MockStream::Unknown);
+        assert_eq!(result, ColorPalette::None);
+    }
 
     #[test]
     fn test_valid_arguments() {

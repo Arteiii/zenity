@@ -14,6 +14,9 @@
   <a href="https://www.codefactor.io/repository/github/arteiii/zenity">
     <img src="https://www.codefactor.io/repository/github/arteiii/zenity/badge" alt="CodeFactor">
   </a>
+  <a href="https://codecov.io/gh/Arteiii/zenity" > 
+    <img src="https://codecov.io/gh/Arteiii/zenity/graph/badge.svg?token=CHEG2ZD0LW" alt="codecov badge"/> 
+  </a>
 </div>
 
 ![progress bar](.github/images/rustrover64_WupAJU44Lu.gif)

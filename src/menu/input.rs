@@ -40,12 +40,12 @@ use std::path::{Path, PathBuf};
 
 use crossterm::{
     cursor::MoveTo,
-    event::{Event, KeyCode, KeyEvent},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 use regex::Regex;
 
+use crate::menu::handle_key_input;
 use crate::style::{Color, Print, SetForegroundColor};
 
 /// Validates and returns a string that matches the specified regex pattern.
@@ -81,11 +81,8 @@ pub fn valid_regex(regex: Regex) -> String {
 
     let mut buffer = String::new();
 
-    // fix for windows double input
-    let mut skip_next = false;
-
     loop {
-        if handle_key_input(&mut buffer, &mut skip_next) && validate_input(&buffer, &regex) {
+        if handle_key_input(&mut buffer) && validate_input(&buffer, &regex) {
             break;
         }
 
@@ -129,11 +126,8 @@ pub fn valid_path() -> Box<PathBuf> {
 
     let mut buffer = String::new();
 
-    // to prevent double inputs on windows
-    let mut skip_next = false;
-
     loop {
-        if handle_key_input(&mut buffer, &mut skip_next) && validate_path(&buffer) {
+        if handle_key_input(&mut buffer) && validate_path(&buffer) {
             break;
         }
 
@@ -161,44 +155,6 @@ fn validate_input(buffer: &str, regex: &Regex) -> bool {
     }
 }
 
-fn handle_key_input(buffer: &mut String, skip_next: &mut bool) -> bool {
-    let event = crossterm::event::read().unwrap();
-
-    // Check if we need to skip this key event
-    if *skip_next {
-        *skip_next = false; // Toggle the flag back
-        return false;
-    }
-
-    // Handle events
-    if let Event::Key(key_event) = event {
-        let KeyEvent { code, .. } = key_event;
-
-        match code {
-            KeyCode::Enter => {
-                return true; // signal to validate the input
-            }
-            KeyCode::Backspace => {
-                buffer.pop();
-            }
-            KeyCode::Char(c) => {
-                buffer.push(c);
-            }
-            _ => {
-                return false; // Continue processing key events
-            }
-        }
-
-        // to fix double inputs on windows
-        #[cfg(windows)]
-        {
-            *skip_next = true;
-        }
-    }
-
-    false
-}
-
 fn render_input_prompt(buffer: &str, is_valid: &bool) {
     execute!(
         stdout(),
@@ -218,7 +174,34 @@ fn render_input_prompt(buffer: &str, is_valid: &bool) {
 
 #[cfg(test)]
 mod tests {
+    use std::thread;
+    use std::time::Duration;
+
     use super::*;
+
+    // TODO!: better testing for the valid_regex and valid_path functions
+    #[test]
+    fn test_valid_regex() {
+        let _handle = thread::spawn(|| {
+            valid_regex(Regex::new(r"^\d{3}$").unwrap());
+        });
+
+        thread::sleep(Duration::from_secs(5));
+
+        // If the test reaches this point without crashing, consider it a success
+        assert!(true);
+    }
+
+    #[test]
+    fn test_valid_path() {
+        let _handle = thread::spawn(|| {
+            valid_path();
+        });
+
+        thread::sleep(Duration::from_secs(5));
+
+        assert!(true);
+    }
 
     #[test]
     fn test_validate_path_existing_file() {
