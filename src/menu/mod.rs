@@ -16,15 +16,12 @@ pub(crate) fn handle_key_input(buffer: &mut String) -> bool {
 
 #[cfg(unix)]
 fn handle_key_input_unix(buffer: &mut String, event: Event) -> bool {
-    let event = crossterm::event::read().unwrap();
-
-    // Handle events
     if let Event::Key(key_event) = event {
         let KeyEvent { code, .. } = key_event;
 
         match code {
             KeyCode::Enter => {
-                return true; // signal to validate the input
+                return true;
             }
             KeyCode::Backspace => {
                 buffer.pop();
@@ -50,7 +47,7 @@ fn handle_key_input_windows(buffer: &mut String, event: Event) -> bool {
         // TODO!: fix unsafe usage!!!
         match code {
             KeyCode::Enter => {
-                return true; // signal to validate the input
+                return true;
             }
             KeyCode::Backspace => unsafe {
                 if !SKIP_NEXT_BACK {
@@ -91,7 +88,7 @@ mod tests {
             kind: KeyEventKind::Press,
             state: KeyEventState::empty(),
         });
-        assert_eq!(handle_key_input_unix(&mut buffer, event), true);
+        assert!(handle_key_input_unix(&mut buffer, event));
     }
 
     #[cfg(unix)]

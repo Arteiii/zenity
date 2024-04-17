@@ -24,8 +24,9 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly
+          toolchain: default
           override: true
+
       - name: Cache dependencies
         uses: actions/cache@v2
         env:
@@ -39,6 +40,7 @@ jobs:
             ~/.cargo/registry/cache
             target
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock') }}
+
       - name: Generate test result and coverage report
         run: |
           cargo install cargo2junit grcov;
@@ -53,6 +55,7 @@ jobs:
           check_name: Test Results
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: results.xml
+
       - name: Upload to CodeCov
         uses: codecov/codecov-action@v4.0.1
         with:
