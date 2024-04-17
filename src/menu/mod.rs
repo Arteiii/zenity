@@ -86,7 +86,9 @@ mod tests {
         let mut buffer = String::new();
         let event = Event::Key(KeyEvent {
             code: KeyCode::Enter,
-            modifiers: Default::default(),
+            modifiers: KeyModifiers::empty(),
+            kind: KeyEventKind::Press,
+            state: KeyEventState::empty(),
         });
         assert_eq!(handle_key_input_unix(&mut buffer, event), true);
     }
@@ -97,7 +99,9 @@ mod tests {
         let mut buffer = String::from("test");
         let event = Event::Key(KeyEvent {
             code: KeyCode::Backspace,
-            modifiers: Default::default(),
+            modifiers: KeyModifiers::empty(),
+            kind: KeyEventKind::Press,
+            state: KeyEventState::empty(),
         });
         handle_key_input_unix(&mut buffer, event);
         assert_eq!(buffer, "tes");
@@ -109,7 +113,9 @@ mod tests {
         let mut buffer = String::new();
         let event = Event::Key(KeyEvent {
             code: KeyCode::Char('a'),
-            modifiers: Default::default(),
+            modifiers: KeyModifiers::empty(),
+            kind: KeyEventKind::Press,
+            state: KeyEventState::empty(),
         });
         handle_key_input_unix(&mut buffer, event);
         assert_eq!(buffer, "a");
