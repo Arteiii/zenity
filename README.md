@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/ZENITY.svg" alt="Zenity svg logo" width="400">
+  <img src=".github/images/ZENITY.svg" alt="Zenity svg logo" width="400">
 <p>Yet Another Spinner Lib</p>
 <p style="margin-top: -10px;">Elevate your Rust command-line interfaces with 100+ spinner animations and Progress Bars + multiline support</p>
   <a href="https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml">
@@ -16,11 +16,11 @@
   </a>
 </div>
 
-![progress bar](./images/rustrover64_WupAJU44Lu.gif)
+![progress bar](.github/images/rustrover64_WupAJU44Lu.gif)
 
-![multiline preview](./images/rustrover64_4bzlv2mWxK.gif)
+![multiline preview](.github/images/rustrover64_4bzlv2mWxK.gif)
 
-![menu input preview](./images/rustrover64_Qgn5icero6.gif)
+![menu input preview](.github/images/rustrover64_Qgn5icero6.gif)
 
 Do you often find yourself gazing into the void of your terminal,  
 wondering if your computer has decided to take a coffee break without notifying you?
@@ -131,4 +131,4 @@ This project wouldn't have been possible without the amazing work of the followi
 
 This project is licensed under the **DWFYW** License.
 
-For more information, see the [LICENSE](LICENSE.md) file.
+For more information, see the [LICENSE](LICENSE) file.
