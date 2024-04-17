@@ -207,14 +207,16 @@ mod tests {
     #[test]
     fn test_should_enable_color_never() {
         let settings = CliColorConfig::new(ColorOption::Never, ColorPalette::Palette256);
-        assert!(!settings.should_enable_color());
+        assert_eq!(!settings.should_enable_color(), false);
     }
 
     #[test]
     fn test_should_enable_color_always() {
         let settings = CliColorConfig::new(ColorOption::Always, ColorPalette::None);
-        assert!(settings.should_enable_color());
+        // somehow nightly gets error while using assert!
+        assert_eq!(settings.should_enable_color(), true);
     }
+
     #[test]
     fn test_should_enable_color_auto_with_palette() {
         let settings = CliColorConfig {
