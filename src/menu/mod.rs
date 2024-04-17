@@ -123,7 +123,7 @@ mod tests {
             kind: KeyEventKind::Press,
             state: KeyEventState::empty(),
         });
-        assert!(handle_key_input_unix(&mut buffer, event, &mut false));
+        assert!(!handle_key_input_unix(&mut buffer, event, &mut false));
     }
 
     #[cfg(unix)]
@@ -164,7 +164,7 @@ mod tests {
             kind: KeyEventKind::Press,
             state: KeyEventState::empty(),
         });
-        assert!(handle_key_input_windows(&mut buffer, event, &mut false));
+        assert!(!handle_key_input_windows(&mut buffer, event, &mut false));
     }
 
     #[cfg(windows)]
