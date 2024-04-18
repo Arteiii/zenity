@@ -229,7 +229,8 @@ fn render_input_prompt(title: &str, buffer: &str, is_valid: &bool, default: Opti
                 SetForegroundColor(Color::Green)
             },
             Print(buffer),
-        ).expect("execute print buffer failed");
+        )
+        .expect("execute print buffer failed");
     } else {
         execute!(
             io::stdout(),
@@ -276,7 +277,7 @@ mod tests {
         // Call the render_input_prompt function with a mock Stdout
         render_input_prompt("Title", "123", &true, Some("Default stuff"));
     }
-    
+
     #[test]
     fn test_validate_input() {
         // Call the render_input_prompt function with a mock Stdout
