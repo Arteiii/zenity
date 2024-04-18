@@ -275,7 +275,7 @@ mod tests {
     #[test]
     fn test_render_input_prompt() {
         // Call the render_input_prompt function with a mock Stdout
-        render_input_prompt("Title", "123", &true, None);
+        render_input_prompt("Title", "123", &true, Some("Default stuff"));
     }
     #[test]
     fn test_validate_input() {

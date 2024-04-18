@@ -56,7 +56,6 @@ mod tests {
 
     use super::*;
 
-    #[cfg(windows)]
     #[test]
     fn test_handle_key_input_windows_enter() {
         let mut buffer = String::new();
@@ -69,7 +68,6 @@ mod tests {
         assert!(_handle_key_input(&mut buffer, event, &mut false));
     }
 
-    #[cfg(windows)]
     #[test]
     fn test_handle_key_input_windows_backspace() {
         let mut buffer = String::from("test");
@@ -83,7 +81,6 @@ mod tests {
         assert_eq!(buffer, "tes");
     }
 
-    #[cfg(windows)]
     #[test]
     fn test_handle_key_input_windows_char() {
         let mut buffer = String::new();
@@ -95,5 +92,12 @@ mod tests {
         });
         _handle_key_input(&mut buffer, event, &mut false);
         assert_eq!(buffer, "a");
+    }
+
+    #[test]
+    fn test_handle_key_input() {
+        let mut buffer = String::new();
+
+        handle_key_input(&mut buffer, &mut false);
     }
 }
