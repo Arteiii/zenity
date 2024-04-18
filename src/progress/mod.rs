@@ -53,11 +53,9 @@ pub mod frames;
 ///
 ///     thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(1..=70)));
 ///  }
+///
 /// ```
-#[derive(Clone)]
 pub struct ProgressBar {
-    // TODO: instead of random ids go after creation and increment by one
-    // this would allow to render them line for line based on this and order them correctly
     bar: Arc<Mutex<HashMap<usize, Frames>>>,
     stop: Arc<Mutex<bool>>,
 }

@@ -42,7 +42,6 @@
 //!
 
 use std::io;
-use std::io::stdout;
 use std::path::{Path, PathBuf};
 
 use crossterm::{
@@ -55,30 +54,22 @@ use crate::menu::handle_key_input;
 use crate::style::{Color, Print, SetForegroundColor};
 
 macro_rules! input_loop {
-    ($buffer:expr, $validate:expr, $default:expr, $allow_force:expr) => {
+    ($title:expr, $buffer:expr, $validate:expr, $default:expr, $allow_force:expr) => {
         let mut force: bool = false;
 
-        // clear console enter release in windows
-        let mut invalid_buffer = String::new();
-        handle_key_input(&mut invalid_buffer, &mut force);
-
         loop {
-            render_input_prompt(&$buffer, &$validate, $default);
+            render_input_prompt($title, &$buffer, &$validate, $default);
 
-            if handle_key_input(&mut $buffer, &mut force)
-                && $default.is_some()
-                && $buffer.is_empty()
-            {
-                $buffer = $default.unwrap().to_string();
-                break;
+            if handle_key_input(&mut $buffer, &mut force) {
+                if !$buffer.is_empty() && $validate {
+                    break;
+                } else if $default.is_some() && $buffer.is_empty() {
+                    $buffer = $default.unwrap().to_string();
+                    break;
+                }
             }
 
             if force && $allow_force {
-                println!("Force!!");
-                break;
-            }
-
-            if handle_key_input(&mut $buffer, &mut force) && $buffer.is_empty() && $validate {
                 break;
             }
         }
@@ -93,7 +84,7 @@ macro_rules! raw_mode_wrapper {
 
         disable_raw_mode().expect("Failed to disable raw-mode");
         execute!(
-            stdout(),
+            io::stdout(),
             cursor::MoveTo(0, 0),
             Clear(ClearType::FromCursorDown),
             cursor::DisableBlinking
@@ -139,10 +130,11 @@ macro_rules! raw_mode_wrapper {
 ///
 /// println!("Valid input: {}", input);
 /// ```
-pub fn valid_regex(regex: Regex, default: Option<&str>, allow_force: bool) -> String {
+pub fn valid_regex(title: &str, regex: Regex, default: Option<&str>, allow_force: bool) -> String {
     let mut buffer = String::new();
 
     raw_mode_wrapper!(input_loop!(
+        title,
         buffer,
         validate_input(&buffer, &regex),
         default,
@@ -181,10 +173,11 @@ pub fn valid_regex(regex: Regex, default: Option<&str>, allow_force: bool) -> St
 /// let path = valid_path(Some("/home/user"), true);
 /// println!("Entered path: {:?}", path);
 /// ```
-pub fn valid_path(default: Option<&str>, allow_force: bool) -> Box<PathBuf> {
+pub fn valid_path(title: &str, default: Option<&str>, allow_force: bool) -> Box<PathBuf> {
     let mut buffer = String::new();
 
     raw_mode_wrapper!(input_loop!(
+        title,
         buffer,
         validate_path(&buffer),
         default,
@@ -196,18 +189,20 @@ pub fn valid_path(default: Option<&str>, allow_force: bool) -> Box<PathBuf> {
     Box::new(path)
 }
 
+#[inline]
 fn validate_path(path: &str) -> bool {
     // useless function but might change something here later...
     Path::new(path).exists()
 }
 
+#[inline]
 fn validate_input(buffer: &str, regex: &Regex) -> bool {
     if regex.is_match(buffer) {
         true
     } else {
         execute!(
             io::stdout(),
-            cursor::MoveTo(0, 0),
+            cursor::MoveTo(0, 5),
             Clear(ClearType::CurrentLine)
         )
         .unwrap();
@@ -215,17 +210,19 @@ fn validate_input(buffer: &str, regex: &Regex) -> bool {
     }
 }
 
-fn render_input_prompt(buffer: &str, is_valid: &bool, default: Option<&str>) {
+fn render_input_prompt(title: &str, buffer: &str, is_valid: &bool, default: Option<&str>) {
     execute!(
         io::stdout(),
-        cursor::MoveTo(0, 6),
+        cursor::MoveTo(0, 4),
         Clear(ClearType::CurrentLine),
     )
     .unwrap();
     if !buffer.is_empty() || default.is_none() {
         execute!(
             io::stdout(),
-            Print("Enter path: "),
+            Print(title),
+            cursor::MoveToNextLine(1),
+            Clear(ClearType::CurrentLine),
             if !is_valid {
                 SetForegroundColor(Color::DarkRed)
             } else {
@@ -233,16 +230,18 @@ fn render_input_prompt(buffer: &str, is_valid: &bool, default: Option<&str>) {
             },
             Print(buffer),
         )
-        .unwrap();
+        .expect("execute print buffer failed");
     } else {
         execute!(
             io::stdout(),
-            Print("Enter path: "),
+            Print(title),
+            cursor::MoveToNextLine(1),
+            Clear(ClearType::CurrentLine),
             SetForegroundColor(Color::Grey),
             Print(default.unwrap()),
             Print(" (Default)"),
         )
-        .unwrap();
+        .expect("execute print default failed");
     }
     execute!(io::stdout(), SetForegroundColor(Color::Reset),).unwrap();
 }
@@ -276,6 +275,13 @@ mod tests {
     #[test]
     fn test_render_input_prompt() {
         // Call the render_input_prompt function with a mock Stdout
-        render_input_prompt("123", &true, None);
+        render_input_prompt("Title", "123", &true, Some("Default stuff"));
+    }
+
+    #[test]
+    fn test_validate_input() {
+        // Call the render_input_prompt function with a mock Stdout
+        assert!(validate_input("123", &Regex::new(r"^\d{3}$").unwrap()));
+        assert!(!validate_input("abc", &Regex::new(r"^\d{3}$").unwrap()));
     }
 }
