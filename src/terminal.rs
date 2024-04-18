@@ -127,6 +127,7 @@ mod tests {
         let content = vec![
             StyledString::simple("Hello, ", Some(Color::Red), None, None),
             StyledString::simple(" world", Some(Color::Green), None, None),
+            StyledString::default(),
         ];
 
         console_render::render_styled(4, &content);

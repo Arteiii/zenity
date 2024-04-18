@@ -278,4 +278,10 @@ mod tests {
         // Call the render_input_prompt function with a mock Stdout
         render_input_prompt("123", &true, None);
     }
+    #[test]
+    fn test_validate_input() {
+        // Call the render_input_prompt function with a mock Stdout
+        assert!(validate_input("123", &Regex::new(r"^\d{3}$").unwrap()));
+        assert!(!validate_input("abc", &Regex::new(r"^\d{3}$").unwrap()));
+    }
 }
