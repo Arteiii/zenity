@@ -229,8 +229,7 @@ fn render_input_prompt(title: &str, buffer: &str, is_valid: &bool, default: Opti
                 SetForegroundColor(Color::Green)
             },
             Print(buffer),
-        )
-        .unwrap();
+        ).expect("execute print buffer failed");
     } else {
         execute!(
             io::stdout(),
@@ -241,7 +240,7 @@ fn render_input_prompt(title: &str, buffer: &str, is_valid: &bool, default: Opti
             Print(default.unwrap()),
             Print(" (Default)"),
         )
-        .unwrap();
+        .expect("execute print default failed");
     }
     execute!(io::stdout(), SetForegroundColor(Color::Reset),).unwrap();
 }
@@ -277,6 +276,7 @@ mod tests {
         // Call the render_input_prompt function with a mock Stdout
         render_input_prompt("Title", "123", &true, Some("Default stuff"));
     }
+    
     #[test]
     fn test_validate_input() {
         // Call the render_input_prompt function with a mock Stdout

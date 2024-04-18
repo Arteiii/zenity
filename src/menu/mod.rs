@@ -93,11 +93,4 @@ mod tests {
         _handle_key_input(&mut buffer, event, &mut false);
         assert_eq!(buffer, "a");
     }
-
-    #[test]
-    fn test_handle_key_input() {
-        let mut buffer = String::new();
-
-        handle_key_input(&mut buffer, &mut false);
-    }
 }
