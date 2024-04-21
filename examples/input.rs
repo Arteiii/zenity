@@ -1,5 +1,5 @@
 use regex::Regex;
-use zenity::menu::input::{valid_path, valid_regex};
+use zenity::menu::Input;
 
 fn main() {
     println!("Input Preview:");

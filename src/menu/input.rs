@@ -11,182 +11,99 @@
 //!
 //! # Examples
 //!
-//! ## Validate Input Against Regex
-//!
-//! ```rust,ignore
-//! use regex::Regex;
-//! use zenity::menu::input::valid_regex;
-//!
-//! // Define a regex pattern to match three digits
-//! let regex = Regex::new(r"^\d{3}$").unwrap();
-//!
-//! // Prompt the user to enter input matching the regex pattern
-//! let input = valid_regex(regex);
-//!
-//! println!("Valid input: {}", input);
-//! ```
-//!
-//! ## Validate File Path
-//!
-//! ```rust,ignore
-//! use std::path::PathBuf;
-//! use zenity::menu::input::valid_path;
-//!
-//! // Prompt the user to enter a valid file path
-//! let path: PathBuf = (*valid_path()).clone().into(); // Cloning the Box<PathBuf> and then converting it into PathBuf
-//!
-//! println!("Entered path: {:?}", path);
-//! ```
-//!
-//! This module is a work in progress, and contributions are welcome
-//!
 
 use std::io;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use crossterm::{
     cursor, execute,
-    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
+    terminal::{Clear, ClearType},
 };
 use regex::Regex;
 
-use crate::menu::handle_key_input;
+use crate::color::ENABLE_COLOR;
 use crate::style::{Color, Print, SetForegroundColor};
 
-macro_rules! input_loop {
-    ($title:expr, $buffer:expr, $validate:expr, $default:expr, $allow_force:expr) => {
-        let mut force: bool = false;
+pub struct Requirements {
+    /// regex to match (optional if ``path`` is true)
+    regex: Option<Regex>,
 
-        loop {
-            render_input_prompt($title, &$buffer, &$validate, $default);
+    /// if the input needs to be a valid path, if its valid, the ``regex`` will be applied to the name and extension
+    path: bool,
 
-            if handle_key_input(&mut $buffer, &mut force) {
-                if !$buffer.is_empty() && $validate {
-                    break;
-                } else if $default.is_some() && $buffer.is_empty() {
-                    $buffer = $default.unwrap().to_string();
-                    break;
-                }
-            }
+    /// allow creating the path if its doesn't exist yet the ``regex`` still needs to match
+    ///
+    /// this only works if ``path`` is true
+    allow_creating: bool,
 
-            if force && $allow_force {
-                break;
-            }
+    /// note to display if condition matches
+    true_note: Option<String>,
+
+    /// note to display while the condition doesn't match
+    false_note: Option<String>,
+}
+
+impl Default for Requirements {
+    fn default() -> Self {
+        Requirements::path()
+    }
+}
+
+
+impl Requirements {
+    pub fn regex(regex: Regex) -> Self {
+        Requirements {
+            regex: Some(regex),
+            path: false,
+            allow_creating: false,
+            true_note: None,
+            false_note: None,
         }
-    };
+    }
+
+
+    pub fn path()-> Self {
+        Requirements {
+            regex: None,
+            path: true,
+            allow_creating: false,
+            true_note: None,
+            false_note: None,
+        }
+    }
+
+    pub fn set_regex(mut self, regex: Regex)  {
+        self.regex = Some(regex);
+    }
+
+
+    pub fn set_note(mut self, valid: &str, invalid: &str){
+        self.true_note = Some(valid.to_string());
+        self.false_note = Some(invalid.to_string());
+    }
+
+    pub fn allow_creation(mut self){
+        self.allow_creating = true;
+    }
 }
 
-macro_rules! raw_mode_wrapper {
-    ($content:expr) => {
-        enable_raw_mode().expect("Failed to enable raw-mode");
 
-        $content;
-
-        disable_raw_mode().expect("Failed to disable raw-mode");
-        execute!(
-            io::stdout(),
-            cursor::MoveTo(0, 0),
-            Clear(ClearType::FromCursorDown),
-            cursor::DisableBlinking
-        )
-        .unwrap();
-    };
+pub struct Input {
+    title: String,
+    requirements: Vec<Requirements>,
+    require_existing_path: bool,
+    allow_path_creation: bool,
 }
 
-/// Validates and returns a string that matches the specified regex pattern.
-///
-/// This function prompts the user to enter input and validates the input against the provided
-/// regex pattern. It continues to prompt the user until the entered input matches the regex pattern.
-/// The function returns the validated input as a string.
-///
-/// If `default` is provided and the user enters an empty string, the default value will be used.
-///
-/// Note: The `allow_force` option is currently not fully supported due to console issues. See
-/// [this issue](https://github.com/crossterm-rs/crossterm/issues/685) for more details. However,
-/// users can force input by pressing Shift+Enter. Pressing Shift+Enter will clear the full input.
-///
-///
-/// # Arguments
-///
-/// * `regex` - A `Regex` object representing the regex pattern to match against the user input.
-/// * `default` - An optional default value to be used if the user enters an empty string.
-/// * `allow_force` - A boolean indicating whether to allow the user to force input (not fully supported).
-///
-/// # Returns
-///
-/// A `String` containing the user input that matches the specified regex pattern.
-///
-/// # Example
-///
-/// ```rust,ignore
-/// use regex::Regex;
-/// use zenity::menu::input::valid_regex;
-///
-/// // Define a regex pattern to match three digits
-/// let regex = Regex::new(r"^\d{3}$").unwrap();
-///
-/// // Prompt the user to enter input matching the regex pattern
-/// let input = valid_regex(regex, Some("default_value"), false);
-///
-/// println!("Valid input: {}", input);
-/// ```
-pub fn valid_regex(title: &str, regex: Regex, default: Option<&str>, allow_force: bool) -> String {
-    let mut buffer = String::new();
-
-    raw_mode_wrapper!(input_loop!(
-        title,
-        buffer,
-        validate_input(&buffer, &regex),
-        default,
-        allow_force
-    ));
-
-    buffer
+impl Default for Input {
+    fn default() -> Self {
+        // TODO!
+    }
 }
 
-/// Validates and returns a `PathBuf` representing the entered path.
-///
-/// This function prompts the user to enter a path and validates the input. If the entered path is valid,
-/// it returns a `PathBuf` containing the path. Otherwise, it continues prompting the user until a valid
-/// path is entered.
-///
-/// If `default` is provided and the user enters an empty string, the default value will be used.
-///
-/// Note: The `allow_force` option is currently not fully supported due to console issues. See
-/// [this issue](https://github.com/crossterm-rs/crossterm/issues/685) for more details. However,
-/// users can force input by pressing Shift+Enter. Pressing Shift+Enter will clear the full input.
-///
-/// # Arguments
-///
-/// * `default` - An optional default value to be used if the user enters an empty string.
-/// * `allow_force` - A boolean indicating whether to allow the user to force input (not fully supported).
-///
-/// # Returns
-///
-/// A `Box<PathBuf>` representing the validated path entered by the user.
-///
-/// # Examples
-///
-/// ```rust,ignore
-/// use zenity::menu::input::valid_path;
-///
-/// let path = valid_path(Some("/home/user"), true);
-/// println!("Entered path: {:?}", path);
-/// ```
-pub fn valid_path(title: &str, default: Option<&str>, allow_force: bool) -> Box<PathBuf> {
-    let mut buffer = String::new();
+impl Input {
+    // TODO! add methods
 
-    raw_mode_wrapper!(input_loop!(
-        title,
-        buffer,
-        validate_path(&buffer),
-        default,
-        allow_force
-    ));
-
-    let path = PathBuf::from(buffer);
-
-    Box::new(path)
 }
 
 #[inline]
@@ -223,10 +140,14 @@ fn render_input_prompt(title: &str, buffer: &str, is_valid: &bool, default: Opti
             Print(title),
             cursor::MoveToNextLine(1),
             Clear(ClearType::CurrentLine),
-            if !is_valid {
-                SetForegroundColor(Color::DarkRed)
+            if *ENABLE_COLOR {
+                if !is_valid {
+                    SetForegroundColor(Color::DarkRed)
+                } else {
+                    SetForegroundColor(Color::Green)
+                }
             } else {
-                SetForegroundColor(Color::Green)
+                SetForegroundColor(Color::Reset)
             },
             Print(buffer),
         )
@@ -237,51 +158,15 @@ fn render_input_prompt(title: &str, buffer: &str, is_valid: &bool, default: Opti
             Print(title),
             cursor::MoveToNextLine(1),
             Clear(ClearType::CurrentLine),
-            SetForegroundColor(Color::Grey),
+            if *ENABLE_COLOR {
+                SetForegroundColor(Color::Grey)
+            } else {
+                SetForegroundColor(Color::Reset)
+            },
             Print(default.unwrap()),
             Print(" (Default)"),
         )
         .expect("execute print default failed");
     }
     execute!(io::stdout(), SetForegroundColor(Color::Reset),).unwrap();
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_validate_path_existing_file() {
-        // Create a temporary file for testing
-        let file_path = "test_file.txt";
-        std::fs::File::create(file_path).expect("Failed to create file");
-
-        // Validate the path of the temporary file
-        assert!(validate_path(file_path));
-
-        // Delete the temporary file
-        std::fs::remove_file(file_path).expect("Failed to delete file");
-    }
-
-    #[test]
-    fn test_validate_path_nonexistent_file() {
-        // Create a temporary file path that doesn't exist
-        let file_path = "nonexistent_file.txt";
-
-        // Validate the path of the nonexistent file
-        assert!(!validate_path(file_path));
-    }
-
-    #[test]
-    fn test_render_input_prompt() {
-        // Call the render_input_prompt function with a mock Stdout
-        render_input_prompt("Title", "123", &true, Some("Default stuff"));
-    }
-
-    #[test]
-    fn test_validate_input() {
-        // Call the render_input_prompt function with a mock Stdout
-        assert!(validate_input("123", &Regex::new(r"^\d{3}$").unwrap()));
-        assert!(!validate_input("abc", &Regex::new(r"^\d{3}$").unwrap()));
-    }
 }
