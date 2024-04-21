@@ -78,10 +78,20 @@
 // #![feature(rustdoc_missing_doc_code_examples)]
 // #![warn(rustdoc::missing_doc_code_examples)]pub mod color;
 
+// Helper
 pub mod color;
-pub(crate) mod iterators;
-pub mod menu;
-pub mod progress;
-pub mod spinner;
 pub mod style;
+
+// Main features
+#[cfg(feature = "menu")]
+pub mod menu;
+
+#[cfg(feature = "progressbar")]
+pub mod progress;
+
+#[cfg(feature = "spinner")]
+pub mod spinner;
+
+// Crate
+pub(crate) mod iterators;
 pub(crate) mod terminal;

@@ -25,6 +25,14 @@ path = "src/lib.rs"
 test = true
 
 
+[features]
+default = ["spinner", "progressbar", "menu"]
+
+spinner = []
+progressbar = []
+menu = []
+
+
 [dependencies]
 crossterm = "0.27.0"
 rand = "0.8.5"
