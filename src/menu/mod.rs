@@ -4,8 +4,9 @@ use crossterm::event::{Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
 pub mod input;
 
-/// re-export for easier access
-pub use input::Input;
+
+
+
 
 pub(crate) fn handle_key_input(buffer: &mut String, force: &mut bool) -> bool {
     _handle_key_input(buffer, crossterm::event::read().unwrap(), force)
