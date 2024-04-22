@@ -14,6 +14,7 @@
 
 use std::io;
 use std::path::Path;
+use std::sync::{Arc, Mutex};
 
 use crossterm::{
     cursor, execute,
@@ -21,36 +22,71 @@ use crossterm::{
 };
 use regex::Regex;
 
-use crate::color::ENABLE_COLOR;
-use crate::style::{Color, Print, SetForegroundColor};
 
+use crate::{style::{Color, Print, SetForegroundColor}, terminal::console_render::raw_mode_wrapper};
+
+
+/// Represents requirements for validating user input
+///
+/// # Examples
+///
+/// ```
+/// use zenity::menu::input::Requirements;
+///
+/// // Create default requirements for validating paths
+/// let default_requirements = Requirements::default();
+/// ```
 pub struct Requirements {
-    /// regex to match (optional if ``path`` is true)
+    /// Regex to match (optional if `path` is true)
     regex: Option<Regex>,
 
-    /// if the input needs to be a valid path, if its valid, the ``regex`` will be applied to the name and extension
+    /// If the input needs to be a valid path
+    /// 
+    /// If valid, the `regex` will be applied to the name and extension
     path: bool,
 
-    /// allow creating the path if its doesn't exist yet the ``regex`` still needs to match
-    ///
-    /// this only works if ``path`` is true
+    /// Allow creating the path if it doesn't exist yet
+    /// 
+    /// **NOTES**  
+    /// - The `regex` still needs to match
+    /// - This only works if `path` is true
     allow_creating: bool,
 
-    /// note to display if condition matches
+    /// Note to display if the condition matches
     true_note: Option<String>,
 
-    /// note to display while the condition doesn't match
+    /// Note to display while the condition doesn't match
     false_note: Option<String>,
 }
 
 impl Default for Requirements {
+    /// Creates default requirements for validating paths.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use zenity::menu::input::Requirements;
+    ///
+    /// // Create default requirements for validating paths
+    /// let default_requirements = Requirements::default();
+    /// ```
     fn default() -> Self {
         Requirements::path()
     }
 }
-
-
 impl Requirements {
+    /// Creates requirements with a specific regex
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use regex::Regex;
+    /// use zenity::menu::input::Requirements;
+    ///
+    /// // Create requirements with a specific regex
+    /// let regex = Regex::new(r"\d{4}-\d{2}-\d{2}").unwrap();
+    /// let regex_requirements = Requirements::regex(regex);
+    /// ```
     pub fn regex(regex: Regex) -> Self {
         Requirements {
             regex: Some(regex),
@@ -61,8 +97,17 @@ impl Requirements {
         }
     }
 
-
-    pub fn path()-> Self {
+    /// Creates requirements for validating paths
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use zenity::menu::input::Requirements;
+    ///
+    /// // Create requirements for validating paths
+    /// let path_requirements = Requirements::path();
+    /// ```
+    pub fn path() -> Self {
         Requirements {
             regex: None,
             path: true,
@@ -72,38 +117,81 @@ impl Requirements {
         }
     }
 
-    pub fn set_regex(mut self, regex: Regex)  {
+    /// Sets the regex for the requirements
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use regex::Regex;
+    /// use zenity::menu::input::Requirements;
+    ///
+    /// // Create requirements for validating paths
+    /// let mut path_requirements = Requirements::path();
+    ///
+    /// // Set a custom regex for path validation
+    /// let regex = Regex::new(r"\d{4}-\d{2}-\d{2}").unwrap();
+    /// path_requirements.set_regex(regex);
+    /// ```
+    pub fn set_regex(mut self, regex: Regex) {
         self.regex = Some(regex);
     }
 
 
-    pub fn set_note(mut self, valid: &str, invalid: &str){
+    /// Sets notes to display based on validity
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use zenity::menu::input::Requirements;
+    ///
+    /// // Create requirements for validating paths
+    /// let mut path_requirements = Requirements::path();
+    ///
+    /// // Set notes to display based on validity
+    /// path_requirements.set_note("Valid path.", "Invalid path.");
+    /// ```
+    pub fn set_note(mut self, valid: &str, invalid: &str) {
         self.true_note = Some(valid.to_string());
         self.false_note = Some(invalid.to_string());
     }
 
-    pub fn allow_creation(mut self){
+
+    /// Allows creating the path if it doesn't exist yet
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use zenity::menu::input::Requirements;
+    ///
+    /// // Create requirements for validating paths
+    /// let mut path_requirements = Requirements::path();
+    ///
+    /// // Allow creating the path if it doesn't exist yet
+    /// path_requirements.allow_creation();
+    /// ```
+    pub fn allow_creation(mut self) {
         self.allow_creating = true;
     }
 }
 
 
 pub struct Input {
-    title: String,
-    requirements: Vec<Requirements>,
-    require_existing_path: bool,
-    allow_path_creation: bool,
+    title: Arc<Mutex<String>>,
+    requirements: Arc<Mutex<Vec<Requirements>>>,
 }
 
-impl Default for Input {
-    fn default() -> Self {
-        // TODO!
-    }
-}
 
 impl Input {
-    // TODO! add methods
-
+    pub fn new(title: &str, req: Requirements) -> Self {
+        let reqs = vec![req];
+        
+        Input {
+            title: Arc::new(Mutex::new(title.to_string())),
+            requirements: Arc::new(Mutex::new(reqs)),
+        }
+    }
+    
+    fn 
 }
 
 #[inline]
@@ -127,46 +215,58 @@ fn validate_input(buffer: &str, regex: &Regex) -> bool {
     }
 }
 
-fn render_input_prompt(title: &str, buffer: &str, is_valid: &bool, default: Option<&str>) {
+fn render_input_prompt(
+    title: &str,
+    buffer: &str,
+    is_valid: &bool,
+    default: Option<&str>,
+    enable_color: bool,
+) {
+    // clear the line before rendering
     execute!(
         io::stdout(),
         cursor::MoveTo(0, 4),
-        Clear(ClearType::CurrentLine),
+        Clear(ClearType::CurrentLine)
     )
     .unwrap();
-    if !buffer.is_empty() || default.is_none() {
-        execute!(
-            io::stdout(),
-            Print(title),
-            cursor::MoveToNextLine(1),
-            Clear(ClearType::CurrentLine),
-            if *ENABLE_COLOR {
-                if !is_valid {
-                    SetForegroundColor(Color::DarkRed)
-                } else {
-                    SetForegroundColor(Color::Green)
-                }
+
+    // determine color based on validity and color enablement
+    let (text_color, content) = if !buffer.is_empty() || default.is_none() {
+        let text_color = if enable_color {
+            if !is_valid {
+                Color::DarkRed
             } else {
-                SetForegroundColor(Color::Reset)
-            },
-            Print(buffer),
-        )
-        .expect("execute print buffer failed");
+                Color::Green
+            }
+        } else {
+            Color::Reset
+        };
+        (text_color, buffer)
     } else {
-        execute!(
-            io::stdout(),
-            Print(title),
-            cursor::MoveToNextLine(1),
-            Clear(ClearType::CurrentLine),
-            if *ENABLE_COLOR {
-                SetForegroundColor(Color::Grey)
-            } else {
-                SetForegroundColor(Color::Reset)
-            },
-            Print(default.unwrap()),
-            Print(" (Default)"),
-        )
-        .expect("execute print default failed");
+        let text_color = if enable_color {
+            Color::Grey
+        } else {
+            Color::Reset
+        };
+        (text_color, default.unwrap_or_default())
+    };
+
+    // render the prompt
+    execute!(
+        io::stdout(),
+        Print(title),
+        cursor::MoveToNextLine(1),
+        Clear(ClearType::CurrentLine),
+        SetForegroundColor(text_color),
+        Print(content),
+    )
+    .unwrap();
+
+    // if using default, indicate it
+    if default.is_some() {
+        execute!(io::stdout(), Print(" (Default)")).unwrap();
     }
-    execute!(io::stdout(), SetForegroundColor(Color::Reset),).unwrap();
+
+    // reset color
+    execute!(io::stdout(), SetForegroundColor(Color::Reset)).unwrap();
 }
