@@ -3,7 +3,7 @@ use regex::Regex;
 use zenity::menu::input::{Input, Requirements};
 
 fn main() {
-    println!("Input Preview:");
+    println!("\n\nInput Preview:");
 
     let path = Input::new("Enter Valid Path:", Requirements::default()).start();
     let path_with_regex = Input::new(
@@ -25,3 +25,5 @@ fn main() {
     println!("Path with Regex:  {:?}", path_with_regex);
     println!("Regex:  {:?}", regex);
 }
+
+

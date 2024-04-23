@@ -422,6 +422,14 @@ impl Input {
                 Print("Press SHIFT + Enter to force input"),
             )
             .unwrap();
+        } else {
+            execute!(
+                io::stdout(),
+                cursor::MoveToNextLine(2),
+                Clear(ClearType::CurrentLine),
+                cursor::MoveToNextLine(2),
+            )
+            .unwrap();
         }
 
         if self.default.is_some() && buffer.is_empty() {
@@ -429,6 +437,14 @@ impl Input {
                 io::stdout(),
                 cursor::MoveToNextLine(2),
                 Print("Press Enter to accept default"),
+            )
+            .unwrap();
+        } else {
+            execute!(
+                io::stdout(),
+                cursor::MoveToNextLine(2),
+                Clear(ClearType::CurrentLine),
+                cursor::MoveToNextLine(2),
             )
             .unwrap();
         }
