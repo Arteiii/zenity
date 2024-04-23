@@ -178,14 +178,29 @@ impl Requirements {
     }
 }
 
+/// Represents an input field with validation requirements and optional default value.
 pub struct Input {
+    /// The title or prompt displayed for the input field.
     title: String,
+    /// The validation requirements for the input field.
     requirements: Vec<Requirements>,
+    /// The default value that can be accepted by pressing Enter.
     default: Option<String>,
+    /// Indicates whether the input can be forced without meeting validation requirements.
     allow_force: bool,
 }
 
 impl Input {
+    /// Creates a new input field with the specified title and validation requirements.
+    ///
+    /// # Arguments
+    ///
+    /// * `title` - The title or prompt for the input field.
+    /// * `req` - The validation requirement for the input field more can be added with the ``add_requirement`` method
+    ///
+    /// # Returns
+    ///
+    /// A new `Input` instance with the given title and validation requirements.
     pub fn new(title: &str, req: Requirements) -> Self {
         let reqs = vec![req];
 
@@ -197,6 +212,14 @@ impl Input {
         }
     }
 
+    /// Starts the input process, displaying the prompt and handling user input.
+    ///
+    /// This method prompts the user for input, validates it according to the specified requirements,
+    /// and returns the validated input as a boxed string.
+    ///
+    /// # Returns
+    ///
+    /// A boxed string containing the validated input.
     pub fn start(&self) -> Box<String> {
         let mut force: bool = false;
         let mut buffer = String::new();
@@ -311,24 +334,6 @@ impl Input {
             .unwrap();
             false
         }
-    }
-
-    fn has_path_requirement(&self) -> bool {
-        for req in &self.requirements {
-            if req.path {
-                return true;
-            }
-        }
-        false
-    }
-
-    fn has_regex_requirement(&self) -> bool {
-        for req in &self.requirements {
-            if req.regex.is_some() {
-                return true;
-            }
-        }
-        false
     }
 
     fn render_input_prompt(&self, buffer: &str, valid: bool, notes: &[Option<String>]) {

@@ -25,5 +25,3 @@ fn main() {
     println!("Path with Regex:  {:?}", path_with_regex);
     println!("Regex:  {:?}", regex);
 }
-
-
