@@ -13,16 +13,9 @@ pub(crate) mod console_render {
             $content;
 
             disable_raw_mode().expect("Failed to disable raw-mode");
-            execute!(
-                io::stdout(),
-                cursor::MoveTo(0, 0),
-                Clear(ClearType::FromCursorDown),
-                cursor::DisableBlinking
-            )
-            .unwrap();
         };
     }
-    
+
     pub(crate) use raw_mode_wrapper;
 
     pub fn render_line(frame: &Vec<String>, row: u16) {
