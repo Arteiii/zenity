@@ -4,10 +4,6 @@ use crossterm::event::{Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
 pub mod input;
 
-
-
-
-
 pub(crate) fn handle_key_input(buffer: &mut String, force: &mut bool) -> bool {
     _handle_key_input(buffer, crossterm::event::read().unwrap(), force)
 }
