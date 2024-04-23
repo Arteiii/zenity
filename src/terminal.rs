@@ -6,6 +6,18 @@ pub(crate) mod console_render {
     use crate::color::ENABLE_COLOR;
     use crate::style::StyledString;
 
+    macro_rules! raw_mode_wrapper {
+        ($content:expr) => {
+            enable_raw_mode().expect("Failed to enable raw-mode");
+
+            $content;
+
+            disable_raw_mode().expect("Failed to disable raw-mode");
+        };
+    }
+
+    pub(crate) use raw_mode_wrapper;
+
     pub fn render_line(frame: &Vec<String>, row: u16) {
         let mut stdout = stdout();
         queue!(
@@ -105,7 +117,6 @@ pub(crate) mod console_cursor {
 #[cfg(test)]
 mod tests {
     use crate::style::Color;
-
     use crate::style::StyledString;
 
     use super::*;
