@@ -17,7 +17,7 @@ use std::path::Path;
 
 use crossterm::{
     cursor, execute,
-    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
+    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 use regex::Regex;
 

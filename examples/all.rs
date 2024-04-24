@@ -48,10 +48,7 @@ fn main() {
         Frames::short_loading_bar_with_arrow(),
         "short_loading_bar_with_arrow"
     );
-    test_predefined_animation!(
-        Frames::loading_bar_with_arrow(),
-        "loading_bar_with_arrow"
-    );
+    test_predefined_animation!(Frames::loading_bar_with_arrow(), "loading_bar_with_arrow");
     test_predefined_animation!(Frames::speaker(), "speaker");
     test_predefined_animation!(Frames::finger_dance(), "finger_dance");
     test_predefined_animation!(Frames::fist_bump(), "fist_bump");

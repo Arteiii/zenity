@@ -32,16 +32,16 @@ pub(crate) mod console_render {
     }
 
     macro_rules! push_unstyled_spaces {
-    ($vec:expr, $count:expr) => {{
-        for _ in 0..$count {
-            $vec.push(StyledString::new(" "));
-        }
-    }};
-}
+        ($vec:expr, $count:expr) => {{
+            for _ in 0..$count {
+                $vec.push(StyledString::new(" "));
+            }
+        }};
+    }
 
     pub(crate) use push_styled_string;
-    pub(crate) use raw_mode_wrapper;
     pub(crate) use push_unstyled_spaces;
+    pub(crate) use raw_mode_wrapper;
 
     pub fn render_line(frame: &Vec<String>, row: u16) {
         let mut stdout = stdout();

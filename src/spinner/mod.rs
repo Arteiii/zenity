@@ -23,12 +23,11 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-
 pub use frames::*;
 
 use crate::iterators::balanced_iterator;
-use crate::style::{Attribute, Color, ContentStyle,StyledString};
 use crate::style;
+use crate::style::{Attribute, Color, ContentStyle, StyledString};
 use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
@@ -307,7 +306,6 @@ impl MultiSpinner {
                         }
                         console_render::push_unstyled_spaces!(combined_vec, 1);
                     }
-
 
                     // always include spinner text
                     combined_vec.push(spinner.text.clone());

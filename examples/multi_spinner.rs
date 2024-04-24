@@ -46,7 +46,7 @@ fn main() {
         sleep(Duration::from_secs(2));
         spinner.set_text(&spinner1, "spinner1 stopped".to_string());
         spinner.stop(&spinner1);
-        
+
         spinner.show_line_number();
 
         sleep(Duration::from_secs(9));
