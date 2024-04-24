@@ -34,7 +34,6 @@ pub mod frames;
 /// use zenity::progress::{Frames, ProgressBar};
 /// use std::thread;
 /// use std::time::Duration;
-/// use rand::Rng;
 ///
 ///  let progress = ProgressBar::new(Frames::rect().set_goal(253));
 ///  let progress1 = progress.get_last();
@@ -51,7 +50,7 @@ pub mod frames;
 ///     progress.set(&progress2, &loading);
 ///     progress.set(&progress3, &loading);
 ///
-///     thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(1..=70)));
+///     thread::sleep(Duration::from_millis(70));
 ///  }
 ///
 /// ```

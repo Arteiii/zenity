@@ -23,10 +23,12 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
+
 pub use frames::*;
 
 use crate::iterators::balanced_iterator;
-use crate::style::StyledString;
+use crate::style::{Attribute, Color, ContentStyle,StyledString};
+use crate::style;
 use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
@@ -55,6 +57,7 @@ pub mod frames;
 #[derive(Clone)]
 pub struct MultiSpinner {
     spinner: Arc<Mutex<HashMap<usize, Frames>>>,
+    show_line_number: Arc<Mutex<bool>>,
     stop: Arc<Mutex<bool>>,
 }
 
@@ -105,6 +108,7 @@ impl MultiSpinner {
         let spinner = MultiSpinner {
             spinner: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
+            show_line_number: Arc::new(Mutex::new(false)),
         };
 
         spinner.add(frames);
@@ -219,6 +223,24 @@ impl MultiSpinner {
         }
     }
 
+    /// shows the line number of the running spinners
+    ///
+    /// [1/4]  .¸¸¸¸¸¸¸¸
+    ///
+    /// ## Example
+    ///
+    /// ```
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
+    ///
+    /// let spinner = MultiSpinner::new(Frames::default());
+    ///
+    /// spinner.show_line_number();
+    /// ```
+    pub fn show_line_number(&self) {
+        *self.show_line_number.lock().unwrap() = true;
+    }
+
     /// execute all created spinners
     /// ## Example
     ///
@@ -239,16 +261,37 @@ impl MultiSpinner {
     pub fn run_all(&self) {
         let spinners = Arc::clone(&self.spinner);
         let stop = Arc::clone(&self.stop);
+        let show_line_number = Arc::clone(&self.show_line_number);
 
         thread::spawn(move || {
             console_cursor::save_hide_cursor();
 
             let mut index = 1_u16;
+            let mut max_line_number: usize = 0;
 
             while !*stop.lock().unwrap() {
                 // collect frames and texts from all spinners
-                for (line_index, spinner) in spinners.lock().unwrap().iter() {
+                for (line_number, spinner) in spinners.lock().unwrap().iter() {
                     let mut combined_vec = Vec::new();
+
+                    if *show_line_number.lock().unwrap() {
+                        // update the max_line_number if a larger line number is encountered
+                        if *line_number > max_line_number {
+                            max_line_number = *line_number;
+                        }
+
+                        console_render::push_styled_string!(
+                            combined_vec,
+                            format!("[{}/{}]", &line_number, &max_line_number),
+                            Some(Color::Grey),
+                            None,
+                            None,
+                            style::combine_attributes(&[&Attribute::Italic])
+                        );
+
+                        // to prevent style to apply to the spacing
+                        console_render::push_unstyled_spaces!(combined_vec, 1);
+                    }
 
                     // if the spinner is not stopped, include new frames and update text
                     if !spinner.stop {
@@ -262,12 +305,14 @@ impl MultiSpinner {
                         if let Some(first_frame) = current_frame.first() {
                             combined_vec.push(first_frame.clone());
                         }
+                        console_render::push_unstyled_spaces!(combined_vec, 1);
                     }
+
 
                     // always include spinner text
                     combined_vec.push(spinner.text.clone());
 
-                    console_render::render_styled_line(*line_index as u16, &combined_vec);
+                    console_render::render_styled_line(*line_number as u16, &combined_vec);
                 }
 
                 index += 1;

@@ -17,7 +17,7 @@ use std::path::Path;
 
 use crossterm::{
     cursor, execute,
-    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
+    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
 };
 use regex::Regex;
 
@@ -425,6 +425,7 @@ impl Input {
                 io::stdout(),
                 cursor::MoveToNextLine(2),
                 Print("Press SHIFT + Enter to force input"),
+                cursor::MoveToPreviousLine(1),
             )
             .unwrap();
         } else {
@@ -432,7 +433,7 @@ impl Input {
                 io::stdout(),
                 cursor::MoveToNextLine(2),
                 Clear(ClearType::CurrentLine),
-                cursor::MoveToNextLine(2),
+                cursor::MoveToPreviousLine(2),
             )
             .unwrap();
         }
@@ -442,6 +443,7 @@ impl Input {
                 io::stdout(),
                 cursor::MoveToNextLine(2),
                 Print("Press Enter to accept default"),
+                cursor::MoveToPreviousLine(1),
             )
             .unwrap();
         } else {
@@ -449,7 +451,7 @@ impl Input {
                 io::stdout(),
                 cursor::MoveToNextLine(2),
                 Clear(ClearType::CurrentLine),
-                cursor::MoveToNextLine(2),
+                cursor::MoveToPreviousLine(2),
             )
             .unwrap();
         }

@@ -35,10 +35,10 @@ menu = []
 
 [dependencies]
 crossterm = "0.27.0"
-rand = "0.8.5"
 supports-color = "3.0.0"
 lazy_static = "1.4.0"
 regex = "1.10.4"
 
 [dev-dependencies]
+rand = "0.8.5"
 unicode-icons = { version = "2.1.2", default-features = false, features = ["symbols"] }

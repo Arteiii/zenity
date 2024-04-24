@@ -10,7 +10,7 @@ fn main() {
     sleep(Duration::from_secs(5));
 
     // optional:
-    spinner.set_text(&spinner.get_last(), "  Loading...".to_string()); // sets the text to "Loading..."
+    spinner.set_text(&spinner.get_last(), "Loading...".to_string()); // sets the text to "Loading..."
 
     sleep(Duration::from_secs(500));
     // `loading_animation` will run out of scope now and get dropped,

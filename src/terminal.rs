@@ -16,7 +16,32 @@ pub(crate) mod console_render {
         };
     }
 
+    macro_rules! push_styled_string {
+        ($vec:expr, $string:expr, $foreground_color:expr, $background_color:expr,$underline_color:expr, $attributes:expr) => {{
+            let styled_string = StyledString {
+                string: $string,
+                style: ContentStyle {
+                    foreground_color: $foreground_color,
+                    background_color: $background_color,
+                    underline_color: $underline_color,
+                    attributes: $attributes,
+                },
+            };
+            $vec.push(styled_string);
+        }};
+    }
+
+    macro_rules! push_unstyled_spaces {
+    ($vec:expr, $count:expr) => {{
+        for _ in 0..$count {
+            $vec.push(StyledString::new(" "));
+        }
+    }};
+}
+
+    pub(crate) use push_styled_string;
     pub(crate) use raw_mode_wrapper;
+    pub(crate) use push_unstyled_spaces;
 
     pub fn render_line(frame: &Vec<String>, row: u16) {
         let mut stdout = stdout();

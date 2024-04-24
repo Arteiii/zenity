@@ -23,11 +23,11 @@ fn main() {
         spinner.run_all();
 
         sleep(Duration::from_secs(4));
-        spinner.set_text(&spinner2, "  spinner2".to_string());
+        spinner.set_text(&spinner2, "spinner2".to_string());
         // stop spinner1
         spinner.set_styled_text(
             &spinner1,
-            StyledString::simple(" spinner1", Some(Color::Blue), Some(Color::DarkBlue), None),
+            StyledString::simple("spinner1", Some(Color::Blue), Some(Color::DarkBlue), None),
         );
 
         sleep(Duration::from_secs(2));
@@ -36,7 +36,7 @@ fn main() {
         spinner.set_styled_text(
             &spinner2,
             StyledString::simple(
-                &format!(" {} Successfully", &check_mark_text),
+                &format!("{} Successfully", &check_mark_text),
                 Some(Color::Green),
                 None,
                 None,
@@ -44,9 +44,10 @@ fn main() {
         );
 
         sleep(Duration::from_secs(2));
-        spinner.set_text(&spinner1, " spinner1 stopped".to_string());
-
+        spinner.set_text(&spinner1, "spinner1 stopped".to_string());
         spinner.stop(&spinner1);
+        
+        spinner.show_line_number();
 
         sleep(Duration::from_secs(9));
         spinner.stop(&spinner3);
@@ -55,7 +56,7 @@ fn main() {
         spinner.set_styled_text(
             &spinner3,
             StyledString::simple(
-                &format!(" {}  Failed!", &cross_mark_text),
+                &format!("{}  Failed!", &cross_mark_text),
                 Some(Color::Red),
                 None,
                 None,
@@ -64,7 +65,7 @@ fn main() {
         spinner.set_styled_text(
             &spinner4,
             StyledString::simple(
-                &format!(" {}  Failed!", &cross_mark_text),
+                &format!("{}  Failed!", &cross_mark_text),
                 Some(Color::Red),
                 None,
                 None,
