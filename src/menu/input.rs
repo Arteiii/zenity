@@ -201,6 +201,15 @@ impl Input {
     /// # Returns
     ///
     /// A new `Input` instance with the given title and validation requirements.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use zenity::menu::input::{Input, Requirements};
+    ///
+    /// // Create a new Input instance with a title and requirements
+    /// let input = Input::new("Name", Requirements::default());
+    /// ```
     pub fn new(title: &str, req: Requirements) -> Self {
         let reqs = vec![req];
 
@@ -220,6 +229,15 @@ impl Input {
     /// # Returns
     ///
     /// A boxed string containing the validated input.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use zenity::menu::input::{Input, Requirements};
+    ///
+    /// // init and start directly
+    /// let input = Input::new("Name", Requirements::default()).start();
+    /// ```
     pub fn start(&self) -> Box<String> {
         let mut force: bool = false;
         let mut buffer = String::new();
@@ -291,8 +309,19 @@ impl Input {
     }
 
     /// Adds a new requirement to the input.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use zenity::menu::input::{Input, Requirements};
+    /// let mut input = Input::new("Name", Requirements::default());
+    ///
+    /// // add requirement
+    /// input.add_requirement(Requirements::default());
+    /// ```
     pub fn add_requirement(mut self, requirement: Requirements) -> Self {
         self.requirements.push(requirement);
+
         self
     }
 
@@ -300,17 +329,38 @@ impl Input {
     /// This can be triggered by pressing SHIFT + Enter.
     ///
     /// **Note:**
-    /// - This feature may not work in all terminal environments. Refer to issue [#685](https://github.com/crossterm-rs/crossterm/issues/685) for more information.
+    /// - This feature may not work in all terminal environments.
+    /// Refer to issue [#685](https://github.com/crossterm-rs/crossterm/issues/685) for more information.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use zenity::menu::input::{Input, Requirements};
+    /// let mut input = Input::new("Name", Requirements::default());
+    ///
+    /// input.allow_force();
+    /// ```
     pub fn allow_force(mut self) -> Self {
         self.allow_force = true;
+
         self
     }
 
     /// Sets the default value, which can be accepted by pressing Enter.
     ///
     /// Pressing Enter without typing anything will accept the default value.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use zenity::menu::input::{Input, Requirements};
+    /// let mut input = Input::new("Name", Requirements::default());
+    ///
+    /// input.set_default("Arteii");
+    /// ```
     pub fn set_default(mut self, default: &str) -> Self {
         self.default = Some(default.to_string());
+
         self
     }
 
