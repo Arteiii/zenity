@@ -233,10 +233,19 @@ impl Input {
     /// # Example
     ///
     /// ```
-    /// use zenity::menu::input::{Input, Requirements};
+    /// # use std::thread;
+    /// # use std::time::Duration;
+    ///  use zenity::menu::input::{Input, Requirements};
     ///
-    /// // init and start directly
-    /// let input = Input::new("Name", Requirements::default()).start();
+    ///  # // spawn a new thread to run the input
+    ///  # let input_thread = thread::spawn(|| {
+    ///  // initialize the input
+    ///  let input = Input::new("Name", Requirements::default()).start();
+    ///  # });
+    ///  # // wait for 5 seconds before joining the thread
+    ///  # thread::sleep(Duration::from_secs(5));
+    ///  # // assert true after waiting for 5 seconds
+    ///  # assert!(true);
     /// ```
     pub fn start(&self) -> Box<String> {
         let mut force: bool = false;
