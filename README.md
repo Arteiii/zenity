@@ -18,12 +18,15 @@
     <img src="https://codecov.io/gh/Arteiii/zenity/graph/badge.svg?token=CHEG2ZD0LW" alt="codecov badge"/> 
   </a>
 </div>
+<br>
 
-![progress bar](images/rustrover64_WupAJU44Lu.gif)
-
-![multiline preview](images/rustrover64_4bzlv2mWxK.gif)
+<div align="center">
+  <img src="images/rustrover64_WupAJU44Lu.gif" alt="progress bar">
+</div>
 
 ![menu input preview](images/rustrover64_Qgn5icero6.gif)
+
+![multiline preview](images/rustrover64_4bzlv2mWxK.gif)
 
 Do you often find yourself gazing into the void of your terminal,  
 wondering if your computer has decided to take a coffee break without notifying you?
