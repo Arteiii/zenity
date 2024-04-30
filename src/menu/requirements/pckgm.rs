@@ -6,6 +6,9 @@ use lazy_static::lazy_static;
 use crate::menu::requirements::pckgm;
 
 /// determine which package manager is available on the system
+///
+/// NOTES:
+/// - IDK if there is a better way to do this or maybe already a lib for this
 fn detect_package_manager() -> Option<&'static str> {
     if which("apt-get").is_some() {
         Some("apt")

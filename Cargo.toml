@@ -26,11 +26,12 @@ test = true
 
 
 [features]
-default = ["spinner", "progressbar", "menu"]
+default = ["spinner", "progressbar", "menu", "log"]
 
 spinner = []
 progressbar = []
 menu = []
+log = []
 
 
 [dependencies]
@@ -38,6 +39,9 @@ crossterm = "0.27.0"
 supports-color = "3.0.0"
 lazy_static = "1.4.0"
 regex = "1.10.4"
+log = { version = "0.4.21", features = ["std"] }
+chrono = "0.4.38"
+
 
 [dev-dependencies]
 rand = "0.8.5"
