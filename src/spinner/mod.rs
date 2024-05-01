@@ -42,7 +42,7 @@ pub mod frames;
 /// use std::time::Duration;
 /// use zenity::spinner::{Frames, MultiSpinner};
 ///
-/// let spinner = MultiSpinner::new(Frames::dot_spinner11());
+/// let spinner = MultiSpinner::default();
 /// spinner.run_all();
 ///
 /// sleep(Duration::from_secs(4));
@@ -156,7 +156,12 @@ impl MultiSpinner {
     pub fn get_last(&self) -> usize {
         let spinner_map = self.spinner.lock().unwrap();
 
-        // get the maximum key value (uid) from the spinner map
+        // Check if the spinner is empty
+        if spinner_map.is_empty() {
+            return 0;
+        }
+
+        // Get the maximum key value (uid) from the spinner map
         spinner_map.keys().copied().max().unwrap()
     }
 
@@ -170,7 +175,7 @@ impl MultiSpinner {
     /// use zenity::spinner::Frames;
     /// use zenity::style::StyledString;
     ///
-    /// let spinner = MultiSpinner::new();
+    /// let spinner = MultiSpinner::default();
     ///
     /// spinner.set_text(&spinner.get_last(),"example".to_string());
     /// ```
@@ -191,7 +196,7 @@ impl MultiSpinner {
     /// use zenity::spinner::Frames;
     /// use zenity::style::StyledString;
     ///
-    /// let spinner = MultiSpinner::new();
+    /// let spinner = MultiSpinner::default();
     ///
     /// spinner.set_styled_text(&spinner.get_last(),
     ///     StyledString::simple("test string", Some(Color::Red), Some(Color::Black), None));
@@ -210,7 +215,7 @@ impl MultiSpinner {
     /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new(Frames::default());
+    /// let spinner = MultiSpinner::default();
     ///
     /// spinner.stop(&spinner.get_last());
     /// ```
@@ -230,7 +235,7 @@ impl MultiSpinner {
     /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new(Frames::default());
+    /// let spinner = MultiSpinner::default();
     ///
     /// spinner.show_line_number();
     /// ```
@@ -246,7 +251,7 @@ impl MultiSpinner {
     /// use zenity::spinner::Frames;
     ///
     /// // make spinner mutable
-    /// let mut spinner = MultiSpinner::new(Frames::dots_simple_big1());
+    /// let mut spinner = MultiSpinner::default();
     ///
     /// // queue spinners for execution
     /// let spinner_num1 = spinner.get_last();
