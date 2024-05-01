@@ -147,7 +147,8 @@ impl MultiSpinner {
     /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new(Frames::default());
+    /// let spinner = MultiSpinner::new();
+    /// spinner.add(Frames::default());
     ///
     /// // the return values is an id you will need to edit the spinner later on
     /// let spinner1_uid = spinner.get_last();
@@ -169,7 +170,7 @@ impl MultiSpinner {
     /// use zenity::spinner::Frames;
     /// use zenity::style::StyledString;
     ///
-    /// let spinner = MultiSpinner::new(Frames::default());
+    /// let spinner = MultiSpinner::new();
     ///
     /// spinner.set_text(&spinner.get_last(),"example".to_string());
     /// ```
@@ -190,7 +191,7 @@ impl MultiSpinner {
     /// use zenity::spinner::Frames;
     /// use zenity::style::StyledString;
     ///
-    /// let spinner = MultiSpinner::new(Frames::default());
+    /// let spinner = MultiSpinner::new();
     ///
     /// spinner.set_styled_text(&spinner.get_last(),
     ///     StyledString::simple("test string", Some(Color::Red), Some(Color::Black), None));

@@ -8,18 +8,31 @@
 //! use zenity::log::Logger;
 //! use log::Level;
 //!
-//! // Initialize logger with default settings
-//! let logger = Logger::new().init().unwrap();
-//!
-//! // Set log level based on environment variable
-//! let logger = Logger::new().with_env("LOG_LEVEL").init().unwrap();
-//!
-//! // Set log level based on command-line argument
-//! let logger = Logger::new().with_arg().init().unwrap();
-//!
-//! // Set log level directly
-//! let logger = Logger::new().set_log_level(Level::Debug).init().unwrap();
+//!  // Initialize logger with default settings
+//!  let logger = Logger::new().init().unwrap();
 //! ```
+//! ```
+//! # use zenity::log::Logger;
+//! # use log::Level;
+//! # 
+//!  // Set log level based on environment variable
+//!  let logger = Logger::new().with_env("LOG_LEVEL").init().unwrap();
+//! ```
+//! ```
+//! # use zenity::log::Logger;
+//! # use log::Level;
+//! #
+//!  // Set log level based on command-line argument
+//!  let logger = Logger::new().with_arg().init().unwrap();
+//! ```
+//! ```
+//! # use zenity::log::Logger;
+//! # use log::Level;
+//! #
+//!  // Set log level directly
+//!  let logger = Logger::new().set_log_level(Level::Debug).init().unwrap();
+//! ```
+
 
 use std::env;
 use std::io::{stdout, Write};
@@ -248,7 +261,8 @@ impl Logger {
     /// # Examples
     ///
     /// ```
-    /// use zenity::log::{Logger, Level};
+    /// use zenity::log::Logger;
+    /// use log::Level;
     ///
     /// let logger = Logger::new().set_log_level(Level::Debug);
     /// ```
