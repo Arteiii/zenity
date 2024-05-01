@@ -14,7 +14,7 @@
 //! ```
 //! # use zenity::log::Logger;
 //! # use log::Level;
-//! # 
+//! #
 //!  // Set log level based on environment variable
 //!  let logger = Logger::new().with_env("LOG_LEVEL").init().unwrap();
 //! ```
@@ -32,7 +32,6 @@
 //!  // Set log level directly
 //!  let logger = Logger::new().set_log_level(Level::Debug).init().unwrap();
 //! ```
-
 
 use std::env;
 use std::io::{stdout, Write};
