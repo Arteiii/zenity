@@ -30,7 +30,7 @@ default = ["spinner", "progressbar", "menu", "log"]
 
 spinner = []
 progressbar = []
-menu = []
+menu = ["spinner"]
 log = []
 
 

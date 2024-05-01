@@ -9,9 +9,25 @@ use log::{Level, Metadata, Record, SetLoggerError};
 use crate::style::combine_attributes;
 use crate::{color::ENABLE_COLOR, style, style::Color};
 
-// Define a custom logger
-struct MyLogger;
+macro_rules! enable_color {
+    ($stdout:expr, $foreground_color:expr) => {
+        if *ENABLE_COLOR {
+            queue!(
+                $stdout,
+                style::SetStyle(ContentStyle {
+                    foreground_color: Some($foreground_color),
+                    background_color: None,
+                    underline_color: None,
+                    attributes: combine_attributes(&[&Attribute::Italic]),
+                }),
+            )
+            .unwrap();
+        }
+    };
+}
 
+// Define a custom logger
+struct MyLogger {}
 impl log::Log for MyLogger {
     fn enabled(&self, metadata: &Metadata) -> bool {
         // This logger will be enabled for all levels based on the configured log level
@@ -25,85 +41,71 @@ impl log::Log for MyLogger {
         let padded_level_str = format!("{:^5}", level_str); // Center-align the level string within a width of 5
         let mut stdout = stdout();
 
+        enable_color!(stdout, Color::DarkGrey);
+
         queue!(
             stdout,
-            style::SetStyle(ContentStyle {
-                foreground_color: Some(Color::DarkGrey),
-                background_color: None,
-                underline_color: None,
-                attributes: combine_attributes(&[&Attribute::Italic]),
-            }),
             style::Print(format!("{}  ", current_time)),
             style::ResetColor, // reset colors
         )
         .unwrap();
 
-        // Set foreground color based on log level
-        let level_color = match record.level() {
-            Level::Error => ContentStyle {
-                foreground_color: Some(Color::Red),
-                background_color: None,
-                underline_color: None,
-                attributes: combine_attributes(&[&Attribute::Bold]),
-            },
-            Level::Warn => ContentStyle {
-                foreground_color: Some(Color::Yellow),
-                background_color: None,
-                underline_color: None,
-                attributes: combine_attributes(&[&Attribute::Bold]),
-            },
-            Level::Info => ContentStyle {
-                foreground_color: Some(Color::Green),
-                background_color: None,
-                underline_color: None,
-                attributes: combine_attributes(&[&Attribute::Bold]),
-            },
-            Level::Debug => ContentStyle {
-                foreground_color: Some(Color::Magenta),
-                background_color: None,
-                underline_color: None,
-                attributes: combine_attributes(&[&Attribute::Bold]),
-            },
-            Level::Trace => ContentStyle {
-                foreground_color: Some(Color::White),
-                background_color: None,
-                underline_color: None,
-                attributes: combine_attributes(&[&Attribute::Bold]),
-            },
-        };
-
         if *ENABLE_COLOR {
-            queue!(
-                stdout,
-                style::SetStyle(level_color), // set animation color
-            )
-            .unwrap();
+            let level_color = match record.level() {
+                Level::Error => ContentStyle {
+                    foreground_color: Some(Color::Red),
+                    background_color: None,
+                    underline_color: None,
+                    attributes: combine_attributes(&[&Attribute::Bold]),
+                },
+                Level::Warn => ContentStyle {
+                    foreground_color: Some(Color::Yellow),
+                    background_color: None,
+                    underline_color: None,
+                    attributes: combine_attributes(&[&Attribute::Bold]),
+                },
+                Level::Info => ContentStyle {
+                    foreground_color: Some(Color::Green),
+                    background_color: None,
+                    underline_color: None,
+                    attributes: combine_attributes(&[&Attribute::Bold]),
+                },
+                Level::Debug => ContentStyle {
+                    foreground_color: Some(Color::Blue),
+                    background_color: None,
+                    underline_color: None,
+                    attributes: combine_attributes(&[&Attribute::Bold]),
+                },
+                Level::Trace => ContentStyle {
+                    foreground_color: Some(Color::Magenta),
+                    background_color: None,
+                    underline_color: None,
+                    attributes: combine_attributes(&[&Attribute::Bold]),
+                },
+            };
+
+            queue!(stdout, style::SetStyle(level_color),).unwrap();
         }
 
-        queue!(
-            stdout,
-            style::Print(&padded_level_str),
-            style::ResetColor, // reset colors
-        )
-        .unwrap();
+        queue!(stdout, style::Print(&padded_level_str), style::ResetColor,).unwrap();
+
+        enable_color!(stdout, Color::DarkGrey);
 
         queue!(
             stdout,
-            style::SetStyle(ContentStyle {
-                foreground_color: Some(Color::DarkGrey),
-                background_color: None,
-                underline_color: None,
-                attributes: combine_attributes(&[&Attribute::Italic]),
-            }),
-            style::Print(format!(" ({}):", record.target())),
-            style::ResetColor, // reset colors
+            style::Print(format!(
+                " ({}:{:?}):",
+                record.target(),
+                record.line().unwrap()
+            )),
+            style::ResetColor,
         )
         .unwrap();
 
         queue!(
             stdout,
             style::Print(format!(" {}", record.args())),
-            style::ResetColor, // reset colors
+            style::ResetColor,
         )
         .unwrap();
 

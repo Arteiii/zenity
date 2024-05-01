@@ -69,7 +69,8 @@ impl Default for MultiSpinner {
     /// let spinner = MultiSpinner::default();
     /// ```
     fn default() -> Self {
-        let spinner = Self::new(Frames::default());
+        let spinner = Self::new();
+        spinner.add(Frames::default());
         spinner.run_all();
 
         spinner
@@ -80,8 +81,8 @@ impl Default for MultiSpinner {
 /// use std::time::Duration;
 /// use zenity::spinner::{Frames, MultiSpinner};
 ///
-/// let spinner = MultiSpinner::new(Frames::dot_spinner11());
-/// let spinner1 = spinner.get_last(); // get last created uid
+/// let spinner = MultiSpinner::default();
+/// let spinner1 = spinner.get_last();
 /// let spinner2 = spinner.add(Frames::default()); // this already returns the uid
 ///
 /// spinner.run_all();
@@ -100,17 +101,15 @@ impl MultiSpinner {
     ///
     /// ## Example
     /// ```
-    /// use zenity::spinner::{MultiSpinner, Frames};
-    /// let spinner = MultiSpinner::new(Frames::default());
+    /// use zenity::spinner::MultiSpinner;
+    /// let spinner = MultiSpinner::new();
     /// ```
-    pub fn new(frames: Frames) -> Self {
+    pub fn new() -> Self {
         let spinner = MultiSpinner {
             spinner: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
             show_line_number: Arc::new(Mutex::new(false)),
         };
-
-        spinner.add(frames);
 
         spinner
     }
@@ -126,7 +125,7 @@ impl MultiSpinner {
     /// use zenity::spinner::MultiSpinner;
     /// use zenity::spinner::Frames;
     ///
-    /// let spinner = MultiSpinner::new(Frames::default());
+    /// let spinner = MultiSpinner::new();
     ///
     /// spinner.add(Frames::aesthetic_load());
     /// ```
