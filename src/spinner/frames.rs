@@ -68,7 +68,7 @@ impl AsRef<Frames> for Frames {
 
 /// ```
 /// use zenity::spinner::{Frames, MultiSpinner};
-/// 
+///
 /// let spinner = MultiSpinner::new();
 /// spinner.add(Frames::default());
 /// ```
