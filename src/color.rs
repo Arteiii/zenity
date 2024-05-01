@@ -136,19 +136,23 @@ impl CliColorConfig {
     }
 
     /// parse args to check for --color=always|auto|never
+
+    /// parse args to check for --color=always|auto|never
     fn parse_arguments(args: &[String]) -> ColorOption {
-        if args.len() > 1 {
-            let arg = &args[1];
-            return match arg.as_str() {
-                "--color=always" => ColorOption::Always,
-                "--color=never" => ColorOption::Never,
-                _ => {
-                    // removed error message print
-                    ColorOption::Auto
-                }
-            };
+        for arg in args.iter() {
+            if arg.starts_with("--color=") {
+                return match arg.split('=').nth(1) {
+                    Some("always") => ColorOption::Always,
+                    Some("auto") => ColorOption::Auto,
+                    Some("never") => ColorOption::Never,
+                    _ => {
+                        ColorOption::Auto // Default to Auto in case of invalid option
+                    }
+                };
+            }
         }
 
+        // If no color option is found, default to Auto
         ColorOption::Auto
     }
 

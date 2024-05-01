@@ -1,7 +1,7 @@
 <div align="center">
   <img src="images/ZENITY.svg" alt="Zenity svg logo" width="400">
 <p>Yet Another Spinner Lib</p>
-<p style="margin-top: -10px;">Elevate your Rust command-line interfaces with 100+ spinner animations and Progress Bars + multiline support</p>
+<p style="margin-top: -10px;">Upgrade your Rust CLIs with 100+ spinner animations, progress bars, and multiline support, plus user input validation, logging, and automatic requirement checks</p>
   <a href="https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml">
     <img src="https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml/badge.svg" alt="Publish to Crates">
   </a>

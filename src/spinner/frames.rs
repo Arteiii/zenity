@@ -52,7 +52,8 @@ impl Default for Frames {
     /// ## Example
     /// ```
     /// use zenity::spinner::{Frames, MultiSpinner};
-    /// let spinner = MultiSpinner::new(Frames::default());
+    /// let spinner = MultiSpinner::new();
+    /// spinner.add(Frames::default());
     /// ```
     fn default() -> Self {
         Self::dots_simple_big3()
@@ -67,7 +68,9 @@ impl AsRef<Frames> for Frames {
 
 /// ```
 /// use zenity::spinner::{Frames, MultiSpinner};
-/// let spinner = MultiSpinner::new(Frames::default());
+/// 
+/// let spinner = MultiSpinner::new();
+/// spinner.add(Frames::default());
 /// ```
 impl Frames {
     /// generates frames for spinner animation based on the provided pattern, inversion flag, and speed

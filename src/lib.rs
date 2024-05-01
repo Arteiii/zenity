@@ -92,6 +92,9 @@ pub mod progress;
 #[cfg(feature = "spinner")]
 pub mod spinner;
 
+#[cfg(feature = "log")]
+pub mod log;
+
 // Crate
 pub(crate) mod iterators;
 pub(crate) mod terminal;

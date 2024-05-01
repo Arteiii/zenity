@@ -8,7 +8,8 @@ static TOTAL_ANIMATIONS: AtomicUsize = AtomicUsize::new(0);
 
 macro_rules! test_predefined_animation {
     ($animation:expr, $text:expr) => {{
-        let custom = MultiSpinner::new($animation);
+        let custom = MultiSpinner::new();
+        custom.add($animation);
         custom.run_all();
         custom.set_text(&custom.get_last(), $text.to_string());
         sleep(Duration::from_secs(5));

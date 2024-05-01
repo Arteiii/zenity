@@ -15,7 +15,8 @@ fn main() {
     };
 
     // create a MultiSpinner instance using the new custom animation
-    let spinner = MultiSpinner::new(custom_frames);
+    let spinner = MultiSpinner::new();
+    spinner.add(custom_frames);
     spinner.run_all();
 
     // wait for 5 seconds to showcase the loading animation with the custom animation
