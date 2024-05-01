@@ -1,3 +1,16 @@
+//! The `requirements` module provides functions to verify that required packages are installed.
+//!
+//! # Examples
+//!
+//! ```
+//! use zenity::menu::requirements::verify_requirements;
+//!
+//! match verify_requirements(vec!["uidmap", "bridge-utils"]) {
+//!     Ok(_) => println!("All required packages are installed."),
+//!     Err(err) => eprintln!("Error verifying requirements: {}", err),
+//! }
+//! ```
+
 use std::time::Duration;
 use std::{io, thread};
 

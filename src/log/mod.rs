@@ -1,3 +1,26 @@
+//! The `log` module provides a customizable logger implementation.
+//!
+//! This logger allows customizing log output format and log levels, and it supports colorized output if enabled.
+//!
+//! # Examples
+//!
+//! ```
+//! use zenity::log::Logger;
+//! use log::Level;
+//!
+//! // Initialize logger with default settings
+//! let logger = Logger::new().init().unwrap();
+//!
+//! // Set log level based on environment variable
+//! let logger = Logger::new().with_env("LOG_LEVEL").init().unwrap();
+//!
+//! // Set log level based on command-line argument
+//! let logger = Logger::new().with_arg().init().unwrap();
+//!
+//! // Set log level directly
+//! let logger = Logger::new().set_log_level(Level::Debug).init().unwrap();
+//! ```
+
 use std::env;
 use std::io::{stdout, Write};
 
@@ -27,7 +50,8 @@ macro_rules! enable_color {
 }
 
 // Define a custom logger
-struct MyLogger {}
+struct MyLogger;
+
 impl log::Log for MyLogger {
     fn enabled(&self, metadata: &Metadata) -> bool {
         // This logger will be enabled for all levels based on the configured log level

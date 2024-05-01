@@ -105,13 +105,11 @@ impl MultiSpinner {
     /// let spinner = MultiSpinner::new();
     /// ```
     pub fn new() -> Self {
-        let spinner = MultiSpinner {
+        MultiSpinner {
             spinner: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
             show_line_number: Arc::new(Mutex::new(false)),
-        };
-
-        spinner
+        }
     }
 
     /// create a new spinner
