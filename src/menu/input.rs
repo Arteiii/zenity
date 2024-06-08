@@ -15,8 +15,9 @@
 use std::io;
 use std::path::Path;
 
+use crossterm::event::{Event, KeyCode, KeyEvent};
 use crossterm::{
-    cursor, execute,
+    cursor, execute, terminal,
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 use regex::Regex;
@@ -254,6 +255,7 @@ impl Input {
             ));
 
             let result = handle_key_input(&mut buffer, &mut force);
+
             // Perform validation for each requirement and store results
             validation_status.clear();
             notes.clear();
@@ -514,5 +516,121 @@ impl Input {
             cursor::Show,
         )
         .unwrap();
+    }
+}
+
+/// Represents a confirmation prompt with a title and a default value.
+///
+/// This struct provides a confirmation prompt to the user, allowing them to press 'y' or 'n' for yes or no.
+/// The default value is used if the user presses Enter without typing anything.
+///
+/// # Examples
+///
+/// ```
+/// use zenity::menu::input::Confirm;
+///
+/// // Create a new confirmation prompt with a title and a default value of 'yes'
+/// let confirm = Confirm::new("Do you want to continue?", true);
+///
+/// // Start the confirmation prompt and get the user's response
+/// let user_response = confirm.start();
+/// if user_response {
+///     println!("User chose to continue.");
+/// } else {
+///     println!("User chose not to continue.");
+/// }
+/// ```
+pub struct Confirm {
+    /// The title or prompt displayed for the confirmation.
+    title: String,
+    /// The default value that can be accepted by pressing Enter (true for 'y', false for 'n').
+    default: bool,
+}
+impl Default for Confirm {
+    fn default() -> Self {
+        Confirm {
+            title: "Do you want to continue?".to_string(),
+            default: true,
+        }
+    }
+}
+
+impl Confirm {
+    /// Creates a new confirmation prompt with the specified title and default value.
+    ///
+    /// # Arguments
+    ///
+    /// * `title` - The title or prompt for the confirmation.
+    /// * `default` - The default value that can be accepted by pressing Enter.
+    ///
+    /// # Returns
+    ///
+    /// A new `Confirm` instance with the given title and default value.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use zenity::menu::input::Confirm;
+    ///
+    /// // Create a new Confirm instance with a title and default value
+    /// let confirm = Confirm::new("Do you want to proceed?", true);
+    /// ```
+    pub fn new(title: &str, default: bool) -> Self {
+        Confirm {
+            title: title.to_string(),
+            default,
+        }
+    }
+
+    /// Starts the confirmation process, displaying the prompt and handling user input.
+    ///
+    /// This method prompts the user for a yes/no confirmation, and returns the user's choice.
+    ///
+    /// # Returns
+    ///
+    /// A boolean indicating the user's choice.
+    ///
+    /// # Example
+    ///
+    /// ```rust-ignore
+    /// use zenity::menu::input::Confirm;
+    ///
+    /// // init and start directly
+    /// let confirm = Confirm::new("Do you want to proceed?", true).start();
+    /// ```
+    pub fn start(&self) -> bool {
+        terminal::enable_raw_mode().unwrap();
+
+        // render the prompt
+        execute!(io::stdout(), Print(&self.title)).unwrap();
+
+        // if using default, indicate it
+        let default_text = if self.default { " (Y/n)" } else { " (y/N)" };
+        execute!(io::stdout(), Print(default_text), cursor::Hide).unwrap();
+
+        loop {
+            if let Event::Key(key_event) = crossterm::event::read().unwrap() {
+                let KeyEvent { code, .. } = key_event;
+
+                let result = match code {
+                    KeyCode::Char('y') | KeyCode::Char('Y') => {
+                        execute!(io::stdout(), Print("y"), cursor::Show).unwrap();
+                        true
+                    }
+                    KeyCode::Char('n') | KeyCode::Char('N') => {
+                        execute!(io::stdout(), Print("n"), cursor::Show).unwrap();
+                        false
+                    }
+                    _ => {
+                        execute!(io::stdout(), cursor::Show).unwrap();
+                        self.default
+                    }
+                };
+
+                // disable raw mode before returning
+                disable_raw_mode().unwrap();
+                return result;
+            }
+        }
     }
 }

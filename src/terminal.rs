@@ -154,8 +154,6 @@ mod tests {
         ];
 
         console_render::render_unstyled(4, &content);
-
-        assert!(true);
     }
 
     #[test]
@@ -167,7 +165,5 @@ mod tests {
         ];
 
         console_render::render_styled(4, &content);
-
-        assert!(true);
     }
 }
