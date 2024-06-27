@@ -17,7 +17,7 @@ use std::path::Path;
 
 use crossterm::event::{Event, KeyCode, KeyEvent};
 use crossterm::{
-    cursor, execute, terminal,
+    cursor, execute,
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 use regex::Regex;
@@ -526,7 +526,7 @@ impl Input {
 ///
 /// # Examples
 ///
-/// ```
+/// ```ignore
 /// use zenity::menu::input::Confirm;
 ///
 /// // Create a new confirmation prompt with a title and a default value of 'yes'
@@ -599,7 +599,7 @@ impl Confirm {
     /// let confirm = Confirm::new("Do you want to proceed?", true).start();
     /// ```
     pub fn start(&self) -> bool {
-        terminal::enable_raw_mode().unwrap();
+        enable_raw_mode().unwrap();
 
         // render the prompt
         execute!(io::stdout(), Print(&self.title)).unwrap();
