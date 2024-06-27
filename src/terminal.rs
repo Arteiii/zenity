@@ -55,7 +55,7 @@ pub(crate) mod console_render {
         .unwrap();
 
         for content in frame {
-            queue!(stdout, style::Print(content),).unwrap();
+            queue!(stdout, Print(content),).unwrap();
         }
 
         stdout.flush().unwrap();
@@ -92,7 +92,7 @@ pub(crate) mod console_render {
             queue!(
                 stdout,
                 style::SetStyle(content.style), // set animation color
-                style::Print(&content.string),
+                Print(&content.string),
                 style::ResetColor, // reset colors
             )
             .unwrap();
