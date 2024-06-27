@@ -23,6 +23,7 @@ pub use frames::*;
 use crate::iterators::balanced_single;
 use crate::style::StyledString;
 use crate::terminal::{console_cursor, console_render};
+use crate::terminal::console_render::{get_rows, push_content_up};
 
 pub mod frames;
 
@@ -56,6 +57,7 @@ pub mod frames;
 /// ```
 pub struct ProgressBar {
     bar: Arc<Mutex<HashMap<usize, Frames>>>,
+    clear_type: Arc<Mutex<Option<u16>>>,
     stop: Arc<Mutex<bool>>,
 }
 
@@ -99,6 +101,7 @@ impl ProgressBar {
         let progress = ProgressBar {
             bar: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
+            clear_type: Arc::new(Mutex::new(Some(get_rows()))),
         };
 
         progress.add(bar);
@@ -132,6 +135,35 @@ impl ProgressBar {
         bar_map.insert(uid, bar);
 
         uid
+    }
+
+    /// Sets the number of rows to clear in the terminal before starting the animation.
+    /// If no value is provided, the terminal will clear all rows by default,
+    /// effectively clearing the screen without deleting old content, which might leave empty rows.
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::progress::ProgressBar;
+    /// use zenity::progress::Frames;
+    ///
+    /// // Clear with the default number of rows (entire terminal)
+    /// let spinner = ProgressBar::new(Frames::default());
+    ///
+    /// // Clear with a specified number of rows (12)
+    /// spinner.clear(Some(12));
+    ///
+    /// // Dont Clean anything
+    /// spinner.clear(None);
+    ///
+    /// spinner.run_all()
+    /// ```
+    ///
+    /// # Parameters
+    /// - `rows`: An optional `u16` specifying the number of rows to clear.
+    /// If `None`, no rows will be cleared.
+    ///
+    pub fn clear(&self, rows: Option<u16>) {
+        *self.clear_type.lock().unwrap() = rows;
     }
 
     /// Set the current value
@@ -216,6 +248,10 @@ impl ProgressBar {
     /// let uid1 = spinner.run_all(); // starts all created bars
     /// ```
     pub fn run_all(&self) {
+        if let Some(rows) = *self.clear_type.lock().unwrap() {
+            push_content_up(rows);
+        }
+
         let bars = Arc::clone(&self.bar);
         let stop = Arc::clone(&self.stop);
 

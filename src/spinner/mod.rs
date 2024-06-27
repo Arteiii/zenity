@@ -28,6 +28,7 @@ pub use frames::*;
 use crate::iterators::balanced_iterator;
 use crate::style;
 use crate::style::{Attribute, Color, ContentStyle, StyledString};
+use crate::terminal::console_render::{get_rows, push_content_up};
 use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
@@ -57,6 +58,7 @@ pub mod frames;
 pub struct MultiSpinner {
     spinner: Arc<Mutex<HashMap<usize, Frames>>>,
     show_line_number: Arc<Mutex<bool>>,
+    clear_type: Arc<Mutex<Option<u16>>>,
     stop: Arc<Mutex<bool>>,
 }
 
@@ -109,6 +111,7 @@ impl MultiSpinner {
             spinner: Arc::new(Mutex::new(HashMap::new())),
             stop: Arc::new(Mutex::new(false)),
             show_line_number: Arc::new(Mutex::new(false)),
+            clear_type: Arc::new(Mutex::new(Some(get_rows()))),
         }
     }
 
@@ -164,6 +167,38 @@ impl MultiSpinner {
         // Get the maximum key value (uid) from the spinner map
         spinner_map.keys().copied().max().unwrap()
     }
+
+    /// Sets the number of rows to clear in the terminal before starting the animation.
+    /// If no value is provided, the terminal will clear all rows by default,
+    /// effectively clearing the screen without deleting old content, which might leave empty rows.
+    ///
+    /// ## Example
+    /// ```
+    /// use zenity::spinner::MultiSpinner;
+    /// use zenity::spinner::Frames;
+    ///
+    /// let spinner = MultiSpinner::new();
+    ///
+    /// // Clear with the default number of rows (entire terminal)
+    /// spinner.add(Frames::default());
+    ///
+    /// // Clear with a specified number of rows (12)
+    /// spinner.clear(Some(12));
+    ///
+    /// // Dont Clean anything
+    /// spinner.clear(None);
+    ///
+    /// spinner.run_all()
+    /// ```
+    ///
+    /// # Parameters
+    /// - `rows`: An optional `u16` specifying the number of rows to clear.
+    /// If `None`, no rows will be cleared.
+    ///
+    pub fn clear(&self, rows: Option<u16>) {
+        *self.clear_type.lock().unwrap() = rows;
+    }
+
 
     /// set text of a specific spinner
     ///
@@ -261,6 +296,10 @@ impl MultiSpinner {
     /// spinner.run_all();
     /// ```
     pub fn run_all(&self) {
+        if let Some(rows) = *self.clear_type.lock().unwrap() {
+            push_content_up(rows);
+        }
+
         let spinners = Arc::clone(&self.spinner);
         let stop = Arc::clone(&self.stop);
         let show_line_number = Arc::clone(&self.show_line_number);
