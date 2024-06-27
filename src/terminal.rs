@@ -1,9 +1,9 @@
 pub(crate) mod console_render {
     use std::io::{stdout, Write};
 
-    use crossterm::{cursor, execute, queue, style, terminal};
     use crossterm::style::Print;
     use crossterm::terminal::size;
+    use crossterm::{cursor, execute, queue, style, terminal};
 
     use crate::color::ENABLE_COLOR;
     use crate::style::StyledString;
@@ -116,15 +116,13 @@ pub(crate) mod console_render {
         for _ in 0..rows {
             execute!(stdout(), Print("\n")).unwrap();
         }
-
     }
 
     #[inline(always)]
-    pub fn get_rows()-> u16 {
+    pub fn get_rows() -> u16 {
         let (_cols, rows) = size().unwrap();
         rows
     }
-
 }
 
 pub(crate) mod console_cursor {

@@ -22,8 +22,8 @@ pub use frames::*;
 
 use crate::iterators::balanced_single;
 use crate::style::StyledString;
-use crate::terminal::{console_cursor, console_render};
 use crate::terminal::console_render::{get_rows, push_content_up};
+use crate::terminal::{console_cursor, console_render};
 
 pub mod frames;
 

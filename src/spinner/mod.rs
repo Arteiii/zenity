@@ -199,7 +199,6 @@ impl MultiSpinner {
         *self.clear_type.lock().unwrap() = rows;
     }
 
-
     /// set text of a specific spinner
     ///
     /// if the uid is invalid, this does nothing
