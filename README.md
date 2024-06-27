@@ -3,8 +3,6 @@
   <img src="images/ZENITY.svg" alt="Zenity svg logo" width="400" >
 <p>Yet Another Spinner Lib</p>
 <p style="margin-top: -10px;">Upgrade your Rust CLIs with 100+ spinner animations, progress bars, and multiline support, plus user input validation, logging, and automatic requirement checks</p>
-  <img src="images/rustrover64_WupAJU44Lu.gif" alt="progress bar">
-  <br>
   <a href="https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml">
     <img src="https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml/badge.svg" alt="Publish to Crates">
   </a>
@@ -24,6 +22,20 @@
   <br>
 </div>
 
+## Table of Contents
+
+- [Overview](#overview)
+- [How to Use?](#how-to-use)
+- [Documentation](#documentation)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [Preview](#preview)
+- [Disclaimer](#disclaimer)
+- [Credits](#credits)
+- [License](#license)
+
+
+## Overview
 Do you often find yourself gazing into the void of your terminal,  
 wondering if your computer has decided to take a coffee break without notifying you?
 
