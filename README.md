@@ -1,5 +1,6 @@
+<!--suppress HtmlDeprecatedAttribute -->
 <div align="center">
-  <img src="images/ZENITY.svg" alt="Zenity svg logo" width="400">
+  <img src="images/ZENITY.svg" alt="Zenity svg logo" width="400" >
 <p>Yet Another Spinner Lib</p>
 <p style="margin-top: -10px;">Upgrade your Rust CLIs with 100+ spinner animations, progress bars, and multiline support, plus user input validation, logging, and automatic requirement checks</p>
   <a href="https://github.com/Arteiii/zenity/actions/workflows/publish_crate.yml">
@@ -17,17 +18,24 @@
   <a href="https://codecov.io/gh/Arteiii/zenity" > 
     <img src="https://codecov.io/gh/Arteiii/zenity/graph/badge.svg?token=CHEG2ZD0LW" alt="codecov badge"/> 
   </a>
-</div>
-<br>
-
-<div align="center">
-  <img src="images/rustrover64_WupAJU44Lu.gif" alt="progress bar">
+  <br>
+  <br>
 </div>
 
-![menu input preview](images/rustrover64_Qgn5icero6.gif)
+## Table of Contents
 
-![multiline preview](images/rustrover64_4bzlv2mWxK.gif)
+- [Overview](#overview)
+- [How to Use?](#how-to-use)
+- [Documentation](#documentation)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [Preview](#preview)
+- [Disclaimer](#disclaimer)
+- [Credits](#credits)
+- [License](#license)
 
+
+## Overview
 Do you often find yourself gazing into the void of your terminal,  
 wondering if your computer has decided to take a coffee break without notifying you?
 
@@ -39,7 +47,7 @@ wondering if your computer has decided to take a coffee break without notifying 
 ## How to Use?
 
 It's as easy as pie (or maybe even easier, depending on your pie-making skills)!  
-Follow these simple steps:
+Follow these steps:
 
 ````shell
 cargo add zenity
@@ -69,9 +77,8 @@ fn main() {
 
 check out the examples for more
 
-**NOTE:**
-
-- the lib already includes checks for `--color` following the conventions
+> [!NOTE]
+> the lib already includes checks for `--color` following the conventions
   by:
   [Rain's Rust CLI recommendations](https://rust-cli-recommendations.sunshowers.io/colors.html#general-recommendations)
 
@@ -109,6 +116,14 @@ an [issue on GitHub](https://github.com/Arteiii/zenity/issues/new).
 If you find this project helpful or enjoyable, consider giving it a star on [GitHub](https://github.com/Arteiii/zenity).
 
 Thank you for your interest and contributions!
+
+## Preview
+
+![progress bar](images/rustrover64_WupAJU44Lu.gif)
+
+![menu input preview](images/rustrover64_Qgn5icero6.gif)
+
+![multiline preview](images/rustrover64_4bzlv2mWxK.gif)
 
 ## Disclaimer
 

@@ -1,6 +1,8 @@
 pub(crate) mod console_render {
     use std::io::{stdout, Write};
 
+    use crossterm::style::Print;
+    use crossterm::terminal::size;
     use crossterm::{cursor, execute, queue, style, terminal};
 
     use crate::color::ENABLE_COLOR;
@@ -53,7 +55,7 @@ pub(crate) mod console_render {
         .unwrap();
 
         for content in frame {
-            queue!(stdout, style::Print(content),).unwrap();
+            queue!(stdout, Print(content),).unwrap();
         }
 
         stdout.flush().unwrap();
@@ -90,7 +92,7 @@ pub(crate) mod console_render {
             queue!(
                 stdout,
                 style::SetStyle(content.style), // set animation color
-                style::Print(&content.string),
+                Print(&content.string),
                 style::ResetColor, // reset colors
             )
             .unwrap();
@@ -107,6 +109,19 @@ pub(crate) mod console_render {
             terminal::Clear(terminal::ClearType::FromCursorDown),
         )
         .unwrap();
+    }
+
+    #[inline(always)]
+    pub fn push_content_up(rows: u16) {
+        for _ in 0..rows {
+            execute!(stdout(), Print("\n")).unwrap();
+        }
+    }
+
+    #[inline(always)]
+    pub fn get_rows() -> u16 {
+        let (_cols, rows) = size().unwrap();
+        rows
     }
 }
 

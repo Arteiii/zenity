@@ -121,7 +121,7 @@ pub struct StyledString {
 /// assert_eq!(repeated_styled_text.string, "Hello, Hello, Hello, ");
 /// ```
 impl StyledString {
-    /// repeats the StyledString `count` times
+    /// Repeats the StyledString `count` times
     ///
     /// Example:
     ///
@@ -140,8 +140,7 @@ impl StyledString {
         // create a new StyledString with the repeated string and the same style
         StyledString {
             string: repeated_string,
-            style: self.style, // cloning the style assuming it's an economical
-                               // (ide suggestion instead of cheap) operation
+            style: self.style, // cloning the style assuming it's a cheap operation
         }
     }
 }

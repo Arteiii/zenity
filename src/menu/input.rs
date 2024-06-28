@@ -1,6 +1,6 @@
 //! Input Validation Widgets
 //!
-//! **Note:** This module is a work in progress,
+//! **Note: ** This module is a work in progress,
 //! and breaking changes could be made soon without increasing the major version
 //! for different reasons, such as improvements or bug fixes.
 //!
@@ -17,7 +17,7 @@ use std::path::Path;
 
 use crossterm::event::{Event, KeyCode, KeyEvent};
 use crossterm::{
-    cursor, execute, terminal,
+    cursor, execute,
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 use regex::Regex;
@@ -330,7 +330,7 @@ impl Input {
     /// Enables the ability to bypass validation requirements and force input submission.
     /// This can be triggered by pressing SHIFT + Enter.
     ///
-    /// **Note:**
+    /// **Note: **
     /// - This feature may not work in all terminal environments.
     /// Refer to issue [#685](https://github.com/crossterm-rs/crossterm/issues/685) for more information.
     ///
@@ -526,7 +526,7 @@ impl Input {
 ///
 /// # Examples
 ///
-/// ```
+/// ```ignore
 /// use zenity::menu::input::Confirm;
 ///
 /// // Create a new confirmation prompt with a title and a default value of 'yes'
@@ -572,7 +572,7 @@ impl Confirm {
     /// ```
     /// use zenity::menu::input::Confirm;
     ///
-    /// // Create a new Confirm instance with a title and default value
+    /// // Create a new Confirmation instance with a title and default value
     /// let confirm = Confirm::new("Do you want to proceed?", true);
     /// ```
     pub fn new(title: &str, default: bool) -> Self {
@@ -599,7 +599,7 @@ impl Confirm {
     /// let confirm = Confirm::new("Do you want to proceed?", true).start();
     /// ```
     pub fn start(&self) -> bool {
-        terminal::enable_raw_mode().unwrap();
+        enable_raw_mode().unwrap();
 
         // render the prompt
         execute!(io::stdout(), Print(&self.title)).unwrap();

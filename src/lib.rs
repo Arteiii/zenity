@@ -13,7 +13,7 @@
 //! ## How to Use?
 //!
 //! It's as easy as pie (or maybe even easier, depending on your pie-making skills)!
-//! Follow these simple steps:
+//! Follow these steps:
 //!
 //! ## Spinner
 //!
