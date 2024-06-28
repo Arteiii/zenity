@@ -1,6 +1,6 @@
 [package]
 name = "zenity"
-version = "3.6.0"
+version = "3.6.1"
 authors = ["Arteii <ben.arteii@proton.me>"]
 edition = "2021"
 license-file = "LICENSE.md"
