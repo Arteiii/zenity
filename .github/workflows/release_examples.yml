@@ -81,13 +81,13 @@ jobs:
           echo "Release version: ${{ env.TAG }}"
 
       - name: Download Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: examples_windows-artifact
           path: examples/windows
 
       - name: Download Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: examples_unix-artifact
           path: examples/unix
