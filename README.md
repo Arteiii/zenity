@@ -154,4 +154,4 @@ The project was sponsored by JetBrains, which provided the open-source software 
 
 This project is licensed under the **DWFYW** License.
 
-For more information, see the [LICENSE](LICENSE) file.
+For more information, see the [LICENSE](LICENSE.md) file.
