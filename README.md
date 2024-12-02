@@ -143,9 +143,12 @@ This project wouldn't have been possible without the amazing work of the followi
 - [supports_color](https://docs.rs/supports-color/latest/supports_color/)
 
 ### Sponsors 
+
 The project was sponsored by JetBrains, which provided the open-source software licenses.
 
-<img width="400" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains">
+<a href="https://www.jetbrains.com/">
+  <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" width="500" alt="JetBrains">
+</a>
 
 ## License
 
