@@ -142,6 +142,11 @@ This project wouldn't have been possible without the amazing work of the followi
 - [Crossterm](https://github.com/crossterm-rs/crossterm)
 - [supports_color](https://docs.rs/supports-color/latest/supports_color/)
 
+### Sponsors 
+The project was sponsored by JetBrains, which provided the open-source software licenses.
+
+<img width="400" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains">
+
 ## License
 
 This project is licensed under the **DWFYW** License.
